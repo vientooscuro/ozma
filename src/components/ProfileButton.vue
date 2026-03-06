@@ -365,12 +365,12 @@ export default class AppHeader extends Vue {
   align-items: flex-start;
 }
 .user-name {
-  color: #1f1f1f;
+  color: var(--default-foregroundColor);
   font-weight: 600;
   font-size: 0.875rem;
 }
 .user-email {
-  color: #3d3d3d;
+  color: var(--default-foregroundDarkerColor);
   font-weight: 500;
   font-size: 0.75rem;
 }

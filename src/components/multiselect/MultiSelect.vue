@@ -845,10 +845,10 @@ export default class MultiSelect extends Vue {
     border-color: var(--default-borderColor);
     background-color: var(--default-backgroundColor);
     padding: 0;
-    color: #000;
+    color: var(--default-foregroundColor);
 
     &::placeholder {
-      color: #777c87;
+      color: var(--default-foregroundDarkerColor);
     }
 
     &:focus {
@@ -885,7 +885,7 @@ export default class MultiSelect extends Vue {
   width: 100%;
 
   &:hover {
-    background: #ffeeee;
+    background: var(--default-backgroundDarker2Color);
   }
 }
 
@@ -906,7 +906,7 @@ export default class MultiSelect extends Vue {
 
 .hovered-value {
   cursor: pointer !important;
-  background-color: #eff6ff !important;
+  background-color: var(--default-backgroundDarker1Color) !important;
 }
 
 div.select-container__options__actions {
@@ -924,7 +924,7 @@ div.select-container__options__actions {
 .single-value {
   display: inline-flex;
   align-items: center;
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   padding: 0.125rem 0.5rem;
   height: 1.3rem;
   overflow: hidden;
@@ -954,12 +954,12 @@ div.select-container__options__actions {
   padding: 0.375rem 1rem;
 
   &:hover {
-    background-color: #eff6ff !important;
+    background-color: var(--default-backgroundDarker1Color) !important;
   }
 
   .option {
-    border-radius: 0.25rem;
-    background: var(--option-backgroundColor, #f2f4f7);
+    border-radius: 0.5rem;
+    background: var(--option-backgroundColor, var(--default-backgroundDarker1Color));
     color: var(--option-foregroundColor);
     border: 1px solid var(--option-borderColor, transparent);
     padding: 0.3125rem 0.75rem;

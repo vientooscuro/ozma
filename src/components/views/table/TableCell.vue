@@ -86,7 +86,8 @@
             {
               option:
                 ((fieldTypeName == 'enum' || fieldTypeName == 'reference') ||
-                  optionColorVariantAttribute.type === 'inline') &&
+                  optionColorVariantAttribute.type === 'inline' ||
+                  (optionColorVariantAttribute.type === 'existing' && optionColorVariantAttribute.className !== 'option')) &&
                 valueHtml.length > 0,
               tree: showTree && column.treeUnfoldColumn,
               'date-time': valueType.type === 'datetime',
@@ -335,7 +336,7 @@ export default class TableCell extends Vue {
   display: inline-flex;
   align-items: center;
   border: 1px solid var(--option-borderColor);
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   background-color: var(--option-backgroundColor);
   padding: 0.1rem 0.5rem;
   max-width: 100%;
