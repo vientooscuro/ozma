@@ -22,7 +22,9 @@
       "contextmenu_cut_tooltip": "Use Ctrl+X to cut selected cell",
       "contextmenu_copy_tooltip": "Use Ctrl+C to copy selected cell",
       "contextmenu_paste_tooltip": "Use Ctrl+V to paste to selected cell",
-      "no_columns": "This query lacks visible columns"
+      "no_columns": "This query lacks visible columns",
+      "pin_column": "Pin column",
+      "unpin_column": "Unpin column"
     },
     "ru": {
       "pagination_select": "Строк на странице",
@@ -46,7 +48,9 @@
       "contextmenu_cut_tooltip": "Нажмите Ctrl+X, чтобы вырезать выделенную ячейку",
       "contextmenu_copy_tooltip": "Нажмите Ctrl+C, чтобы скопировать выделенную ячейку",
       "contextmenu_paste_tooltip": "Нажмите Ctrl+V, чтобы вставить в выделенную ячейку",
-      "no_columns": "В запросе отсутствуют видимые колонки"
+      "no_columns": "В запросе отсутствуют видимые колонки",
+      "pin_column": "Закрепить столбец",
+      "unpin_column": "Открепить столбец"
     },
     "es": {
       "cut": "Cortar",
@@ -67,7 +71,9 @@
       "contextmenu_cut_tooltip": "Usar Ctrl + X para cortar la celda seleccionada",
       "contextmenu_copy_tooltip": "Usar Ctrl + C para copiar la celda seleccionada",
       "contextmenu_paste_tooltip": "Usar Ctrl + V para pegar en la celda seleccionada",
-      "no_columns": "Esta consulta carece de columnas visibles"
+      "no_columns": "Esta consulta carece de columnas visibles",
+      "pin_column": "Fijar columna",
+      "unpin_column": "Desfijar columna"
     }
   }
 </i18n>
@@ -164,6 +170,33 @@
           </div>
         </popper>
 
+        <popper
+          v-if="columnContextMenu"
+          v-click-outside="closeColumnContextMenu"
+          force-show
+          :trigger="null"
+          :reference="columnContextMenu.reference"
+          transition="fade"
+          enter-active-class="fade-enter fade-enter-active"
+          leave-active-class="fade-leave fade-leave-active"
+          :visible-arrow="false"
+          :options="{
+            placement: 'bottom-start',
+            positionFixed: true,
+            modifiers: { offset: { offset: 0 } },
+          }"
+        >
+          <div class="popper border rounded overflow-hidden shadow">
+            <div class="context-menu-wrapper">
+              <ButtonList
+                :buttons="columnContextMenu.buttons"
+                @button-click="closeColumnContextMenu"
+                @goto="$emit('goto', $event)"
+              />
+            </div>
+          </div>
+        </popper>
+
         <div
           v-if="showAddRowButtons && uv.rows.length > 5"
           class="button-container"
@@ -242,6 +275,7 @@
                 }"
                 :title="$ustOrEmpty(columns[i].caption)"
                 @click="loadAllRowsAndUpdateSort(i)"
+                @contextmenu.prevent="(event) => openColumnContextMenu(i, event)"
               >
                 <div class="table-th">
                   <span class="column-capture">
@@ -1580,6 +1614,8 @@ export default class UserViewTable extends mixins<
   showAddRowButtons = false
 
   cellContextMenu: CellContextMenuData | null = null
+  columnContextMenu: CellContextMenuData | null = null
+  pinnedColumns: Record<number, boolean> = {}
 
   autoscrollTimer: number | null = null
   autoscrollForward = true
@@ -1622,7 +1658,9 @@ export default class UserViewTable extends mixins<
         }
       }
 
-      const fixedColumn = z.coerce.boolean().parse(getColumnAttr('fixed'))
+      const fixedFromAttr = z.coerce.boolean().parse(getColumnAttr('fixed'))
+      const fixedColumn =
+        i in this.pinnedColumns ? this.pinnedColumns[i] : fixedFromAttr
 
       const visibleColumn = z.coerce
         .boolean()
@@ -3149,6 +3187,36 @@ export default class UserViewTable extends mixins<
 
   private closeCellContextMenu() {
     this.cellContextMenu = null
+  }
+
+  private closeColumnContextMenu() {
+    this.columnContextMenu = null
+  }
+
+  private openColumnContextMenu(columnIndex: number, event: MouseEvent) {
+    const isPinned = this.columns[columnIndex]?.fixed ?? false
+    this.columnContextMenu = {
+      reference: {
+        clientWidth: 1,
+        clientHeight: 1,
+        getBoundingClientRect: () =>
+          new DOMRect(event.clientX, event.clientY, 1, 1),
+        removeEventListener: () => {},
+      },
+      buttons: [
+        {
+          type: 'callback',
+          icon: isPinned ? 'push_pin' : 'push_pin',
+          caption: isPinned
+            ? this.$t('unpin_column').toString()
+            : this.$t('pin_column').toString(),
+          variant: defaultVariantAttribute,
+          callback: () => {
+            this.$set(this.pinnedColumns, columnIndex, !isPinned)
+          },
+        },
+      ],
+    }
   }
 
   private openCellContextMenu(

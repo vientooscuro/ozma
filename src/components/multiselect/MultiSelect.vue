@@ -226,8 +226,8 @@
                 @click.stop="selectOption(option.index)"
               >
                 <div
-                  :class="[optionVariantClassName, 'option-local-variant', 'option']"
-                  :style="optionVariantVariables"
+                  :class="[getOptionVariantClassName(option), 'option-local-variant', 'option']"
+                  :style="getOptionVariantVariables(option)"
                 >
                   <slot name="option" :option="option">
                     <!-- eslint-disable vue/no-v-html -->
@@ -302,6 +302,7 @@ import { UserString, isOptionalUserString } from '@/state/translations'
 export interface ISelectOption<T> {
   label: string
   value: T
+  colorVariant?: ColorVariantAttribute
 }
 
 interface ISelectOptionHtml<T> {
@@ -309,6 +310,7 @@ interface ISelectOptionHtml<T> {
   label: string
   labelHtml: string // Stores label with links replaced with <a> tags.
   value: T
+  colorVariant?: ColorVariantAttribute
 }
 
 export interface IPendingOptions {
@@ -373,6 +375,7 @@ export default class MultiSelect extends Vue {
         label: option.label,
         labelHtml: replaceHtmlLinks(option.label),
         value: option.value,
+        colorVariant: option.colorVariant,
       }
     })
   }
@@ -406,6 +409,16 @@ export default class MultiSelect extends Vue {
 
   get optionVariantVariables(): Record<string, string> | null {
     return getColorVariantAttributeVariables(this.optionColorVariantAttribute)
+  }
+
+  getOptionVariantClassName(option: ISelectOptionHtml<unknown>): string | null {
+    const variant = option.colorVariant ?? this.optionColorVariantAttribute
+    return getColorVariantAttributeClassName(variant)
+  }
+
+  getOptionVariantVariables(option: ISelectOptionHtml<unknown>): Record<string, string> | null {
+    const variant = option.colorVariant ?? this.optionColorVariantAttribute
+    return getColorVariantAttributeVariables(variant)
   }
 
   @Watch('loadingState', { immediate: true })

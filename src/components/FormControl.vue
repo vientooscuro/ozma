@@ -753,6 +753,7 @@ export default class FormControl extends Vue {
 
   private getEnumOptions(values: string[]): ISelectOption<string>[] {
     const textMapping = this.attributeMappings['text']
+    const variantMapping = this.attributeMappings['option_variant']
     return values.map((x) => {
       let label = x
       if (textMapping) {
@@ -763,7 +764,9 @@ export default class FormControl extends Vue {
           label = String(textMapping.default)
         }
       }
-      return { label, value: x }
+      const rawVariant = variantMapping?.entries[x] ?? variantMapping?.default
+      const colorVariant = rawVariant !== undefined ? colorVariantFromAttribute(rawVariant) : undefined
+      return { label, value: x, colorVariant }
     })
   }
 

@@ -359,19 +359,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       currentTheme?.colorVariants['default'] ?? oldDefaultVariant
     const interfaceButton = {
       ...transparentVariant,
-      backgroundDarker1: 'rgba(0, 0, 0, 0.2)',
-      backgroundDarker2: 'rgba(0, 0, 0, 0.4)',
+      backgroundDarker1: defaultVariant.backgroundDarker1,
+      backgroundDarker2: defaultVariant.backgroundDarker2,
       foreground: defaultVariant.foreground,
       foregroundContrast: defaultVariant.foregroundContrast,
       foregroundDarker: defaultVariant.foregroundDarker,
     }
     const menuEntry = {
       ...interfaceButton,
-      foreground: '#3D3D3D',
     }
     const menuHeader = {
       ...interfaceButton,
-      foreground: '#1F1F1F',
     }
     const outlinedInterfaceButton = {
       ...interfaceButton,

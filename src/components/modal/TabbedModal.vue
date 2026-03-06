@@ -303,6 +303,7 @@ export default class TabbedModal extends Vue {
   background-color: var(--default-backgroundColor);
   max-height: calc(100% - 38px - 2rem);
   color: var(--MainTextColor);
+  box-shadow: 0 20px 60px -2px var(--default-borderColor);
 
   @include mobile {
     max-height: calc(100% - 38px);
