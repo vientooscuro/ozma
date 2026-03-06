@@ -6,7 +6,7 @@ import FunDBAPI, {
   RowId,
 } from '@ozma-io/ozmadb-js/client'
 import { store } from '@/main'
-import { mapMaybe, objectMap } from '@/utils'
+import { mapMaybe, objectMap, safeJsonParse } from '@/utils'
 
 const ThemeRef = z.object({
   schema: z.string(),
@@ -364,21 +364,17 @@ export const getPreferredTheme = (
   themes: ThemesMap,
   defaultSchema?: SchemaName,
 ): IThemeRef | null => {
-  // FIXME: use prefers-color-scheme for user browser dark theme when we will fix all dark theme design issues
-  // const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const prefersDarkTheme = false
+  const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
 
-  /*
-  const storedTheme = ThemeRef.safeParse(safeJsonParse(localStorage.getItem("preferredTheme")));
+  const storedTheme = ThemeRef.safeParse(safeJsonParse(localStorage.getItem("preferredTheme")))
 
   if (storedTheme.success) {
-    const themesSchema = themes[storedTheme.data.schema];
+    const themesSchema = themes[storedTheme.data.schema]
     if (themesSchema !== undefined && storedTheme.data.name in themesSchema) {
-      return storedTheme.data;
+      return storedTheme.data
     }
-    console.error(`User theme ${storedTheme.data.schema}.${storedTheme.data.name} is not defined`);
+    console.error(`User theme ${storedTheme.data.schema}.${storedTheme.data.name} is not defined`)
   }
-  */
 
   const myDefaultSchema = defaultSchema ?? 'user'
 
