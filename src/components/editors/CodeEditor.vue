@@ -33,7 +33,8 @@ export default class CodeEditor extends Vue {
     if (!bg) return false
     // Parse rgb/rgba or hex and check luminance
     const canvas = document.createElement('canvas')
-    canvas.width = canvas.height = 1
+    canvas.width = 1
+    canvas.height = 1
     const ctx = canvas.getContext('2d')!
     ctx.fillStyle = bg
     ctx.fillRect(0, 0, 1, 1)
