@@ -565,13 +565,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   ) !important;
   --MainBorderColor: var(--borderColor, var(--OldMainBorderColor)) !important;
 
-  --userview-background-color: var(--default-backgroundDarker1Color, #f2f4f7);
+  --userview-background-color: var(--pageBackground-backgroundColor, var(--default-backgroundDarker1Color, #f2f4f7));
 
   background-color: var(--backgroundColor);
   color: var(--foregroundColor);
 }
 
 @include variant-to-local('default');
+@include variant-to-local('pageBackground');
 
 .app-container {
   position: relative;

@@ -55,7 +55,7 @@
           <div class="sort-editor-body">
             <div class="sort-field">
               <label class="sort-label">{{ $t('column') }}</label>
-              <select v-model="selectedColumn" class="sort-select form-control form-control-sm">
+              <select v-model="selectedColumn" class="sort-select form-control form-control-sm" @change="onColumnChange">
                 <option :value="null">{{ $t('no_sort') }}</option>
                 <option v-for="col in columns" :key="col.index" :value="col.index">
                   {{ $ustOrEmpty(col.caption) }}
@@ -64,7 +64,7 @@
             </div>
             <div v-if="selectedColumn !== null" class="sort-field">
               <label class="sort-label">{{ $t('direction') }}</label>
-              <select v-model="selectedAsc" class="sort-select form-control form-control-sm">
+              <select v-model="selectedAsc" class="sort-select form-control form-control-sm" @change="onAscChange">
                 <option :value="true">{{ $t('asc') }}</option>
                 <option :value="false">{{ $t('desc') }}</option>
               </select>
@@ -116,19 +116,30 @@ export default class SortEditor extends Vue {
     return this.sortEditorProps.columns
   }
 
-  @Watch('sortEditorProps', { immediate: true })
-  onPropsChanged() {
+  @Watch('sortEditorProps.sortColumn')
+  onExternalSortColumnChanged() {
+    this.selectedColumn = this.sortEditorProps.sortColumn
+  }
+
+  @Watch('sortEditorProps.sortAsc')
+  onExternalSortAscChanged() {
+    this.selectedAsc = this.sortEditorProps.sortAsc
+  }
+
+  mounted() {
     this.selectedColumn = this.sortEditorProps.sortColumn
     this.selectedAsc = this.sortEditorProps.sortAsc
   }
 
-  @Watch('selectedColumn')
-  onColumnChanged() {
-    this.sortEditorProps.onSort(this.selectedColumn, this.selectedAsc)
+  onColumnChange() {
+    if (this.selectedColumn === null) {
+      this.sortEditorProps.onSort(null, true)
+    } else {
+      this.sortEditorProps.onSort(this.selectedColumn, this.selectedAsc)
+    }
   }
 
-  @Watch('selectedAsc')
-  onAscChanged() {
+  onAscChange() {
     if (this.selectedColumn !== null) {
       this.sortEditorProps.onSort(this.selectedColumn, this.selectedAsc)
     }
@@ -149,6 +160,7 @@ export default class SortEditor extends Vue {
 
   private reset() {
     this.selectedColumn = null
+    this.selectedAsc = true
     this.sortEditorProps.onSort(null, true)
   }
 }
