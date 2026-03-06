@@ -3750,7 +3750,7 @@ export default class UserViewTable extends mixins<
 
 th,
 ::v-deep td {
-  border-bottom: 1px solid #efefef;
+  border-bottom: 1px solid var(--table-borderColor);
 }
 
 .button-container {
@@ -3790,7 +3790,7 @@ th,
   z-index: 30;
   margin-top: revert; // Fix for Safari, huge margin otherwise. Caused by `reset.css`.
   margin-top: auto;
-  border-top: 1px solid #efefef;
+  border-top: 1px solid var(--table-borderColor);
   background-color: var(--table-backgroundColor);
   padding: 0.75rem;
 
@@ -3841,7 +3841,7 @@ th,
     padding: 0;
     width: 1.75rem;
     height: 1.75rem;
-    border: 1.5px solid #d0d5dd !important;
+    border: 1.5px solid var(--table-borderColor) !important;
     border-radius: 8px !important;
   }
 
@@ -3865,14 +3865,14 @@ th,
 
 .no-results {
   padding: 1rem;
-  color: #bfbfbf;
+  color: var(--table-foregroundDarkerColor);
   text-align: left;
 }
 
 .table-wrapper {
   --technical-column-width: 4rem;
-  --icon-color: #777c87;
-  --button-hover-background: #efefef;
+  --icon-color: var(--table-foregroundDarkerColor);
+  --button-hover-background: var(--table-backgroundDarker1Color);
 
   display: flex;
   position: relative;
@@ -3910,7 +3910,7 @@ th {
   top: -1px; /* Instead of `0` to fix Safari's gap bug, not needed in normal browsers, but easier to set same for all. */
   vertical-align: middle;
   z-index: 20;
-  border-top: 1px solid #efefef;
+  border-top: 1px solid var(--table-borderColor);
   height: 4rem;
   user-select: none;
 
@@ -3959,7 +3959,7 @@ th {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  color: #1f1f1f;
+  color: var(--table-foregroundColor);
   font-weight: 500;
   font-size: 0.875rem;
   text-overflow: ellipsis;
@@ -3993,12 +3993,12 @@ th {
   opacity: 0;
   transition: all 0.2s;
   cursor: col-resize;
-  background-color: #efefef;
+  background-color: var(--table-backgroundDarker1Color);
   width: 1rem;
   height: 100%;
 
   .material-icons {
-    color: #444;
+    color: var(--table-foregroundColor);
     font-size: 0.75rem;
   }
 
@@ -4008,7 +4008,7 @@ th {
 }
 
 .show-fixed-column-border ::v-deep .last-fixed-cell {
-  border-right: 1px solid #efefef;
+  border-right: 1px solid var(--table-borderColor);
 }
 
 ::v-deep td > p {
