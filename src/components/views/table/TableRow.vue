@@ -27,7 +27,7 @@
         class="icon-link"
         @goto="$emit('goto', $event)"
       >
-        <i class="material-icons edit-in-modal-icon">edit_note</i>
+        <i class="material-icons edit-in-modal-icon">edit</i>
       </OzmaLink>
     </td>
     <TableCell
