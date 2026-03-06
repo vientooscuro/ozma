@@ -85,7 +85,7 @@ services:
       - keycloak
 
   ozma:
-    image: ozmaio/ozma:master
+    image: ghcr.io/vientooscuro/ozma:master
     restart: unless-stopped
     logging:
       driver: "json-file"

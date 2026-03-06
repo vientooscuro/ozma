@@ -1,0 +1,55 @@
+name: Docker Publish
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-push:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: yarn
+
+      - name: Build ozma-embedded
+        working-directory: ./ozma-embedded
+        run: |
+          yarn set version stable
+          yarn install --immutable
+          yarn build
+
+      - name: Install Dependencies
+        run: |
+          yarn set version stable
+          yarn install --immutable
+          yarn link ./ozma-embedded
+
+      - name: Build
+        run: yarn build
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./docker/Dockerfile.ozma
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/ozma:master
