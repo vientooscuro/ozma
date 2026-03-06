@@ -326,6 +326,20 @@ export const colorVariantFromAttribute = (
         }
       : defaultVariant
 
+// For `cell_color`: if the string is a valid CSS color, treat it as a background color (inline).
+// Otherwise treat it as a palette variant class name (same as `option_variant`).
+export const colorVariantFromCellColor = (
+  cellColor: string,
+): ColorVariantAttribute =>
+  toRgbaOrNull(cellColor) !== null
+    ? {
+        type: 'inline',
+        variables: colorVariantToCssVariables(
+          colorVariantFromRaw({ background: cellColor }),
+        ),
+      }
+    : { type: 'existing', className: cellColor }
+
 export const getColorVariantAttributeClassName = (
   attribute: ColorVariantAttribute,
 ): ColorVariantFullClassName | null =>

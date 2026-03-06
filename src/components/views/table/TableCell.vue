@@ -147,6 +147,7 @@ import type {
 import {
   ColorVariantAttribute,
   colorVariantFromAttribute,
+  colorVariantFromCellColor,
   defaultVariantAttribute,
   getColorVariantAttributeClassName,
   getColorVariantAttributeVariables,
@@ -202,7 +203,7 @@ export default class TableCell extends Vue {
     if (cellColorVariantAttribute) {
       return colorVariantFromAttribute(cellColorVariantAttribute)
     } else if (typeof cellColor === 'string') {
-      return colorVariantFromAttribute({ background: cellColor })
+      return colorVariantFromCellColor(cellColor)
     } else {
       return defaultVariantAttribute
     }

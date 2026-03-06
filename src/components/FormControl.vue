@@ -336,7 +336,7 @@ import { IQuery, attrToQuerySelf, attrObjectToQuery } from '@/state/query'
 import { ISelectOption } from '@/components/multiselect/MultiSelect.vue'
 import { AutoSaveLock } from '@/state/staging_changes'
 
-import { colorVariantFromAttribute } from '@/utils_colors'
+import { colorVariantFromAttribute, colorVariantFromCellColor } from '@/utils_colors'
 import type { ColorVariantAttribute } from '@/utils_colors'
 import type { Button } from '@/components/buttons/buttons'
 import { attrToButtons } from '@/components/buttons/buttons'
@@ -723,7 +723,7 @@ export default class FormControl extends Vue {
     if (this.attributes['cell_variant']) {
       return colorVariantFromAttribute(this.attributes['cell_variant'])
     } else if (this.cellColor) {
-      return colorVariantFromAttribute({ background: this.cellColor })
+      return colorVariantFromCellColor(this.cellColor)
     } else {
       return { type: 'existing', className: 'cell' }
     }

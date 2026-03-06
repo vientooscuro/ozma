@@ -29,7 +29,9 @@ export default class CodeEditor extends Vue {
   private get isDarkTheme(): boolean {
     // Depend on currentThemeRef to make this reactive to theme changes
     void this.currentThemeRef
-    const bg = getComputedStyle(document.documentElement)
+    const el =
+      document.querySelector('.default-variant') ?? document.documentElement
+    const bg = getComputedStyle(el)
       .getPropertyValue('--default-backgroundColor')
       .trim()
     if (!bg) return false
