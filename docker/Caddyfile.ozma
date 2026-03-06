@@ -1,3 +1,9 @@
+{
+	servers {
+		trusted_proxies static {$TRUSTED_PROXIES}
+	}
+}
+
 {$ADDRESS} {
 	# Специальная обработка для /process_payment -> хост на порту 5002
 	handle /process_payment {
@@ -5,15 +11,15 @@
 	}
 
 	handle_path /api/* {
-		reverse_proxy ozmadb:5000
+		reverse_proxy {$OZMA_DB_HOST}:{$OZMA_DB_PORT:5000}
 	}
 
 	handle /auth/* {
-		reverse_proxy keycloak:8080
+		reverse_proxy {$KEYCLOAK_HOST}:{$KEYCLOAK_PORT:8080}
 	}
 
 	handle /report-generator/* {
-		reverse_proxy ozma-report-generator:5000
+		reverse_proxy {$OZMA_REPORT_GENERATOR_HOST}:{$OZMA_REPORT_GENERATOR_PORT:5000}
 	}
 
 	# Grafana - редирект без слеша и прокси со слешом
