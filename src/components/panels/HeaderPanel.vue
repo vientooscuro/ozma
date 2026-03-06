@@ -360,7 +360,7 @@ export default class HeaderPanel extends Vue {
 }
 .placeholder-button {
   border-radius: 0.5rem;
-  background-color: #efefef;
+  background-color: var(--default-backgroundDarker1Color);
   width: 5rem;
   height: 2rem;
 }

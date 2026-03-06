@@ -497,7 +497,7 @@ export default class ReferenceMultiSelect extends mixins(BaseEntriesView) {
   width: 100%;
   color: #2361ff;
   &:hover {
-    background-color: #eff6ff;
+    background-color: var(--default-backgroundDarker1Color);
   }
 }
 

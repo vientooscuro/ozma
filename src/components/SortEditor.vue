@@ -149,7 +149,7 @@ export default class SortEditor extends Vue {
     return {
       type: 'callback',
       variant: outlinedInterfaceButtonVariant,
-      icon: 'sort',
+      icon: 'swap_vert',
       caption: this.$t('sort').toString(),
       tooltip: '',
       callback: () => {

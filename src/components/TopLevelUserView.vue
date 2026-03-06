@@ -678,14 +678,14 @@ export default class TopLevelUserView extends Vue {
 
 .reset-changes-button {
   margin-bottom: 0.5rem;
-  background-color: #f2f4f7;
-  color: #777c87;
+  background-color: var(--default-backgroundDarker1Color);
+  color: var(--default-foregroundDarkerColor);
 }
 
 .show-errors-button {
   margin-bottom: 0.5rem;
-  background-color: #f2f4f7;
-  color: #777c87;
+  background-color: var(--default-backgroundDarker1Color);
+  color: var(--default-foregroundDarkerColor);
 }
 
 .save-button {
