@@ -46,6 +46,11 @@ services:
     restart: unless-stopped
 
   ozmadb:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
     image: ozmaio/ozmadb:master
     restart: unless-stopped
     environment:
@@ -88,6 +93,11 @@ services:
   ozma:
     image: ozmaio/ozma:master
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
     volumes:
       - caddy_data:/data
       - ./docker/Caddyfile.ozma:/etc/caddy/Caddyfile:ro
@@ -96,6 +106,8 @@ services:
     ports:
       - ${HTTP_PORT:-9080}:80
       - ${HTTPS_PORT:-9443}:443
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - keycloak
       - ozmadb

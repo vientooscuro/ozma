@@ -1,4 +1,9 @@
 {$ADDRESS} {
+	# Специальная обработка для /process_payment -> хост на порту 5002
+	handle /process_payment {
+		reverse_proxy host.docker.internal:5002
+	}
+
 	handle_path /api/* {
 		reverse_proxy ozmadb:5000
 	}
@@ -9,6 +14,16 @@
 
 	handle /report-generator/* {
 		reverse_proxy ozma-report-generator:5000
+	}
+
+	# Grafana - редирект без слеша и прокси со слешом
+	@grafana_no_slash path /grafana
+	handle @grafana_no_slash {
+		redir {scheme}://{host}/grafana/ permanent
+	}
+
+	handle /grafana/* {
+		reverse_proxy grafana:3000
 	}
 
 	handle {
