@@ -27,6 +27,8 @@ export default class CodeEditor extends Vue {
   editor: monaco.editor.IStandaloneCodeEditor | null = null
 
   private get isDarkTheme(): boolean {
+    // Depend on currentThemeRef to make this reactive to theme changes
+    void this.currentThemeRef
     const bg = getComputedStyle(document.documentElement)
       .getPropertyValue('--default-backgroundColor')
       .trim()

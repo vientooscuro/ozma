@@ -71,7 +71,7 @@ export default class Checkbox extends Vue {
   }
 }
 .checkbox-mark {
-  stroke: var(--default-foregroundContrastColor, white);
+  stroke: var(--default-backgroundColor, white);
 }
 .label {
   color: var(--MainTextColorLight);
