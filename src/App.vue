@@ -565,6 +565,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   ) !important;
   --MainBorderColor: var(--borderColor, var(--OldMainBorderColor)) !important;
 
+  --userview-background-color: var(--default-backgroundDarker1Color, #f2f4f7);
+
   background-color: var(--backgroundColor);
   color: var(--foregroundColor);
 }
