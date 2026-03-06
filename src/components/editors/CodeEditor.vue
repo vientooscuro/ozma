@@ -46,28 +46,81 @@ monaco.editor.defineTheme('ozma-light', {
   colors: {},
 })
 
-monaco.editor.defineTheme('ozma-dark', {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+;(monaco.editor.defineTheme as any)('ozma-dark', {
   base: 'vs-dark',
   inherit: true,
-  rules: tokenRules(
-    'c586c0', // keyword: pink/purple (Dark+)
-    'ce9178', // string: orange-brown (Dark+)
-    'b5cea8', // number: light green (Dark+)
-    '6a9955', // comment: muted green (Dark+)
-    '4ec9b0', // type/class: teal (Dark+)
-    'd4d4d4', // operator: light grey (Dark+)
-  ),
+  semanticHighlighting: true,
+  semanticTokenColors: {
+    'variable': '#87C3FF',
+    'variable.readonly': '#AAA0FA',
+    'variable.defaultLibrary': '#87C3FF',
+    'parameter': '#D6D6DD',
+    'function': '#EFB080',
+    'function.defaultLibrary': '#87C3FF',
+    'method': '#EFB080',
+    'method.defaultLibrary': '#87C3FF',
+    'class': '#EFB080',
+    'class.defaultLibrary': '#87C3FF',
+    'interface': '#EFB080',
+    'type': '#EFB080',
+    'typeParameter': '#EFB080',
+    'namespace': '#D6D6DD',
+    'property': '#AAA0FA',
+    'enumMember': '#AAA0FA',
+    'event': '#AAA0FA',
+    'macro': '#82D2CE',
+    'label': '#D6D6DD',
+    // JSON
+    'property.declaration': '#82D2CE',
+  },
+  rules: [
+    { token: 'keyword', foreground: '82D2CE', fontStyle: 'bold' },
+    { token: 'keyword.sql', foreground: '82D2CE', fontStyle: 'bold' },
+    { token: 'string', foreground: 'E394DC' },
+    { token: 'string.sql', foreground: 'E394DC' },
+    { token: 'number', foreground: 'EBC88D' },
+    { token: 'number.sql', foreground: 'EBC88D' },
+    { token: 'comment', foreground: 'E4E4E45E', fontStyle: 'italic' },
+    { token: 'comment.sql', foreground: 'E4E4E45E', fontStyle: 'italic' },
+    { token: 'type', foreground: 'EFB080' },
+    { token: 'predefined', foreground: '87C3FF' },
+    { token: 'operator', foreground: 'D6D6DD' },
+    { token: 'operator.sql', foreground: '82D2CE' },
+    { token: 'identifier', foreground: 'D6D6DD' },
+    { token: 'identifier.quote', foreground: 'D6D6DD' },
+    { token: 'identifier.quote.sql', foreground: 'D6D6DD' },
+    { token: 'variable', foreground: '87C3FF' },
+    { token: 'constant', foreground: 'AAA0FA' },
+    { token: 'string.escape', foreground: 'AAA0FA' },
+    { token: 'string.escape.sql', foreground: 'AAA0FA' },
+    { token: 'number.float', foreground: 'EBC88D' },
+    { token: 'number.hex', foreground: 'EBC88D' },
+    { token: 'comment.block', foreground: 'E4E4E45E', fontStyle: 'italic' },
+    { token: 'comment.block.sql', foreground: 'E4E4E45E', fontStyle: 'italic' },
+    { token: 'delimiter', foreground: 'E4E4E48D' },
+    { token: 'delimiter.sql', foreground: 'E4E4E48D' },
+    { token: 'delimiter.parenthesis', foreground: 'E4E4E4EB' },
+    { token: 'delimiter.parenthesis.sql', foreground: 'E4E4E4EB' },
+    // JSON
+    { token: 'key.json', foreground: '82D2CE' },
+    { token: 'string.value.json', foreground: 'E394DC' },
+    { token: 'number.json', foreground: 'EBC88D' },
+    { token: 'keyword.json', foreground: 'AAA0FA' },
+  ],
   colors: {
-    'editor.background': '#1e1e1e',
-    'editor.foreground': '#d4d4d4',
-    'editorLineNumber.foreground': '#858585',
-    'editorLineNumber.activeForeground': '#c6c6c6',
-    'editor.selectionBackground': '#264f78',
-    'editor.inactiveSelectionBackground': '#3a3d41',
-    'editor.lineHighlightBackground': '#2a2d2e',
-    'editorCursor.foreground': '#aeafad',
-    'editor.findMatchBackground': '#515c6a',
-    'editor.findMatchHighlightBackground': '#ea5c0055',
+    'editor.background': '#181818',
+    'editor.foreground': '#E4E4E4EB',
+    'editorLineNumber.foreground': '#E4E4E45E',
+    'editorLineNumber.activeForeground': '#E4E4E4EB',
+    'editor.selectionBackground': '#40404099',
+    'editor.inactiveSelectionBackground': '#40404066',
+    'editor.lineHighlightBackground': '#262626',
+    'editorCursor.foreground': '#E4E4E4EB',
+    'editor.findMatchBackground': '#81A1C155',
+    'editor.findMatchHighlightBackground': '#81A1C133',
+    'editorIndentGuide.background1': '#E4E4E413',
+    'editorIndentGuide.activeBackground1': '#E4E4E42E',
   },
 })
 
