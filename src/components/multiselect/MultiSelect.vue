@@ -225,7 +225,10 @@
                 @mouseover="hoveredOptionIndex = index"
                 @click.stop="selectOption(option.index)"
               >
-                <div class="option">
+                <div
+                  :class="[optionVariantClassName, 'option-local-variant', 'option']"
+                  :style="optionVariantVariables"
+                >
                   <slot name="option" :option="option">
                     <!-- eslint-disable vue/no-v-html -->
                     <span v-html="option.labelHtml" />
@@ -956,7 +959,9 @@ div.select-container__options__actions {
 
   .option {
     border-radius: 0.25rem;
-    background: #f2f4f7;
+    background: var(--option-backgroundColor, #f2f4f7);
+    color: var(--option-foregroundColor);
+    border: 1px solid var(--option-borderColor, transparent);
     padding: 0.3125rem 0.75rem;
   }
 }

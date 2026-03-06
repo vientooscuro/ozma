@@ -59,6 +59,10 @@
           :filter-string="filterString"
           @update:filter-string="$emit('update:filter-string', $event)"
         />
+        <SortEditor
+          v-if="!useCompactLayout && sortEditorProps"
+          :sort-editor-props="sortEditorProps"
+        />
         <ArgumentEditor
           v-if="!useCompactLayout && argumentEditorProps"
           :userView="argumentEditorProps.userView"
@@ -94,6 +98,10 @@
         :buttons="headerButtons"
         @goto="$emit('goto', $event)"
       />
+      <SortEditor
+        v-if="sortEditorProps"
+        :sort-editor-props="sortEditorProps"
+      />
       <ArgumentEditor
         v-if="argumentEditorProps"
         :userView="argumentEditorProps.userView"
@@ -118,6 +126,7 @@ import { UserString, isOptionalUserString } from '@/state/translations'
 import ArgumentEditor, {
   IArgumentEditorProps,
 } from '@/components/ArgumentEditor.vue'
+import SortEditor, { ISortEditorProps } from '@/components/SortEditor.vue'
 
 const isHelpButton = (button: Button) => button.icon === 'help_outline'
 
@@ -127,6 +136,7 @@ const isHelpButton = (button: Button) => button.icon === 'help_outline'
     ButtonItem,
     Popper,
     ArgumentEditor,
+    SortEditor,
   },
 })
 export default class HeaderPanel extends Vue {
@@ -137,6 +147,7 @@ export default class HeaderPanel extends Vue {
   @Prop({ type: String, required: true }) filterString!: string
   @Prop({ type: Boolean, default: false }) isLoading!: boolean
   @Prop({ type: Object }) argumentEditorProps!: IArgumentEditorProps | null
+  @Prop({ type: Object }) sortEditorProps!: ISortEditorProps | null
   @Prop({ type: String }) type!: 'root' | 'modal' | 'nested' | undefined
 
   get extraButtons() {

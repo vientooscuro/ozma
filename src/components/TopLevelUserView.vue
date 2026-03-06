@@ -83,6 +83,7 @@
         :is-enable-filter="enableFilter"
         :filter-string="query.root.search"
         :argumentEditorProps="argumentEditorProps"
+        :sort-editor-props="sortEditorProps"
         :is-loading="uvLoading"
         @update:filter-string="replaceSearch({ key: null, search: $event })"
         @goto="push({ ...$event, key: null })"
@@ -124,6 +125,7 @@
           @update:is-loading="uvLoading = $event"
           @update:current-page="replacePage({ key: null, page: $event })"
           @update:argument-editor-props="argumentEditorProps = $event"
+          @update:sort-editor-props="sortEditorProps = $event"
         />
       </div>
     </div>
@@ -235,6 +237,7 @@ import { CurrentSettings, DisplayMode } from '@/state/settings'
 import QRCodeScannerModal from './qrcode/QRCodeScannerModal.vue'
 import { UserString } from '@/state/translations'
 import { IArgumentEditorProps } from './ArgumentEditor.vue'
+import type { ISortEditorProps } from './SortEditor.vue'
 import ProfileButton from './ProfileButton.vue'
 import AlertBanner from './AlertBanner.vue'
 
@@ -347,6 +350,7 @@ export default class TopLevelUserView extends Vue {
 
   private buttons: Button[] = []
   private argumentEditorProps: IArgumentEditorProps | null = null
+  private sortEditorProps: ISortEditorProps | null = null
 
   private currentQRCodeLink: Link | null = null
 

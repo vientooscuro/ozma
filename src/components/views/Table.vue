@@ -524,6 +524,7 @@ import type TableCell from './table/TableCell.vue'
 import { elementWindow, WindowKey } from '@/state/windows'
 import { formatValue } from '@/user_views/format'
 import { rawToUserString, UserString } from '@/state/translations'
+import type { ISortEditorProps } from '@/components/SortEditor.vue'
 
 export interface IColumn {
   caption: UserString
@@ -3476,12 +3477,43 @@ export default class UserViewTable extends mixins<
     }
 
     this.$emit('update:enable-filter', this.uv.rows !== null)
+    this.emitSortEditorProps()
 
     this.updateRows()
   }
 
   private updateRows() {
     this.buildRowPositions()
+  }
+
+  private emitSortEditorProps() {
+    const props: ISortEditorProps = {
+      columns: this.columns
+        .map((col, i) => ({ index: i, caption: col.caption }))
+        .filter((_, i) => this.columns[i].visible),
+      sortColumn: this.uv.extra.sortColumn,
+      sortAsc: this.uv.extra.sortAsc,
+      onSort: (column, asc) => {
+        if (column === null) {
+          this.uv.extra.sortColumn = null
+          this.sortRows()
+        } else {
+          this.uv.extra.sortColumn = column
+          this.uv.extra.sortAsc = asc
+          const type = this.columns[column].columnInfo.valueType.type
+          if (type === 'int' || type === 'decimal') {
+            this.uv.extra.sortOptions = { numeric: true }
+          } else if (type === 'string') {
+            this.uv.extra.sortOptions = { sensitivity: 'accent' }
+          } else {
+            this.uv.extra.sortOptions = {}
+          }
+          this.loadAllRowsAndUpdateSort(column)
+        }
+        this.emitSortEditorProps()
+      },
+    }
+    this.$emit('update:sort-editor-props', props)
   }
 
   private loadAllRowsAndUpdateSort(sortColumn: number) {
@@ -3789,6 +3821,7 @@ th,
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.375rem;
 
   .current-rows {
     margin-right: 1.25rem;
@@ -3805,10 +3838,11 @@ th,
   }
 
   .pagination-arrow-button {
-    border: none;
     padding: 0;
-    width: 1.5rem;
-    height: 1.25rem;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1.5px solid #d0d5dd !important;
+    border-radius: 8px !important;
   }
 
   .select-wrapper {

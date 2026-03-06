@@ -175,6 +175,7 @@
             @select="$emit('select', $event)"
             @update:buttons="componentButtons = $event"
             @update:enable-filter="$emit('update:enable-filter', $event)"
+            @update:sort-editor-props="$emit('update:sort-editor-props', $event)"
             @update:current-page="$emit('update:current-page', $event)"
             @update:body-style="$emit('update:body-style', $event)"
             @load-next-chunk="loadNextChunk"
@@ -661,6 +662,7 @@ export default class UserView extends Vue {
   private watchState() {
     if (this.state.state !== 'show') {
       this.$emit('update:argument-editor-props', null)
+      this.$emit('update:sort-editor-props', null)
       return
     }
 

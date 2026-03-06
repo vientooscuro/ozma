@@ -48,6 +48,7 @@
         :view="view"
         :is-loading="isUserViewLoading"
         :argument-editor-props="argumentEditorProps"
+        :sort-editor-props="sortEditorProps"
         @goto="$emit('goto', $event)"
       />
     </template>
@@ -72,6 +73,7 @@
           @goto-previous="$emit('goto-previous')"
           @select="$emit('select', $event)"
           @update:argument-editor-props="argumentEditorProps = $event"
+          @update:sort-editor-props="sortEditorProps = $event"
         />
       </div>
     </section>
@@ -97,6 +99,7 @@ import { convertToWords } from '@/utils'
 import { ErrorKey } from '@/state/errors'
 import { UserString } from '@/state/translations'
 import { IArgumentEditorProps } from './ArgumentEditor.vue'
+import type { ISortEditorProps } from './SortEditor.vue'
 
 const staging = namespace('staging')
 const errors = namespace('errors')
@@ -128,6 +131,7 @@ export default class ModalUserView extends Vue {
   private isUserViewLoading = false
 
   private argumentEditorProps: IArgumentEditorProps | null = null
+  private sortEditorProps: ISortEditorProps | null = null
 
   private savedRecently: { show: boolean; timeoutId: NodeJS.Timeout | null } = {
     show: false,

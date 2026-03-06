@@ -287,6 +287,7 @@
         :filter-string="filterString"
         :is-loading="isUserViewLoading"
         :argument-editor-props="argumentEditorProps"
+        :sort-editor-props="sortEditorProps"
         @update:filter-string="filterString = $event"
         @goto="$emit('goto', $event)"
       />
@@ -303,12 +304,14 @@
           :filter-string="filterString"
           :in-container="customHeight !== null"
           :argumentEditorProps="argumentEditorProps"
+          :sort-editor-props="sortEditorProps"
           @update:buttons="buttons = $event"
           @update:enable-filter="enableFilter = $event"
           @update:is-loading="isUserViewLoading = $event"
           @update:title="title = $event"
           @goto="$emit('goto', $event)"
           @update:argument-editor-props="argumentEditorProps = $event"
+          @update:sort-editor-props="sortEditorProps = $event"
         />
       </div>
     </div>
@@ -347,6 +350,7 @@ import type { ConvertedBoundAttributesMap } from '@/user_views/combined'
 import { formatRawValue } from '@/user_views/format'
 import { UserString, isOptionalUserString } from '@/state/translations'
 import { IArgumentEditorProps } from './ArgumentEditor.vue'
+import type { ISortEditorProps } from './SortEditor.vue'
 
 interface ITextType {
   name: 'text'
@@ -630,6 +634,7 @@ export default class FormControl extends Vue {
   private autoSaveLock: AutoSaveLock | null = null
 
   private argumentEditorProps: IArgumentEditorProps | null = null
+  private sortEditorProps: ISortEditorProps | null = null
 
   get valueIsNull() {
     return valueIsNull(this.value)

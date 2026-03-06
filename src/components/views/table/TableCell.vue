@@ -85,7 +85,8 @@
             'option-local-variant',
             {
               option:
-                (fieldTypeName == 'enum' || fieldTypeName == 'reference') &&
+                ((fieldTypeName == 'enum' || fieldTypeName == 'reference') ||
+                  optionColorVariantAttribute.type === 'inline') &&
                 valueHtml.length > 0,
               tree: showTree && column.treeUnfoldColumn,
               'date-time': valueType.type === 'datetime',

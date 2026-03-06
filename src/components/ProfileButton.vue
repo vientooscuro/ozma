@@ -219,16 +219,14 @@ export default class AppHeader extends Vue {
         variant: defaultVariantAttribute,
       })
     }
-    /*
     if (this.themeButtons.length > 0) {
       buttons.push({
-        caption: this.$t("theme").toString(),
-        type: "button-group",
+        caption: this.$t('theme').toString(),
+        type: 'button-group',
         buttons: this.themeButtons,
         variant: defaultVariantAttribute,
-      });
+      })
     }
-    */
 
     buttons.push({
       caption: this.$t('change_language').toString(),
