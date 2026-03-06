@@ -364,8 +364,6 @@ export const getPreferredTheme = (
   themes: ThemesMap,
   defaultSchema?: SchemaName,
 ): IThemeRef | null => {
-  const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-
   const storedTheme = ThemeRef.safeParse(safeJsonParse(localStorage.getItem("preferredTheme")))
 
   if (storedTheme.success) {
@@ -391,13 +389,6 @@ export const getPreferredTheme = (
       } else {
         return null
       }
-    }
-  }
-
-  if (prefersDarkTheme) {
-    const darkScheme = tryFindTheme('dark')
-    if (darkScheme) {
-      return darkScheme
     }
   }
 
