@@ -15,6 +15,7 @@ const settings = namespace('settings')
 @Component
 export default class CodeEditor extends Vue {
   @settings.State('current') settings!: CurrentSettings
+  @settings.State('currentThemeRef') currentThemeRef!: unknown
 
   @Prop({ default: '' }) content!: string
   @Prop({ default: 'sql', type: String }) language!: string
@@ -24,6 +25,26 @@ export default class CodeEditor extends Vue {
   @Prop({ default: false }) isModal!: boolean
 
   editor: monaco.editor.IStandaloneCodeEditor | null = null
+
+  private get isDarkTheme(): boolean {
+    const bg = getComputedStyle(document.documentElement)
+      .getPropertyValue('--default-backgroundColor')
+      .trim()
+    if (!bg) return false
+    // Parse rgb/rgba or hex and check luminance
+    const canvas = document.createElement('canvas')
+    canvas.width = canvas.height = 1
+    const ctx = canvas.getContext('2d')!
+    ctx.fillStyle = bg
+    ctx.fillRect(0, 0, 1, 1)
+    const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+    return luminance < 0.5
+  }
+
+  private get monacoTheme(): string {
+    return this.isDarkTheme ? 'vs-dark' : 'vs'
+  }
 
   get options(): monaco.editor.IStandaloneEditorConstructionOptions {
     const fontSize = 12
@@ -41,6 +62,7 @@ export default class CodeEditor extends Vue {
         nonBasicASCII: false,
       },
       fontSize,
+      theme: this.monacoTheme,
     }
 
     const mobileOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
@@ -61,6 +83,13 @@ export default class CodeEditor extends Vue {
   ) {
     if (this.editor !== null) {
       this.editor.updateOptions(newOptions)
+    }
+  }
+
+  @Watch('currentThemeRef')
+  private onThemeChange() {
+    if (this.editor !== null) {
+      monaco.editor.setTheme(this.monacoTheme)
     }
   }
 

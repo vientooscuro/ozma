@@ -290,6 +290,29 @@ $input-focus-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
   }
 }
 
+.b-skeleton-animate-wave::after,
+.b-skeleton-animate-fade,
+.b-skeleton-animate-throb {
+  background-color: var(--default-backgroundDarker1Color);
+}
+
+.b-skeleton-text,
+.b-skeleton-button,
+.b-skeleton-input,
+.b-skeleton-icon,
+.b-skeleton-img {
+  background-color: var(--default-backgroundDarker1Color) !important;
+
+  &::after {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--default-backgroundDarker2Color),
+      transparent
+    ) !important;
+  }
+}
+
 .list-group-item {
   background-color: var(--default-backgroundColor) !important;
   color: var(--default-foregroundColor) !important;
