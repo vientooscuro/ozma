@@ -48,7 +48,7 @@
       }"
       :disabled="!visible"
       :force-show="visible"
-      @documentClick="visible = false"
+      @document-click="visible = false"
     >
       <div class="popper shadow">
         <div class="sort-editor">
