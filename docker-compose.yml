@@ -94,6 +94,7 @@ services:
         max-file: "10"
     volumes:
       - caddy_data:/data
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
     environment:
       ADDRESS: ${CADDY_ADDRESS:-:80}
       KEYCLOAK_HOST: keycloak
