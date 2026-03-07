@@ -352,10 +352,16 @@ export const getColorVariantAttributeVariables = (
 ): ColorVariantCssVariables | null =>
   attribute?.type === 'inline' ? attribute.variables : null
 
+const globalVariantPrefix = 'global-'
+
 const colorVariantToCssRule = (
   variantName: string,
   variant: ColorVariant,
 ): string => {
+  if (variantName.startsWith(globalVariantPrefix)) {
+    const cssVarName = `--${variantName.slice(globalVariantPrefix.length)}`
+    return `:root {\n${cssVarName}: ${variant.background};\n}`
+  }
   const variables = (Object.entries(variant) as [VariantKey, string][])
     .map(([variantKey, value]) =>
       colorVariantPropToCssVariable(variantKey, value),

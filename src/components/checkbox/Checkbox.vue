@@ -48,7 +48,8 @@ export default class Checkbox extends Vue {
   height: 100%;
   color: #777c87;
 
-  --checkbox-color: var(--default-foregroundColor, #2c3038);
+  --checkbox-fill: var(--checkbox-background, var(--default-foregroundColor, #2c3038));
+  --checkbox-check: var(--checkbox-foreground, var(--default-backgroundColor, white));
 
   &:active,
   &:hover {
@@ -66,12 +67,12 @@ export default class Checkbox extends Vue {
   stroke-width: 1.5;
 
   &.checked {
-    fill: var(--checkbox-color);
-    stroke: var(--checkbox-color);
+    fill: var(--checkbox-fill);
+    stroke: var(--checkbox-fill);
   }
 }
 .checkbox-mark {
-  stroke: var(--default-backgroundColor, white);
+  stroke: var(--checkbox-check);
 }
 .label {
   color: var(--MainTextColorLight);
