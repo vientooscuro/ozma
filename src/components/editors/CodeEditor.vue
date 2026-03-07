@@ -36,14 +36,24 @@ monaco.editor.defineTheme('ozma-light', {
   base: 'vs',
   inherit: true,
   rules: tokenRules(
-    '0000ff', // keyword: blue
-    'a31515', // string: dark red
-    '098658', // number: green
-    '008000', // comment: green
-    '267f99', // type: teal
-    '000000', // operator: black
+    '3d6fd6', // keyword: medium blue (softer than pure blue)
+    'b5365a', // string: muted rose-red
+    '6f8f2e', // number: olive green
+    '7c8c7a', // comment: muted sage, italic
+    '286f7a', // type: dark teal
+    '5a5a5a', // operator: dark grey
   ),
-  colors: {},
+  colors: {
+    'editor.background': '#f8f8f8',
+    'editor.foreground': '#2e2e2e',
+    'editorLineNumber.foreground': '#aaaaaa',
+    'editorLineNumber.activeForeground': '#555555',
+    'editor.lineHighlightBackground': '#f0f0f0',
+    'editor.selectionBackground': '#cce5ff',
+    'editor.inactiveSelectionBackground': '#e5e5e5',
+    'editorIndentGuide.background1': '#e0e0e0',
+    'editorIndentGuide.activeBackground1': '#bbbbbb',
+  },
 })
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -81,8 +91,8 @@ monaco.editor.defineTheme('ozma-light', {
     { token: 'string.sql', foreground: 'E394DC' },
     { token: 'number', foreground: 'EBC88D' },
     { token: 'number.sql', foreground: 'EBC88D' },
-    { token: 'comment', foreground: 'E4E4E45E', fontStyle: 'italic' },
-    { token: 'comment.sql', foreground: 'E4E4E45E', fontStyle: 'italic' },
+    { token: 'comment', foreground: '676767', fontStyle: 'italic' },
+    { token: 'comment.sql', foreground: '676767', fontStyle: 'italic' },
     { token: 'type', foreground: 'EFB080' },
     { token: 'predefined', foreground: '87C3FF' },
     { token: 'operator', foreground: 'D6D6DD' },
@@ -96,8 +106,8 @@ monaco.editor.defineTheme('ozma-light', {
     { token: 'string.escape.sql', foreground: 'AAA0FA' },
     { token: 'number.float', foreground: 'EBC88D' },
     { token: 'number.hex', foreground: 'EBC88D' },
-    { token: 'comment.block', foreground: 'E4E4E45E', fontStyle: 'italic' },
-    { token: 'comment.block.sql', foreground: 'E4E4E45E', fontStyle: 'italic' },
+    { token: 'comment.block', foreground: '676767', fontStyle: 'italic' },
+    { token: 'comment.block.sql', foreground: '676767', fontStyle: 'italic' },
     { token: 'delimiter', foreground: 'E4E4E48D' },
     { token: 'delimiter.sql', foreground: 'E4E4E48D' },
     { token: 'delimiter.parenthesis', foreground: 'E4E4E4EB' },
