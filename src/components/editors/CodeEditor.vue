@@ -182,6 +182,8 @@ export default class CodeEditor extends Vue {
       language: this.language,
       readOnly: this.readOnly,
       automaticLayout: true,
+      fontFamily:
+        '"JetBrains Mono", Menlo, Monaco, Consolas, "Courier New", monospace',
       lineNumbersMinChars: 3,
       scrollbar: {
         useShadows: false,
@@ -190,6 +192,7 @@ export default class CodeEditor extends Vue {
         ambiguousCharacters: false,
         nonBasicASCII: false,
       },
+      fontLigatures: true,
       fontSize,
       theme: this.monacoTheme,
     }
