@@ -339,7 +339,7 @@ export default class TableCell extends Vue {
   border: 1px solid var(--option-borderColor);
   border-radius: 0.5rem;
   background-color: var(--option-backgroundColor);
-  padding: 0.1rem 0.5rem;
+  padding: 0.15rem 0.6rem;
   max-width: 100%;
   max-height: 100%;
   color: var(--option-foregroundColor);
