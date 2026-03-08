@@ -55,6 +55,8 @@ services:
       DB_USER: ozmadb
       DB_PASSWORD: ozmadb
       DB_NAME: ozmadb
+      OZMADB__JAVASCRIPT__HTTP__ENABLED: "true"
+      OZMADB__JAVASCRIPT__HTTP__ALLOWEDHOSTS__0: "ozma.gogol.school"
       PRELOAD: /etc/ozmadb/preload/preload.json
       EXTERNAL_ORIGIN: ${EXTERNAL_ORIGIN:-http://localhost:9080}
       AUTH_METADATA_ADDRESS: http://keycloak:8080/auth/realms/ozma/.well-known/openid-configuration
