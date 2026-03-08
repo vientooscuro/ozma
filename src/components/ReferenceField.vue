@@ -24,6 +24,7 @@
       :compact-mode="compactMode"
       :option-color-variant-attribute="optionColorVariantAttribute"
       :option-variant-mapping="optionVariantMapping"
+      :referencing-field="referencingField"
       @update:value="$emit('update:value', $event)"
       @popup-opened="$emit('popup-opened')"
       @popup-closed="$emit('popup-closed')"

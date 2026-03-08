@@ -85,11 +85,11 @@
                 v-for="(option, index) in selectedOptions"
                 :key="index"
                 :class="[
-                  optionVariantClassName,
+                  getSelectedOptionVariantClassName(option),
                   'option-local-variant',
                   single ? 'single-value' : 'one-of-many-value',
                 ]"
-                :style="{ ...listValueStyle, ...optionVariantVariables }"
+                :style="{ ...listValueStyle, ...getSelectedOptionVariantVariables(option) }"
               >
                 <slot name="option" :option="option">
                   <!-- eslint-disable vue/no-v-html -->
@@ -169,11 +169,11 @@
                 v-for="(option, index) in selectedOptions"
                 :key="index"
                 :class="[
-                  optionVariantClassName,
+                  getSelectedOptionVariantClassName(option),
                   'option-local-variant',
                   'option-wrapper',
                 ]"
-                :style="optionVariantVariables"
+                :style="getSelectedOptionVariantVariables(option)"
                 @click.stop="unselectOption(index, false)"
               >
                 <button
@@ -226,8 +226,8 @@
                 @click.stop="selectOption(option.index)"
               >
                 <div
-                  :class="[getOptionVariantClassName(option), 'option-local-variant', 'option']"
-                  :style="getOptionVariantVariables(option)"
+                  :class="[getDropdownOptionVariantClassName(option), 'option-local-variant', 'option']"
+                  :style="getDropdownOptionVariantVariables(option)"
                 >
                   <slot name="option" :option="option">
                     <!-- eslint-disable vue/no-v-html -->
@@ -403,22 +403,34 @@ export default class MultiSelect extends Vue {
     }
   }
 
-  get optionVariantClassName(): string | null {
-    return getColorVariantAttributeClassName(this.optionColorVariantAttribute)
-  }
-
-  get optionVariantVariables(): Record<string, string> | null {
-    return getColorVariantAttributeVariables(this.optionColorVariantAttribute)
-  }
-
-  getOptionVariantClassName(option: ISelectOptionHtml<unknown>): string | null {
+  getSelectedOptionVariantClassName(
+    option: ISelectOptionHtml<unknown>,
+  ): string | null {
     const variant = option.colorVariant ?? this.optionColorVariantAttribute
     return getColorVariantAttributeClassName(variant)
   }
 
-  getOptionVariantVariables(option: ISelectOptionHtml<unknown>): Record<string, string> | null {
+  getSelectedOptionVariantVariables(
+    option: ISelectOptionHtml<unknown>,
+  ): Record<string, string> | null {
     const variant = option.colorVariant ?? this.optionColorVariantAttribute
     return getColorVariantAttributeVariables(variant)
+  }
+
+  getDropdownOptionVariantClassName(
+    option: ISelectOptionHtml<unknown>,
+  ): string | null {
+    return option.colorVariant
+      ? getColorVariantAttributeClassName(option.colorVariant)
+      : null
+  }
+
+  getDropdownOptionVariantVariables(
+    option: ISelectOptionHtml<unknown>,
+  ): Record<string, string> | null {
+    return option.colorVariant
+      ? getColorVariantAttributeVariables(option.colorVariant)
+      : null
   }
 
   @Watch('loadingState', { immediate: true })

@@ -129,7 +129,9 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
 
 import type {
+  IFieldRef,
   IEntityRef,
+  IViewExprResult,
   RowId,
   SchemaName,
   ValueType,
@@ -219,8 +221,328 @@ export default class ReferenceMultiSelect extends mixins(BaseEntriesView) {
   @Prop({ type: Boolean, default: false }) compactMode!: boolean
   @Prop({ type: Object }) optionColorVariantAttribute!: ColorVariantAttribute
   @Prop({ type: Object }) optionVariantMapping!: IConvertedBoundMapping | undefined
+  @Prop({ type: Object }) referencingField!: IFieldRef | undefined
 
   selectedView: IQuery | null = null
+  private fallbackVariantById: Record<number, unknown> = {}
+  private fallbackVariantByPunContains: Array<{
+    variant: unknown
+    needles: string[]
+  }> = []
+  private fallbackVariantDefault: unknown = undefined
+  private entityFallbackVariantById: Record<number, unknown> = {}
+  private entityVariantCandidates:
+    | Array<{ fieldName: string; expression: string }>
+    | null = null
+  private entityVariantIdsKey: string | null = null
+
+  mounted() {
+    void this.loadFallbackOptionVariantMapping()
+    void this.loadEntityFallbackOptionVariants()
+  }
+
+  @Watch('referencingField', { immediate: true })
+  onReferencingFieldChanged() {
+    void this.loadFallbackOptionVariantMapping()
+    void this.loadEntityFallbackOptionVariants()
+  }
+
+  @Watch('referenceEntity', { immediate: true, deep: true })
+  onReferenceEntityChanged() {
+    this.entityVariantCandidates = null
+    this.entityFallbackVariantById = {}
+    this.entityVariantIdsKey = null
+    void this.loadEntityFallbackOptionVariants()
+  }
+
+  @Watch('currentEntries')
+  onCurrentEntriesChanged() {
+    void this.loadEntityFallbackOptionVariants()
+  }
+
+  @Watch('entriesOptions', { immediate: true, deep: true })
+  onEntriesOptionsChanged() {
+    void this.loadEntityFallbackOptionVariants()
+  }
+
+  private parseCaseOptionVariants(attributesText: string): void {
+    this.fallbackVariantById = {}
+    this.fallbackVariantByPunContains = []
+    this.fallbackVariantDefault = undefined
+
+    const caseMatch = attributesText.match(/option_variant\s*=\s*CASE([\s\S]*?)END/im)
+    if (!caseMatch) {
+      const staticMatch = attributesText.match(/option_variant\s*=\s*'([^']+)'/im)
+      if (staticMatch) {
+        this.fallbackVariantDefault = staticMatch[1]
+      }
+      return
+    }
+
+    const caseBody = caseMatch[1]
+    const inMatches = caseBody.matchAll(
+      /WHEN[\s\S]*?\bIN\s*\(([^)]*)\)\s*THEN\s*'([^']+)'/gim,
+    )
+    for (const match of inMatches) {
+      const idsRaw = match[1]
+      const variant = match[2]
+      const ids = idsRaw
+        .split(',')
+        .map((part) => Number.parseInt(part.trim(), 10))
+        .filter((id) => Number.isFinite(id))
+      for (const id of ids) {
+        this.fallbackVariantById[id] = variant
+      }
+    }
+
+    const equalsMatches = caseBody.matchAll(
+      /WHEN[\s\S]*?=\s*(-?\d+)\s*THEN\s*'([^']+)'/gim,
+    )
+    for (const match of equalsMatches) {
+      const id = Number.parseInt(match[1], 10)
+      if (Number.isFinite(id)) {
+        this.fallbackVariantById[id] = match[2]
+      }
+    }
+
+    const elseMatch = caseBody.match(/ELSE\s*'([^']+)'/im)
+    if (elseMatch) {
+      this.fallbackVariantDefault = elseMatch[1]
+    }
+
+    const whenThenMatches = caseBody.matchAll(
+      /WHEN\s*([\s\S]*?)\s*THEN\s*'([^']+)'/gim,
+    )
+    for (const match of whenThenMatches) {
+      const condition = match[1]
+      const variant = match[2]
+      const needles = Array.from(
+        condition.matchAll(/like\s*'%([^%']+)%'/gim),
+      )
+        .map((m) => m[1].toLowerCase())
+        .filter((s) => s.length > 0)
+
+      if (needles.length > 0) {
+        this.fallbackVariantByPunContains.push({ variant, needles })
+      }
+    }
+  }
+
+  private async loadFallbackOptionVariantMapping() {
+    if (!this.referencingField) {
+      this.fallbackVariantById = {}
+      this.fallbackVariantDefault = undefined
+      return
+    }
+
+    try {
+      const query = `
+{ $schema string, $entity string, $field string }:
+SELECT attributes
+FROM public.fields_attributes
+WHERE schema_id=>name = $schema
+  AND field_entity_id=>name = $entity
+  AND field_name = $field
+ORDER BY priority DESC
+`
+      const res = (await this.$store.dispatch(
+        'callApi',
+        {
+          func: (api: any) =>
+            api.getAnonymousUserView(query, {
+              schema: this.referencingField!.entity.schema,
+              entity: this.referencingField!.entity.name,
+              field: this.referencingField!.name,
+            }),
+        },
+        { root: true },
+      )) as IViewExprResult
+
+      const firstRow = res.result.rows[0]
+      const attributesText = firstRow?.values?.[0]?.value
+      if (typeof attributesText === 'string') {
+        this.parseCaseOptionVariants(attributesText)
+      }
+    } catch (e) {
+      // Best-effort fallback path; ignore and keep default option styling.
+      console.warn('Failed to load fallback option variants', e)
+      this.fallbackVariantById = {}
+      this.fallbackVariantDefault = undefined
+    }
+  }
+
+  private extractOptionVariantExpression(
+    attributesText: string,
+  ): string | null {
+    const caseMatch = attributesText.match(
+      /option_variant\s*=\s*(CASE[\s\S]*?END)/im,
+    )
+    if (caseMatch) {
+      return caseMatch[1].trim()
+    }
+
+    const simpleStringMatch = attributesText.match(
+      /option_variant\s*=\s*'([^']+)'/im,
+    )
+    if (simpleStringMatch) {
+      return `'${simpleStringMatch[1]}'`
+    }
+
+    return null
+  }
+
+  private async loadEntityVariantCandidates(): Promise<
+    Array<{ fieldName: string; expression: string }>
+  > {
+    if (this.entityVariantCandidates !== null) {
+      return this.entityVariantCandidates
+    }
+
+    const query = `
+{ $schema string, $entity string }:
+SELECT field_name, attributes
+FROM public.fields_attributes
+WHERE schema_id=>name = $schema
+  AND field_entity_id=>name = $entity
+  AND attributes ILIKE '%option_variant%'
+ORDER BY priority DESC
+`
+    const res = (await this.$store.dispatch(
+      'callApi',
+      {
+        func: (api: any) =>
+          api.getAnonymousUserView(query, {
+            schema: this.referenceEntity.schema,
+            entity: this.referenceEntity.name,
+          }),
+      },
+      { root: true },
+    )) as IViewExprResult
+
+    const candidates: Array<{ fieldName: string; expression: string }> = []
+    for (const row of res.result.rows) {
+      const fieldName = row.values[0]?.value
+      const attributesText = row.values[1]?.value
+      if (typeof fieldName !== 'string' || typeof attributesText !== 'string') {
+        continue
+      }
+      const expression = this.extractOptionVariantExpression(attributesText)
+      if (expression) {
+        candidates.push({ fieldName, expression })
+      }
+    }
+
+    this.entityVariantCandidates = candidates
+    return candidates
+  }
+
+  private getCurrentOptionIds(): number[] {
+    if (!this.currentEntries) {
+      return []
+    }
+
+    return Object.keys(this.currentEntries.entries)
+      .map((rawId) => Number.parseInt(rawId, 10))
+      .filter((id) => Number.isFinite(id))
+  }
+
+  private scoreCandidateFieldName(fieldName: string): number {
+    const lower = fieldName.toLowerCase()
+    if (lower === 'class_type') return 4
+    if (lower.endsWith('_status') || lower === 'status') return 3
+    if (lower.endsWith('_stage') || lower === 'stage') return 2
+    if (lower.endsWith('_type') || lower === 'type') return 1
+    return 0
+  }
+
+  private async loadEntityFallbackOptionVariants() {
+    const ids = this.getCurrentOptionIds()
+    if (ids.length === 0) {
+      this.entityFallbackVariantById = {}
+      this.entityVariantIdsKey = null
+      return
+    }
+
+    const idsKey = ids.slice().sort((a, b) => a - b).join(',')
+    if (this.entityVariantIdsKey === idsKey) {
+      return
+    }
+
+    try {
+      const candidates = await this.loadEntityVariantCandidates()
+      if (candidates.length === 0) {
+        this.entityFallbackVariantById = {}
+        this.entityVariantIdsKey = idsKey
+        return
+      }
+
+      const view = `"${this.referenceEntity.schema}"."${this.referenceEntity.name}"`
+      const sortedCandidates = [...candidates].sort((a, b) => {
+        return (
+          this.scoreCandidateFieldName(b.fieldName) -
+          this.scoreCandidateFieldName(a.fieldName)
+        )
+      })
+
+      let bestVariants: Record<number, unknown> = {}
+      let bestScore = -1
+
+      for (const candidate of sortedCandidates) {
+        const query = `
+{ $ids array(int) }:
+SELECT id, (${candidate.expression}) AS variant
+FROM ${view}
+WHERE id = ANY($ids)
+`
+
+        try {
+          const res = (await this.$store.dispatch(
+            'callApi',
+            {
+              func: (api: any) => api.getAnonymousUserView(query, { ids }),
+            },
+            { root: true },
+          )) as IViewExprResult
+
+          const variantsById: Record<number, unknown> = {}
+          let nonNullCount = 0
+          const distinctValues = new Set<string>()
+
+          for (const row of res.result.rows) {
+            const id = Number(row.values[0]?.value)
+            if (!Number.isFinite(id)) continue
+            const value = row.values[1]?.value
+            variantsById[id] = value
+            if (value !== null && value !== undefined) {
+              nonNullCount += 1
+              distinctValues.add(String(value))
+            }
+          }
+
+          const score =
+            nonNullCount * 1000 +
+            distinctValues.size * 10 +
+            this.scoreCandidateFieldName(candidate.fieldName)
+          if (score > bestScore) {
+            bestScore = score
+            bestVariants = variantsById
+          }
+        } catch (e) {
+          console.warn(
+            `Failed to evaluate entity option_variant candidate ${candidate.fieldName}`,
+            e,
+          )
+        }
+      }
+
+      this.entityFallbackVariantById = bestVariants
+      this.entityVariantIdsKey = idsKey
+    } catch (e) {
+      console.warn('Failed to load entity fallback option variants', e)
+      this.entityFallbackVariantById = {}
+      this.entityVariantIdsKey = idsKey
+    }
+  }
 
   openQRCodeScanner() {
     ;(this.$refs.scanner as QRCodeScannerModal).scan()
@@ -278,8 +600,96 @@ export default class ReferenceMultiSelect extends mixins(BaseEntriesView) {
     return this.homeSchema ? { homeSchema: this.homeSchema } : undefined
   }
 
+  private getVariantFromRawEntries(id: RowId, pun: string): unknown {
+    const rawEntries = this.optionVariantMapping?.rawEntries
+    if (!rawEntries) return undefined
+
+    for (const entry of rawEntries) {
+      const when = entry.when
+      if (when === id || String(when) === String(id) || when === pun) {
+        return entry.value
+      }
+
+      if (typeof when === 'object' && when !== null) {
+        const whenObj = when as Record<string, unknown>
+        const whenValue = whenObj['value'] ?? whenObj['id']
+        const whenPun = whenObj['pun']
+
+        if (
+          whenValue === id ||
+          String(whenValue) === String(id) ||
+          whenValue === pun ||
+          whenPun === pun
+        ) {
+          return entry.value
+        }
+      }
+    }
+
+    return undefined
+  }
+
+  private getVariantFromPunFallback(pun: string): unknown {
+    const lowerPun = pun.toLowerCase()
+    for (const rule of this.fallbackVariantByPunContains) {
+      if (rule.needles.some((needle) => lowerPun.includes(needle))) {
+        return rule.variant
+      }
+    }
+    return undefined
+  }
+
+  private getHeuristicVariantByPun(pun: string): string | undefined {
+    if (
+      !this.referencingField ||
+      this.referencingField.entity.schema !== 'crm' ||
+      this.referencingField.entity.name !== 'actions_for_contacts' ||
+      this.referencingField.name !== 'cancellation_status'
+    ) {
+      return undefined
+    }
+
+    const lowerPun = pun.toLowerCase()
+    if (lowerPun.includes('произведен')) return 'request-status-done'
+    if (
+      lowerPun.includes('ожидание') ||
+      lowerPun.includes('согласование') ||
+      lowerPun.includes('подписание')
+    ) {
+      return 'request-status-progress'
+    }
+    if (
+      lowerPun.includes('попросил') ||
+      lowerPun.includes('передумал') ||
+      lowerPun.includes('не оплатил') ||
+      lowerPun.includes('мы отказали')
+    ) {
+      return 'request-status-cancel'
+    }
+    return 'request-status-neutral'
+  }
+
   makeOption(id: RowId, pun: string): ReferenceSelectOption {
-    const rawVariant = this.optionVariantMapping?.entries[id] ?? this.optionVariantMapping?.default
+    const variantEntries = this.optionVariantMapping?.entries
+    const numericId =
+      typeof id === 'number' ? id : Number.parseInt(String(id), 10)
+    const fallbackVariant =
+      (Number.isFinite(numericId)
+        ? this.fallbackVariantById[numericId]
+        : undefined) ??
+      this.getVariantFromPunFallback(pun) ??
+      this.fallbackVariantDefault
+    const rawVariant =
+      variantEntries?.[id] ??
+      variantEntries?.[String(id)] ??
+      variantEntries?.[pun] ??
+      this.getVariantFromRawEntries(id, pun) ??
+      fallbackVariant ??
+      (Number.isFinite(numericId)
+        ? this.entityFallbackVariantById[numericId]
+        : undefined) ??
+      this.getHeuristicVariantByPun(pun) ??
+      this.optionVariantMapping?.default
     const colorVariant = rawVariant !== undefined ? colorVariantFromAttribute(rawVariant) : undefined
     return {
       label: pun,

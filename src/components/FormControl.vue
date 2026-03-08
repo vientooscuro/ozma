@@ -326,6 +326,7 @@ import type {
   AttributesMap,
   FieldType,
   IFieldRef,
+  IViewExprResult,
   RowId,
   ValueType,
 } from '@ozma-io/ozmadb-js/client'
@@ -637,6 +638,103 @@ export default class FormControl extends Vue {
 
   private argumentEditorProps: IArgumentEditorProps | null = null
   private sortEditorProps: ISortEditorProps | null = null
+  private enumFallbackVariantByValue: Record<string, unknown> = {}
+  private enumFallbackVariantDefault: unknown = undefined
+
+  @Watch('fieldRef', { immediate: true, deep: true })
+  onFieldRefChanged() {
+    void this.loadEnumFallbackOptionVariants()
+  }
+
+  private parseEnumOptionVariants(attributesText: string): void {
+    this.enumFallbackVariantByValue = {}
+    this.enumFallbackVariantDefault = undefined
+
+    const caseMatch = attributesText.match(
+      /option_variant\s*=\s*CASE([\s\S]*?)END/im,
+    )
+    if (!caseMatch) {
+      const staticMatch = attributesText.match(
+        /option_variant\s*=\s*'([^']+)'/im,
+      )
+      if (staticMatch) {
+        this.enumFallbackVariantDefault = staticMatch[1]
+      }
+      return
+    }
+
+    const caseBody = caseMatch[1]
+    const equalsMatches = caseBody.matchAll(
+      /WHEN[\s\S]*?=\s*'([^']+)'\s*THEN\s*'([^']+)'/gim,
+    )
+    for (const match of equalsMatches) {
+      this.enumFallbackVariantByValue[match[1]] = match[2]
+    }
+
+    const inMatches = caseBody.matchAll(
+      /WHEN[\s\S]*?\bIN\s*\(([^)]*)\)\s*THEN\s*'([^']+)'/gim,
+    )
+    for (const match of inMatches) {
+      const valuesRaw = match[1]
+      const variant = match[2]
+      const values = Array.from(valuesRaw.matchAll(/'([^']+)'/g)).map(
+        (m) => m[1],
+      )
+      for (const value of values) {
+        this.enumFallbackVariantByValue[value] = variant
+      }
+    }
+
+    const elseMatch = caseBody.match(/ELSE\s*'([^']+)'/im)
+    if (elseMatch) {
+      this.enumFallbackVariantDefault = elseMatch[1]
+    }
+  }
+
+  private async loadEnumFallbackOptionVariants() {
+    if (!this.fieldRef) {
+      this.enumFallbackVariantByValue = {}
+      this.enumFallbackVariantDefault = undefined
+      return
+    }
+
+    try {
+      const query = `
+{ $schema string, $entity string, $field string }:
+SELECT attributes
+FROM public.fields_attributes
+WHERE schema_id=>name = $schema
+  AND field_entity_id=>name = $entity
+  AND field_name = $field
+ORDER BY priority DESC
+`
+      const res = (await this.$store.dispatch(
+        'callApi',
+        {
+          func: (api: any) =>
+            api.getAnonymousUserView(query, {
+              schema: this.fieldRef!.entity.schema,
+              entity: this.fieldRef!.entity.name,
+              field: this.fieldRef!.name,
+            }),
+        },
+        { root: true },
+      )) as IViewExprResult
+
+      const firstRow = res.result.rows[0]
+      const attributesText = firstRow?.values?.[0]?.value
+      if (typeof attributesText === 'string') {
+        this.parseEnumOptionVariants(attributesText)
+      } else {
+        this.enumFallbackVariantByValue = {}
+        this.enumFallbackVariantDefault = undefined
+      }
+    } catch (e) {
+      console.warn('Failed to load enum fallback option variants', e)
+      this.enumFallbackVariantByValue = {}
+      this.enumFallbackVariantDefault = undefined
+    }
+  }
 
   get valueIsNull() {
     return valueIsNull(this.value)
@@ -732,6 +830,16 @@ export default class FormControl extends Vue {
   }
 
   private get optionColorVariantAttribute(): ColorVariantAttribute {
+    // If `option_variant` has a bound mapping, per-option colors are provided
+    // through `options[].colorVariant`. Using mapped `attributes['option_variant']`
+    // here would apply current value color to all options in dropdown.
+    if (this.attributeMappings['option_variant']) {
+      return {
+        type: 'existing',
+        className: 'option',
+      }
+    }
+
     return colorVariantFromAttribute(this.attributes['option_variant'], {
       type: 'existing',
       className: 'option',
@@ -756,7 +864,7 @@ export default class FormControl extends Vue {
   private getEnumOptions(values: string[]): ISelectOption<string>[] {
     const textMapping = this.attributeMappings['text']
     const variantMapping = this.attributeMappings['option_variant']
-    return values.map((x) => {
+    return values.map((x, valueIndex) => {
       let label = x
       if (textMapping) {
         const mappedLabel = textMapping.entries[x]
@@ -766,7 +874,62 @@ export default class FormControl extends Vue {
           label = String(textMapping.default)
         }
       }
-      const rawVariant = variantMapping?.entries[x] ?? variantMapping?.default
+      const rawVariantFromRawEntries = variantMapping?.rawEntries?.find(
+        (entry) => {
+          const when = entry.when
+          if (
+            when === x ||
+            String(when) === x ||
+            when === valueIndex ||
+            String(when) === String(valueIndex)
+          ) {
+            return true
+          }
+          if (typeof when === 'object' && when !== null) {
+            const whenObj = when as Record<string, unknown>
+            if (
+              whenObj['value'] === x ||
+              String(whenObj['value']) === x ||
+              whenObj['id'] === x ||
+              String(whenObj['id']) === x ||
+              whenObj['name'] === x ||
+              String(whenObj['name']) === x ||
+              whenObj['enum'] === x ||
+              String(whenObj['enum']) === x ||
+              whenObj['index'] === valueIndex ||
+              String(whenObj['index']) === String(valueIndex)
+            ) {
+              return true
+            }
+
+            for (const v of Object.values(whenObj)) {
+              if (typeof v === 'string' && v === x) {
+                return true
+              }
+              if (
+                (typeof v === 'number' || typeof v === 'string') &&
+                String(v) === String(valueIndex)
+              ) {
+                return true
+              }
+            }
+
+            return false
+          }
+          return false
+        },
+      )?.value
+
+      const rawVariant =
+        variantMapping?.entries[x] ??
+        variantMapping?.entries[JSON.stringify(x)] ??
+        variantMapping?.entries[`"${x}"`] ??
+        variantMapping?.entries[valueIndex] ??
+        variantMapping?.entries[String(valueIndex)] ??
+        rawVariantFromRawEntries ??
+        this.enumFallbackVariantByValue[x] ??
+        this.enumFallbackVariantDefault ??
+        variantMapping?.default
       const colorVariant = rawVariant !== undefined ? colorVariantFromAttribute(rawVariant) : undefined
       return { label, value: x, colorVariant }
     })
@@ -1079,6 +1242,7 @@ export default class FormControl extends Vue {
   }
 
   private mounted() {
+    void this.loadEnumFallbackOptionVariants()
     if (this.autofocus) {
       const control = this.$refs['control'] as HTMLElement | undefined
       control?.focus?.()

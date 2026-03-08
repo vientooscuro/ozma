@@ -357,6 +357,7 @@ export interface ICommonUserViewData {
 
 export interface IConvertedBoundMapping {
   entries: Record<string | number, unknown>
+  rawEntries?: Array<{ when: unknown; value: unknown }>
   default: unknown
 }
 
@@ -624,6 +625,10 @@ const convertAttributeMapping = (
     entries: Object.fromEntries(
       mapping.entries.map((entry) => [entry.when, entry.value]),
     ),
+    rawEntries: mapping.entries.map((entry) => ({
+      when: entry.when,
+      value: entry.value,
+    })),
     default: mapping.default,
   }
 }
