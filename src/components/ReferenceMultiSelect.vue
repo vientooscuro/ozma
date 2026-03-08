@@ -484,58 +484,70 @@ ORDER BY priority DESC
         )
       })
 
-      let bestVariants: Record<number, unknown> = {}
-      let bestScore = -1
-
-      for (const candidate of sortedCandidates) {
-        const query = `
+      const evaluatedCandidates = await Promise.all(
+        sortedCandidates.map(async (candidate, index) => {
+          const query = `
 { $ids array(int) }:
 SELECT id, (${candidate.expression}) AS variant
 FROM ${view}
 WHERE id = ANY($ids)
 `
 
-        try {
-          const res = (await this.$store.dispatch(
-            'callApi',
-            {
-              func: (api: any) => api.getAnonymousUserView(query, { ids }),
-            },
-            { root: true },
-          )) as IViewExprResult
+          try {
+            const res = (await this.$store.dispatch(
+              'callApi',
+              {
+                func: (api: any) => api.getAnonymousUserView(query, { ids }),
+              },
+              { root: true },
+            )) as IViewExprResult
 
-          const variantsById: Record<number, unknown> = {}
-          let nonNullCount = 0
-          const distinctValues = new Set<string>()
+            const variantsById: Record<number, unknown> = {}
+            let nonNullCount = 0
+            const distinctValues = new Set<string>()
 
-          for (const row of res.result.rows) {
-            const id = Number(row.values[0]?.value)
-            if (!Number.isFinite(id)) continue
-            const value = row.values[1]?.value
-            variantsById[id] = value
-            if (value !== null && value !== undefined) {
-              nonNullCount += 1
-              distinctValues.add(String(value))
+            for (const row of res.result.rows) {
+              const id = Number(row.values[0]?.value)
+              if (!Number.isFinite(id)) continue
+              const value = row.values[1]?.value
+              variantsById[id] = value
+              if (value !== null && value !== undefined) {
+                nonNullCount += 1
+                distinctValues.add(String(value))
+              }
             }
-          }
 
-          const score =
-            nonNullCount * 1000 +
-            distinctValues.size * 10 +
-            this.scoreCandidateFieldName(candidate.fieldName)
-          if (score > bestScore) {
-            bestScore = score
-            bestVariants = variantsById
+            return {
+              index,
+              score:
+                nonNullCount * 1000 +
+                distinctValues.size * 10 +
+                this.scoreCandidateFieldName(candidate.fieldName),
+              variantsById,
+            }
+          } catch (e) {
+            console.warn(
+              `Failed to evaluate entity option_variant candidate ${candidate.fieldName}`,
+              e,
+            )
+            return null
           }
-        } catch (e) {
-          console.warn(
-            `Failed to evaluate entity option_variant candidate ${candidate.fieldName}`,
-            e,
-          )
-        }
-      }
+        }),
+      )
 
-      this.entityFallbackVariantById = bestVariants
+      const validCandidates = evaluatedCandidates.filter(
+        (x): x is { index: number; score: number; variantsById: Record<number, unknown> } => x !== null,
+      )
+      const bestCandidate = validCandidates.reduce<
+        { index: number; score: number; variantsById: Record<number, unknown> } | null
+      >((best, current) => {
+        if (!best) return current
+        if (current.score > best.score) return current
+        if (current.score === best.score && current.index < best.index) return current
+        return best
+      }, null)
+
+      this.entityFallbackVariantById = bestCandidate?.variantsById ?? {}
       this.entityVariantIdsKey = idsKey
     } catch (e) {
       console.warn('Failed to load entity fallback option variants', e)
