@@ -225,6 +225,7 @@ export default class ReferenceMultiSelect extends mixins(BaseEntriesView) {
 
   selectedView: IQuery | null = null
   private fallbackVariantById: Record<number, unknown> = {}
+  private fallbackVariantByPunExact: Record<string, unknown> = {}
   private fallbackVariantByPunContains: Array<{
     variant: unknown
     needles: string[]
@@ -267,6 +268,7 @@ export default class ReferenceMultiSelect extends mixins(BaseEntriesView) {
 
   private parseCaseOptionVariants(attributesText: string): void {
     this.fallbackVariantById = {}
+    this.fallbackVariantByPunExact = {}
     this.fallbackVariantByPunContains = []
     this.fallbackVariantDefault = undefined
 
@@ -305,9 +307,25 @@ export default class ReferenceMultiSelect extends mixins(BaseEntriesView) {
       }
     }
 
+    const equalsStringMatches = caseBody.matchAll(
+      /WHEN[\s\S]*?=\s*'([^']+)'\s*THEN\s*'([^']+)'/gim,
+    )
+    for (const match of equalsStringMatches) {
+      const value = match[1].toLowerCase()
+      this.fallbackVariantByPunExact[value] = match[2]
+    }
+
     const elseMatch = caseBody.match(/ELSE\s*'([^']+)'/im)
     if (elseMatch) {
       this.fallbackVariantDefault = elseMatch[1]
+    }
+    if (this.fallbackVariantDefault === undefined) {
+      const isNotNullMatch = caseBody.match(
+        /WHEN[\s\S]*?\bIS\s+NOT\s+NULL\s*THEN\s*'([^']+)'/im,
+      )
+      if (isNotNullMatch) {
+        this.fallbackVariantDefault = isNotNullMatch[1]
+      }
     }
 
     const whenThenMatches = caseBody.matchAll(
@@ -643,6 +661,10 @@ WHERE id = ANY($ids)
 
   private getVariantFromPunFallback(pun: string): unknown {
     const lowerPun = pun.toLowerCase()
+    const exact = this.fallbackVariantByPunExact[lowerPun]
+    if (exact !== undefined) {
+      return exact
+    }
     for (const rule of this.fallbackVariantByPunContains) {
       if (rule.needles.some((needle) => lowerPun.includes(needle))) {
         return rule.variant
