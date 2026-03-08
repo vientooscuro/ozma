@@ -44,7 +44,7 @@ monaco.editor.defineTheme('ozma-light', {
     '5a5a5a', // operator: dark grey
   ),
   colors: {
-    'editor.background': '#f8f8f8',
+    'editor.background': '#ffffff',
     'editor.foreground': '#2e2e2e',
     'editorLineNumber.foreground': '#aaaaaa',
     'editorLineNumber.activeForeground': '#555555',
