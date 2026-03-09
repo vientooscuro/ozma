@@ -303,6 +303,7 @@
                     @mousedown.stop.prevent="
                       (event) => handleColumnResizeMouseDown(i, event)
                     "
+                    @dragstart.stop.prevent
                     @click.stop
                   >
                     <i class="material-icons">drag_indicator</i>
@@ -1678,6 +1679,7 @@ export default class UserViewTable extends mixins<
   draggedColumnIndex: number | null = null
   draggedOverColumnIndex: number | null = null
   suppressNextColumnHeaderClick = false
+  suppressColumnDrag = false
   persistColumnLayoutTimeoutId: ReturnType<typeof setTimeout> | null = null
 
   private getColumnAttr(columnIndex: number, name: string): unknown {
@@ -2981,6 +2983,7 @@ export default class UserViewTable extends mixins<
   private handleColumnResizeMouseDown(columnIndex: number, event: MouseEvent) {
     const oldDeltaX = this.resizedColumnDeltaXs[columnIndex] ?? 0
     this.suppressNextColumnHeaderClick = true
+    this.suppressColumnDrag = true
     this.columnResizeState = {
       type: 'resizing',
       columnIndex,
@@ -3007,6 +3010,11 @@ export default class UserViewTable extends mixins<
 
     this.columnResizeState = { type: 'idle' }
     this.schedulePersistColumnLayout()
+    // Keep DnD disabled for this event loop tick to avoid late dragstart
+    // after a resize gesture in some browsers.
+    window.setTimeout(() => {
+      this.suppressColumnDrag = false
+    }, 0)
   }
 
   private handleColumnHeaderClick(columnIndex: number, event: MouseEvent) {
@@ -3020,8 +3028,14 @@ export default class UserViewTable extends mixins<
   }
 
   private handleColumnDragStart(columnIndex: number, event: DragEvent) {
-    if (this.columnResizeState.type !== 'idle') {
+    const target = event.target as Element | null
+    if (
+      this.columnResizeState.type !== 'idle' ||
+      this.suppressColumnDrag ||
+      target?.closest('.resize-column-thumb')
+    ) {
       event.preventDefault()
+      event.stopPropagation()
       return
     }
     this.draggedColumnIndex = columnIndex
