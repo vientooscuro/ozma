@@ -244,9 +244,55 @@ WHERE uv.schema_id = (SELECT id FROM public.schemas WHERE name = 'funapp')
   AND strpos(query, '"on_time_fields" @{ caption = { schema: ''admin'', message: ''Time Fields'' } },') > 0
   AND strpos(query, 'on_time_offset_value') = 0;
 
--- 5) Exactly-once history table for time triggers.
+-- 5) Theme variant typography fields for existing instances.
+ALTER TABLE IF EXISTS funapp.color_variants
+  ADD COLUMN IF NOT EXISTS font_weight text DEFAULT 'normal',
+  ADD COLUMN IF NOT EXISTS font_style text DEFAULT 'normal',
+  ADD COLUMN IF NOT EXISTS text_decoration text DEFAULT 'none';
+
+WITH color_variants_entity AS (
+    SELECT e.id AS entity_id
+    FROM public.entities e
+    JOIN public.schemas s ON s.id = e.schema_id
+    WHERE s.name = 'funapp' AND e.name = 'color_variants'
+),
+new_fields(name, type, default_expr, is_nullable, is_immutable) AS (
+    VALUES
+        ('font_weight', 'string', '''normal''', true, false),
+        ('font_style', 'string', '''normal''', true, false),
+        ('text_decoration', 'string', '''none''', true, false)
+)
+INSERT INTO public.column_fields (entity_id, name, type, "default", is_nullable, is_immutable)
+SELECT t.entity_id, f.name, f.type, f.default_expr, f.is_nullable, f.is_immutable
+FROM color_variants_entity t
+CROSS JOIN new_fields f
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM public.column_fields cf
+    WHERE cf.entity_id = t.entity_id
+      AND cf.name = f.name
+);
+
+UPDATE public.user_views uv
+SET query = replace(
+    query,
+    $q$    background
+  FROM$q$,
+    $q$    background,
+    font_weight,
+    font_style,
+    text_decoration
+  FROM$q$
+)
+WHERE uv.schema_id = (SELECT id FROM public.schemas WHERE name = 'funapp')
+  AND uv.name = 'color_variants'
+  AND strpos(query, 'font_weight') = 0;
+
+-- 6) Exactly-once history table for time triggers.
+CREATE SEQUENCE IF NOT EXISTS public.time_trigger_fired_id_seq;
+
 CREATE TABLE IF NOT EXISTS public.time_trigger_fired (
-  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  id integer NOT NULL DEFAULT nextval('public.time_trigger_fired_id_seq'),
   trigger_schema text NOT NULL,
   trigger_entity_schema text NOT NULL,
   trigger_entity_name text NOT NULL,
@@ -262,6 +308,23 @@ CREATE TABLE IF NOT EXISTS public.time_trigger_fired (
   due_at timestamp with time zone NOT NULL,
   fired_at timestamp with time zone NOT NULL
 );
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint
+    WHERE conrelid = 'public.time_trigger_fired'::regclass
+      AND contype = 'p'
+  ) THEN
+    ALTER TABLE public.time_trigger_fired
+      ADD CONSTRAINT time_trigger_fired_pkey PRIMARY KEY (id);
+  END IF;
+END
+$$;
+
+ALTER SEQUENCE public.time_trigger_fired_id_seq
+  OWNED BY NONE;
 
 CREATE UNIQUE INDEX IF NOT EXISTS __index__time_trigger_fired__task
   ON public.time_trigger_fired (
@@ -281,7 +344,7 @@ CREATE INDEX IF NOT EXISTS __index__time_trigger_fired__fired_at
 CREATE INDEX IF NOT EXISTS __index__time_trigger_fired__root_row
   ON public.time_trigger_fired (root_entity_schema, root_entity_name, row_id);
 
--- 6) Fix potentially stale sequences to avoid duplicate key errors.
+-- 7) Fix potentially stale sequences to avoid duplicate key errors.
 DO $$
 BEGIN
     IF to_regclass('public.__idseq__fields_attributes') IS NOT NULL THEN

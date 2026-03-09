@@ -32,7 +32,7 @@ export type Rgba = [r: number, g: number, b: number, a: number]
 export type Hsla = [h: number, s: number, l: number, a: number]
 export type Color = string
 
-export const variantKeys = [
+export const colorVariantKeys = [
   'foreground',
   'foregroundContrast',
   'foregroundDarker',
@@ -41,10 +41,22 @@ export const variantKeys = [
   'backgroundDarker2',
   'border',
 ] as const
+export type ColorVariantKey = (typeof colorVariantKeys)[number]
+export const styleVariantKeys = [
+  'fontWeight',
+  'fontStyle',
+  'textDecoration',
+] as const
+export type StyleVariantKey = (typeof styleVariantKeys)[number]
+export const variantKeys = [...colorVariantKeys, ...styleVariantKeys] as const
 export type VariantKey = (typeof variantKeys)[number]
 
 type RawColorVariant = {
   [key in VariantKey]?: unknown
+} & {
+  font_weight?: unknown
+  font_style?: unknown
+  text_decoration?: unknown
 }
 export type ColorVariant = {
   [key in VariantKey]: string
@@ -73,6 +85,11 @@ export const colorVariantFromRaw = (raw: RawColorVariant): ColorVariant => {
   const backgroundDarker2 = mix(background, foreground, 0.15)
   const foregroundContrast = readableColor(background)
   const foregroundDarker = mix(foreground, background, 0.5)
+  const fontWeight = String(raw.fontWeight ?? raw.font_weight ?? 'normal')
+  const fontStyle = String(raw.fontStyle ?? raw.font_style ?? 'normal')
+  const textDecoration = String(
+    raw.textDecoration ?? raw.text_decoration ?? 'none',
+  )
   return {
     foreground,
     foregroundContrast,
@@ -81,6 +98,9 @@ export const colorVariantFromRaw = (raw: RawColorVariant): ColorVariant => {
     backgroundDarker1,
     backgroundDarker2,
     border,
+    fontWeight,
+    fontStyle,
+    textDecoration,
   }
 }
 
@@ -281,18 +301,20 @@ export const loadThemes = async (): Promise<ThemesMap> => {
 
 const colorVariantPropToCssVariableEntry = (
   variantKey: VariantKey,
-  color: string,
+  value: string,
 ): [ColorVariantCssVariableName, string] => [
-  `--${variantKey}Color` as const,
-  color,
+  (colorVariantKeys.includes(variantKey as ColorVariantKey)
+    ? `--${variantKey}Color`
+    : `--${variantKey}Style`) as ColorVariantCssVariableName,
+  value,
 ]
 
 const colorVariantPropToCssVariable = (
   variantKey: VariantKey,
-  color: string,
+  value: string,
 ) => {
-  const [name, _] = colorVariantPropToCssVariableEntry(variantKey, color)
-  return `${name}: ${color};`
+  const [name, _] = colorVariantPropToCssVariableEntry(variantKey, value)
+  return `${name}: ${value};`
 }
 
 export const colorVariantToCssVariables = (
@@ -331,14 +353,30 @@ export const colorVariantFromAttribute = (
 export const colorVariantFromCellColor = (
   cellColor: string,
 ): ColorVariantAttribute =>
-  toRgbaOrNull(cellColor) !== null
+  cellColor === 'table_color'
     ? {
         type: 'inline',
-        variables: colorVariantToCssVariables(
-          colorVariantFromRaw({ background: cellColor }),
-        ),
+        variables: {
+          '--foregroundColor': 'var(--table-foregroundColor)',
+          '--foregroundContrastColor': 'var(--table-foregroundContrastColor)',
+          '--foregroundDarkerColor': 'var(--table-foregroundDarkerColor)',
+          '--backgroundColor': 'var(--table-backgroundColor)',
+          '--backgroundDarker1Color': 'var(--table-backgroundDarker1Color)',
+          '--backgroundDarker2Color': 'var(--table-backgroundDarker2Color)',
+          '--borderColor': 'var(--table-borderColor)',
+          '--fontWeightStyle': 'var(--table-fontWeightStyle, normal)',
+          '--fontStyleStyle': 'var(--table-fontStyleStyle, normal)',
+          '--textDecorationStyle': 'var(--table-textDecorationStyle, none)',
+        },
       }
-    : { type: 'existing', className: cellColor }
+    : toRgbaOrNull(cellColor) !== null
+      ? {
+          type: 'inline',
+          variables: colorVariantToCssVariables(
+            colorVariantFromRaw({ background: cellColor }),
+          ),
+        }
+      : { type: 'existing', className: cellColor }
 
 export const getColorVariantAttributeClassName = (
   attribute: ColorVariantAttribute,
@@ -415,7 +453,9 @@ export const getPreferredTheme = (
   return tryFindTheme('light')
 }
 
-export type ColorVariantCssVariableName = `--${VariantKey}Color`
+export type ColorVariantCssVariableName =
+  | `--${ColorVariantKey}Color`
+  | `--${StyleVariantKey}Style`
 export type ColorVariantCssVariables = Record<
   ColorVariantCssVariableName,
   string

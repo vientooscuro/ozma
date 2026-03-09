@@ -24,7 +24,9 @@
       "contextmenu_paste_tooltip": "Use Ctrl+V to paste to selected cell",
       "no_columns": "This query lacks visible columns",
       "pin_column": "Pin column",
-      "unpin_column": "Unpin column"
+      "unpin_column": "Unpin column",
+      "count": "Count",
+      "sum": "Sum"
     },
     "ru": {
       "pagination_select": "Строк на странице",
@@ -50,7 +52,9 @@
       "contextmenu_paste_tooltip": "Нажмите Ctrl+V, чтобы вставить в выделенную ячейку",
       "no_columns": "В запросе отсутствуют видимые колонки",
       "pin_column": "Закрепить столбец",
-      "unpin_column": "Открепить столбец"
+      "unpin_column": "Открепить столбец",
+      "count": "Кол-во",
+      "sum": "Сумма"
     },
     "es": {
       "cut": "Cortar",
@@ -73,7 +77,9 @@
       "contextmenu_paste_tooltip": "Usar Ctrl + V para pegar en la celda seleccionada",
       "no_columns": "Esta consulta carece de columnas visibles",
       "pin_column": "Fijar columna",
-      "unpin_column": "Desfijar columna"
+      "unpin_column": "Desfijar columna",
+      "count": "Cantidad",
+      "sum": "Suma"
     }
   }
 </i18n>
@@ -265,6 +271,7 @@
                 :class="{
                   'fixed-cell': columns[i].fixed,
                   'last-fixed-cell': index === fixedColumnsLength - 1,
+                  'column-drop-target': draggedOverColumnIndex === i,
                 }"
                 :style="{
                   ...columns[i].style,
@@ -274,8 +281,13 @@
                       : undefined,
                 }"
                 :title="$ustOrEmpty(columns[i].caption)"
+                draggable="true"
                 @click="loadAllRowsAndUpdateSort(i)"
                 @contextmenu.prevent="(event) => openColumnContextMenu(i, event)"
+                @dragstart="(event) => handleColumnDragStart(i, event)"
+                @dragover.prevent="(event) => handleColumnDragOver(i, event)"
+                @drop.prevent="(event) => handleColumnDrop(i, event)"
+                @dragend="handleColumnDragEnd"
               >
                 <div class="table-th">
                   <span class="column-capture">
@@ -368,6 +380,34 @@
               @goto="$emit('goto', $event)"
             />
           </tbody>
+          <tfoot v-if="showAggregatesFooter">
+            <tr class="table-footer-row">
+              <th v-if="showSelectionColumn" class="table-footer-cell" />
+              <th v-if="showLinkColumn" class="table-footer-cell" />
+              <th
+                v-for="(i, index) in columnIndexes"
+                :key="`footer-${i}`"
+                class="table-footer-cell"
+                :class="{
+                  'fixed-cell': columns[i].fixed,
+                  'last-fixed-cell': index === fixedColumnsLength - 1,
+                }"
+                :style="{
+                  ...columns[i].style,
+                  left:
+                    stickFixedColumns && fixedColumnPositions[i]
+                      ? `${fixedColumnPositions[i]}px`
+                      : undefined,
+                }"
+              >
+                <div class="table-th">
+                  <span class="column-capture">
+                    {{ footerByColumn[i] ?? '' }}
+                  </span>
+                </div>
+              </th>
+            </tr>
+          </tfoot>
         </table>
 
         <div
@@ -506,6 +546,7 @@ import {
   waitTimeout,
   ClipboardParseValue,
   debounceTillAnimationFrame,
+  safeJsonParse,
 } from '@/utils'
 import { valueIsNull } from '@/values'
 import { UserView } from '@/components'
@@ -1496,6 +1537,15 @@ export const TableLazyLoad = z
 export type ITableLazyLoad = z.infer<typeof TableLazyLoad>
 
 const stringArraySchema = z.array(z.string())
+const tableLayoutSchema = z.object({
+  widths: z.record(z.coerce.number()).default({}),
+  order: z.array(z.coerce.number()).default([]),
+})
+
+interface ITableFooterOptions {
+  count: boolean
+  sum: boolean
+}
 
 type MoveDirection = 'up' | 'right' | 'down' | 'left'
 
@@ -1563,6 +1613,7 @@ const entities = namespace('entities')
 const entries = namespace('entries')
 const query = namespace('query')
 const windows = namespace('windows')
+const settingsStore = namespace('settings')
 
 @UserView({
   handler: tableUserViewHandler,
@@ -1596,6 +1647,10 @@ export default class UserViewTable extends mixins<
     ref: IEntityRef,
   ) => Promise<IEntity>
   @windows.Getter('active') activeWindow!: WindowKey | null
+  @settingsStore.Action('writeUserSettings') writeUserSettings!: (setting: {
+    name: string
+    value: string
+  }) => Promise<void>
 
   // These two aren't computed properties for performance. They are computed during `init()` and mutated when other values change.
   // If `init()` is called again, their values after recomputation should be equal to those before it.
@@ -1619,27 +1674,127 @@ export default class UserViewTable extends mixins<
 
   autoscrollTimer: number | null = null
   autoscrollForward = true
+  customColumnOrder: number[] = []
+  draggedColumnIndex: number | null = null
+  draggedOverColumnIndex: number | null = null
+  persistColumnLayoutTimeoutId: ReturnType<typeof setTimeout> | null = null
+
+  private getColumnAttr(columnIndex: number, name: string): unknown {
+    return tryDicts(
+      name,
+      this.uv.columnAttributes[columnIndex],
+      this.uv.attributes,
+    )
+  }
+
+  private getInitialColumnWidth(columnIndex: number): number {
+    return z.coerce
+      .number()
+      .default(200)
+      .catch(200)
+      .parse(this.getColumnAttr(columnIndex, 'column_width'))
+  }
+
+  private normalizeColumnOrder(order: number[]): number[] {
+    const columnsLength = this.uv.info.columns.length
+    const valid = new Set<number>()
+    const normalized: number[] = []
+    for (const rawIndex of order) {
+      const index = Math.trunc(rawIndex)
+      if (index < 0 || index >= columnsLength || valid.has(index)) {
+        continue
+      }
+      normalized.push(index)
+      valid.add(index)
+    }
+
+    for (let index = 0; index < columnsLength; index++) {
+      if (!valid.has(index)) {
+        normalized.push(index)
+      }
+    }
+    return normalized
+  }
+
+  private get tableLayoutSettingName(): string {
+    const source = this.uv.args.source
+    if (source.type === 'named') {
+      return `table_layout_${source.ref.schema}.${source.ref.name}`
+    }
+    const serialized = JSON.stringify(source)
+    let hash = 0
+    for (let i = 0; i < serialized.length; i++) {
+      hash = (hash * 31 + serialized.charCodeAt(i)) | 0
+    }
+    return `table_layout_anonymous_${Math.abs(hash).toString(36)}`
+  }
+
+  private applyStoredColumnLayout() {
+    const raw = this.settings.settings[this.tableLayoutSettingName]
+    const parsed = tableLayoutSchema.safeParse(safeJsonParse(raw))
+    if (!parsed.success) {
+      this.customColumnOrder = this.normalizeColumnOrder([])
+      this.resizedColumnDeltaXs = {}
+      return
+    }
+
+    this.customColumnOrder = this.normalizeColumnOrder(parsed.data.order)
+    this.resizedColumnDeltaXs = {}
+    Object.entries(parsed.data.widths).forEach(([columnIndex, width]) => {
+      const index = Number(columnIndex)
+      if (!Number.isInteger(index)) return
+      if (index < 0 || index >= this.uv.info.columns.length) return
+      const initialWidth = this.getInitialColumnWidth(index)
+      const delta = width - initialWidth
+      if (Number.isFinite(delta)) {
+        Vue.set(this.resizedColumnDeltaXs, index, delta)
+      }
+    })
+  }
+
+  private schedulePersistColumnLayout() {
+    if (this.persistColumnLayoutTimeoutId !== null) {
+      clearTimeout(this.persistColumnLayoutTimeoutId)
+    }
+    this.persistColumnLayoutTimeoutId = setTimeout(() => {
+      this.persistColumnLayoutTimeoutId = null
+      const widths = Object.fromEntries(
+        Object.keys(this.resizedColumnDeltaXs).map((rawColumnIndex) => {
+          const columnIndex = Number(rawColumnIndex)
+          const width = Math.max(
+            50,
+            this.getInitialColumnWidth(columnIndex) +
+              (this.resizedColumnDeltaXs[columnIndex] ?? 0),
+          )
+          return [rawColumnIndex, width]
+        }),
+      )
+      const value = JSON.stringify({
+        widths,
+        order: this.normalizeColumnOrder(this.customColumnOrder),
+      })
+      void this.writeUserSettings({
+        name: this.tableLayoutSettingName,
+        value,
+      })
+    }, 300)
+  }
+
+  private get orderedColumnIndexes(): number[] {
+    return this.normalizeColumnOrder(this.customColumnOrder)
+  }
 
   get columns() {
-    const viewAttrs = this.uv.attributes
     let isTreeUnfoldColumnSet = false
 
     const columns = this.uv.info.columns.map((columnInfo, i): IColumn => {
-      const columnAttrs = this.uv.columnAttributes[i]
-      const getColumnAttr = (name: string) =>
-        tryDicts(name, columnAttrs, viewAttrs)
-
-      const captionAttr = rawToUserString(getColumnAttr('caption'))
+      const captionAttr = rawToUserString(this.getColumnAttr(i, 'caption'))
       const caption = captionAttr ?? columnInfo.name
 
       const style: Record<string, unknown> = {}
 
       const minColumnWidth = 50
-      const initialColumnWidth = z.coerce
-        .number()
-        .default(200)
-        .catch(200)
-        .parse(getColumnAttr('column_width'))
+      const initialColumnWidth = this.getInitialColumnWidth(i)
       const resizedColumnWidth =
         initialColumnWidth + (this.resizedColumnDeltaXs[i] ?? 0)
       const columnWidth = Math.max(minColumnWidth, resizedColumnWidth)
@@ -1647,7 +1802,7 @@ export default class UserViewTable extends mixins<
 
       const textAlignResult = z
         .enum(['left', 'center', 'right'])
-        .safeParse(getColumnAttr('text_align'))
+        .safeParse(this.getColumnAttr(i, 'text_align'))
       if (textAlignResult.success) {
         style['text-align'] = textAlignResult.data
       } else {
@@ -1658,25 +1813,28 @@ export default class UserViewTable extends mixins<
         }
       }
 
-      const fixedFromAttr = z.coerce.boolean().parse(getColumnAttr('fixed'))
+      const fixedFromAttr = z.coerce
+        .boolean()
+        .parse(this.getColumnAttr(i, 'fixed'))
       const fixedColumn =
         i in this.pinnedColumns ? this.pinnedColumns[i] : fixedFromAttr
 
       const visibleColumn = z.coerce
         .boolean()
         .default(true)
-        .parse(getColumnAttr('visible'))
+        .parse(this.getColumnAttr(i, 'visible'))
 
       const treeUnfoldColumn = z.coerce
         .boolean()
-        .parse(getColumnAttr('tree_unfold_column'))
+        .parse(this.getColumnAttr(i, 'tree_unfold_column'))
       if (treeUnfoldColumn) {
         isTreeUnfoldColumnSet = true
       }
 
       // "column_type" is old version, but "control" is consistent with forms.
       const type = String(
-        getColumnAttr('control') ?? getColumnAttr('column_type'),
+        this.getColumnAttr(i, 'control') ??
+          this.getColumnAttr(i, 'column_type'),
       )
 
       return {
@@ -2308,16 +2466,74 @@ export default class UserViewTable extends mixins<
   }
 
   get columnIndexes() {
-    const columns = this.columns
-      .map((column, index) => ({
+    const columns = this.orderedColumnIndexes
+      .map((index) => ({
         index,
-        fixed: column.fixed,
-        visible: column.visible,
+        fixed: this.columns[index].fixed,
+        visible: this.columns[index].visible,
       }))
       .filter((c) => c.visible)
     const fixed = columns.filter((c) => c.fixed)
     const nonFixed = columns.filter((c) => !c.fixed)
     return [...fixed, ...nonFixed].map((c) => c.index)
+  }
+
+  private getColumnFooterOptions(columnIndex: number): ITableFooterOptions {
+    const count = z.coerce
+      .boolean()
+      .default(false)
+      .catch(false)
+      .parse(this.getColumnAttr(columnIndex, 'footer_count'))
+    const sum = z.coerce
+      .boolean()
+      .default(false)
+      .catch(false)
+      .parse(this.getColumnAttr(columnIndex, 'footer_sum'))
+    return { count, sum }
+  }
+
+  private formatFooterNumber(value: number): string {
+    return Number(value.toFixed(6)).toLocaleString()
+  }
+
+  get footerByColumn(): Record<number, string> {
+    const result: Record<number, string> = {}
+    for (const columnIndex of this.columnIndexes) {
+      const opts = this.getColumnFooterOptions(columnIndex)
+      if (!opts.count && !opts.sum) continue
+
+      let count = 0
+      let sum = 0
+      for (const row of this.shownRows) {
+        const rawValue = currentValue(row.row.values[columnIndex])
+        const hasValue =
+          rawValue !== null && rawValue !== undefined && rawValue !== ''
+        if (opts.count && hasValue) {
+          count++
+        }
+        if (opts.sum) {
+          const num =
+            typeof rawValue === 'number' ? rawValue : Number(rawValue)
+          if (Number.isFinite(num)) {
+            sum += num
+          }
+        }
+      }
+
+      const parts: string[] = []
+      if (opts.count) {
+        parts.push(`${this.$t('count')}: ${count}`)
+      }
+      if (opts.sum) {
+        parts.push(`${this.$t('sum')}: ${this.formatFooterNumber(sum)}`)
+      }
+      result[columnIndex] = parts.join(' | ')
+    }
+    return result
+  }
+
+  get showAggregatesFooter() {
+    return Object.keys(this.footerByColumn).length > 0
   }
 
   get fixedColumnIndexes() {
@@ -2395,6 +2611,7 @@ export default class UserViewTable extends mixins<
 
   protected created() {
     this.currentFilter = this.filter
+    this.applyStoredColumnLayout()
     this.init()
 
     if (
@@ -2422,6 +2639,7 @@ export default class UserViewTable extends mixins<
 
   @Watch('uv')
   protected uvChanged() {
+    this.applyStoredColumnLayout()
     this.init()
     this.updateRows()
 
@@ -2429,6 +2647,11 @@ export default class UserViewTable extends mixins<
     ;(
       this.$refs['infiniteLoading'] as InfiniteLoading | undefined
     )?.stateChanger.reset()
+  }
+
+  @Watch('settings.settings', { deep: true })
+  protected settingsChanged() {
+    this.applyStoredColumnLayout()
   }
 
   private get initialPage() {
@@ -2781,6 +3004,54 @@ export default class UserViewTable extends mixins<
     if (this.columnResizeState.type === 'idle') return
 
     this.columnResizeState = { type: 'idle' }
+    this.schedulePersistColumnLayout()
+  }
+
+  private handleColumnDragStart(columnIndex: number, event: DragEvent) {
+    this.draggedColumnIndex = columnIndex
+    this.draggedOverColumnIndex = null
+    if (event.dataTransfer) {
+      event.dataTransfer.effectAllowed = 'move'
+      event.dataTransfer.setData('text/plain', String(columnIndex))
+    }
+  }
+
+  private handleColumnDragOver(columnIndex: number, event: DragEvent) {
+    if (this.draggedColumnIndex === null) return
+    if (this.draggedColumnIndex === columnIndex) return
+    this.draggedOverColumnIndex = columnIndex
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move'
+    }
+  }
+
+  private handleColumnDrop(columnIndex: number, event: DragEvent) {
+    const draggedColumnIndex =
+      this.draggedColumnIndex ??
+      Number(event.dataTransfer?.getData('text/plain') ?? '')
+    if (!Number.isInteger(draggedColumnIndex)) {
+      this.handleColumnDragEnd()
+      return
+    }
+
+    const order = [...this.orderedColumnIndexes]
+    const fromIndex = order.indexOf(draggedColumnIndex)
+    const toIndex = order.indexOf(columnIndex)
+    if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) {
+      this.handleColumnDragEnd()
+      return
+    }
+
+    order.splice(fromIndex, 1)
+    order.splice(toIndex, 0, draggedColumnIndex)
+    this.customColumnOrder = this.normalizeColumnOrder(order)
+    this.schedulePersistColumnLayout()
+    this.handleColumnDragEnd()
+  }
+
+  private handleColumnDragEnd() {
+    this.draggedColumnIndex = null
+    this.draggedOverColumnIndex = null
   }
 
   private showFixedColumnBorder = false
@@ -2840,6 +3111,10 @@ export default class UserViewTable extends mixins<
     )
     document.removeEventListener('mousemove', this.handleColumnResizeMouseMove)
     document.removeEventListener('mouseup', this.handleColumnResizeMouseUp)
+    if (this.persistColumnLayoutTimeoutId !== null) {
+      clearTimeout(this.persistColumnLayoutTimeoutId)
+      this.persistColumnLayoutTimeoutId = null
+    }
     if (this.autoscrollTimer !== null) {
       clearInterval(this.autoscrollTimer)
     }
@@ -3819,6 +4094,22 @@ export default class UserViewTable extends mixins<
 th,
 ::v-deep td {
   border-bottom: 1px solid var(--table-borderColor);
+}
+
+th[draggable='true'] {
+  cursor: grab;
+}
+
+th.column-drop-target {
+  outline: 2px solid var(--table-foregroundDarkerColor);
+  outline-offset: -2px;
+}
+
+.table-footer-row .table-footer-cell {
+  border-top: 1px solid var(--table-borderColor);
+  border-bottom: 0;
+  background-color: var(--table-backgroundDarker1Color);
+  font-size: 0.75rem;
 }
 
 .button-container {

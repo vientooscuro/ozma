@@ -52,6 +52,9 @@ $color-transition:
   border-color: var(--#{$name}-borderColor);
   background-color: var(--#{$name}-backgroundColor);
   color: var(--#{$name}-foregroundColor);
+  font-weight: var(--#{$name}-fontWeightStyle, normal);
+  font-style: var(--#{$name}-fontStyleStyle, normal);
+  text-decoration: var(--#{$name}-textDecorationStyle, none);
 }
 
 /* 24px is material icons best size and 14px is default font size */
@@ -62,7 +65,8 @@ $color-transition:
 @mixin variant-to-local($local-name) {
   /* stylelint-disable value-keyword-case */
   $keys: foregroundColor, foregroundDarkerColor, foregroundContrastColor,
-    backgroundColor, backgroundDarker1Color, backgroundDarker2Color, borderColor;
+    backgroundColor, backgroundDarker1Color, backgroundDarker2Color, borderColor,
+    fontWeightStyle, fontStyleStyle, textDecorationStyle;
 
   .#{$local-name}-local-variant {
     @each $key in $keys {
