@@ -65,6 +65,73 @@ export const store = new Vuex.Store({
   },
 })
 
+const CHUNK_RELOAD_KEY = 'ozma:chunk-reload-once'
+let hasAttemptedChunkReload = false
+
+const extractErrorMessage = (error: unknown): string => {
+  if (typeof error === 'string') {
+    return error
+  }
+
+  if (error instanceof Error) {
+    return `${error.name}: ${error.message}`
+  }
+
+  if (typeof error === 'object' && error !== null && 'message' in error) {
+    const message = (error as { message?: unknown }).message
+    if (typeof message === 'string') {
+      return message
+    }
+  }
+
+  return ''
+}
+
+const isChunkLoadError = (error: unknown): boolean => {
+  const message = extractErrorMessage(error).toLowerCase()
+  return (
+    message.includes('chunkloaderror') ||
+    message.includes('loading chunk') ||
+    message.includes('failed to fetch dynamically imported module')
+  )
+}
+
+const didAttemptChunkReload = (): boolean => {
+  if (hasAttemptedChunkReload) {
+    return true
+  }
+
+  try {
+    if (sessionStorage.getItem(CHUNK_RELOAD_KEY) === '1') {
+      hasAttemptedChunkReload = true
+      return true
+    }
+  } catch {
+    // sessionStorage might be unavailable (privacy mode / browser policy).
+  }
+
+  return false
+}
+
+const markChunkReloadAttempt = (): void => {
+  hasAttemptedChunkReload = true
+
+  try {
+    sessionStorage.setItem(CHUNK_RELOAD_KEY, '1')
+  } catch {
+    // Ignore storage write errors and still proceed with reload.
+  }
+}
+
+const reloadOnChunkLoadError = (error: unknown): void => {
+  if (!isChunkLoadError(error) || didAttemptChunkReload()) {
+    return
+  }
+
+  markChunkReloadAttempt()
+  window.location.reload()
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 Vue.use(TextareaAutosize)
 Vue.use(VueIsMobile)
@@ -91,6 +158,18 @@ Modules.router.beforeResolve((to, from, next) => {
   setHeadMeta('property', 'twitter:title', titleDefault)
   setHeadMeta('property', 'twitter:description', descriptionDefault)
   next()
+})
+
+Modules.router.onError((error) => {
+  reloadOnChunkLoadError(error)
+})
+
+window.addEventListener('error', (event) => {
+  reloadOnChunkLoadError(event.error ?? event.message)
+})
+
+window.addEventListener('unhandledrejection', (event) => {
+  reloadOnChunkLoadError(event.reason)
 })
 
 export const app = new Vue({
