@@ -22,6 +22,7 @@ require_cmd() {
 require_cmd docker
 require_cmd yarn
 require_cmd file
+require_cmd git
 
 if [[ ! -d "$OZMADB_LOCAL_DIR" ]]; then
   echo "Error: local ozmadb directory not found: $OZMADB_LOCAL_DIR" >&2
@@ -30,6 +31,11 @@ fi
 
 if [[ ! -f "$OZMADB_LOCAL_DIR/docker/Dockerfile" ]]; then
   echo "Error: Dockerfile not found: $OZMADB_LOCAL_DIR/docker/Dockerfile" >&2
+  exit 1
+fi
+
+if [[ ! -d "$OZMADB_LOCAL_DIR/.git" ]]; then
+  echo "Error: git repository not found: $OZMADB_LOCAL_DIR/.git" >&2
   exit 1
 fi
 
@@ -65,6 +71,11 @@ docker build \
   -f "$OZMADB_LOCAL_DIR/docker/Dockerfile" \
   -t "$OZMADB_LOCAL_IMAGE" \
   "$OZMADB_LOCAL_DIR"
+
+log "Reverting generated lockfile changes in ozmadb..."
+git -C "$OZMADB_LOCAL_DIR" restore \
+  OzmaDBSchema/packages.lock.json \
+  OzmaUtils/packages.lock.json
 
 log "Building frontend assets (yarn build)..."
 yarn build
