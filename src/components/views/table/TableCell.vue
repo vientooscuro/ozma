@@ -50,7 +50,12 @@
       </template>
       <template v-else-if="link !== null && valueHtml.length > 0">
         <div
-          :class="['option', optionVariantClassName, 'option-local-variant']"
+          :class="[
+            'option',
+            'reference-option',
+            optionVariantClassName,
+            'option-local-variant',
+          ]"
           :style="optionVariantVariables"
         >
           <OzmaLink
@@ -352,7 +357,7 @@ export default class TableCell extends Vue {
   border: 1px solid var(--option-borderColor);
   border-radius: 0.5rem;
   background-color: var(--option-backgroundColor);
-  padding: 0.15rem 0.6rem;
+  padding: 0.35rem 0.6rem;
   max-width: 100%;
   max-height: 100%;
   color: var(--option-foregroundColor);
@@ -377,6 +382,10 @@ export default class TableCell extends Vue {
   .text {
     color: var(--option-foregroundColor);
   }
+}
+
+.reference-option {
+  padding: 0.24rem 0.55rem;
 }
 
 .add-child {

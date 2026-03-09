@@ -3082,12 +3082,16 @@ export default class UserViewTable extends mixins<
       },
     )
     if (this.$refs['tableWrapper']) {
-      this.tableResizeObserver = new ResizeObserver(
-        debounceTillAnimationFrame(this.onTableResize),
-      )
-      this.tableResizeObserver.observe(
-        this.$refs['tableWrapper'] as HTMLElement,
-      )
+      if (typeof ResizeObserver !== 'undefined') {
+        this.tableResizeObserver = new ResizeObserver(
+          debounceTillAnimationFrame(this.onTableResize),
+        )
+        this.tableResizeObserver.observe(
+          this.$refs['tableWrapper'] as HTMLElement,
+        )
+      } else {
+        this.onTableResize()
+      }
     }
     this.rootEvents.forEach(([name, callback]) =>
       this.$root.$on(name, callback),
@@ -4270,7 +4274,7 @@ th {
   vertical-align: middle;
   z-index: 20;
   border-top: 1px solid var(--table-borderColor);
-  height: 4rem;
+  height: 3.35rem;
   user-select: none;
 
   @include mobile-landscape {
@@ -4312,15 +4316,17 @@ th {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.3rem;
   cursor: pointer;
   background-color: var(--table-backgroundColor);
   width: 100%;
   height: 100%;
   overflow: hidden;
   color: var(--table-foregroundColor);
-  font-weight: 500;
-  font-size: 0.875rem;
+  font-weight: 520;
+  font-size: 0.8125rem;
+  text-transform: none;
+  letter-spacing: normal;
   text-overflow: ellipsis;
   white-space: nowrap;
 

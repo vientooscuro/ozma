@@ -18,7 +18,7 @@
     class="tabbed-modal"
     :width="modalWidth"
     :height="modalHeight"
-    :min-width="200"
+    :min-width="minWidth"
     :min-height="100"
     :pivot-y="0.8"
     :name="uid"
@@ -131,6 +131,7 @@ export default class TabbedModal extends Vue {
   @Prop({ type: Boolean, default: true }) show!: boolean
   @Prop({ type: Boolean, default: false }) fullscreen!: boolean
   @Prop({ type: String }) width!: string
+  @Prop({ type: Number, default: 200 }) minWidth!: number
   @Prop({ type: String }) height!: string
   @Prop({ type: Number, default: 0 }) startingTab!: number
 

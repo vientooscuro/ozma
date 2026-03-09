@@ -1,8 +1,18 @@
 $enable-rounded: true;
 $enable-shadows: false;
 $enable-gradients: false;
-$font-family-sans-serif: inter;
-$font-family-serif: inter;
+$font-family-sans-serif:
+  -apple-system,
+  BlinkMacSystemFont,
+  'SF Pro Text',
+  'SF Pro Display',
+  Inter,
+  'Segoe UI',
+  Roboto,
+  'Helvetica Neue',
+  Arial,
+  sans-serif;
+$font-family-serif: $font-family-sans-serif;
 $input-color: var(--cell-foregroundColor);
 $input-placeholder-color: var(--cell-foregroundDarkerColor);
 $border-color: var(--MainBorderColor);
@@ -35,12 +45,21 @@ body {
 
   --FocusBorderColor: #{$input-focus-border-color};
   --userview-background-color: #f2f4f7;
-
   div#app {
     display: flex;
     flex-direction: column;
     height: 100%;
-    font-family: Inter;
+    font-family:
+      -apple-system,
+      BlinkMacSystemFont,
+      'SF Pro Text',
+      'SF Pro Display',
+      Inter,
+      'Segoe UI',
+      Roboto,
+      'Helvetica Neue',
+      Arial,
+      sans-serif;
   }
 }
 
@@ -207,7 +226,27 @@ input.with-clear-content-button {
 }
 
 .btn {
-  border-radius: 0.625rem;
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+  border-radius: 0.75rem;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 500;
+  box-shadow: 0 2px 8px -6px rgb(15 23 42 / 35%);
+
+  &:hover:not(:disabled),
+  &:focus-visible:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 24px -18px rgb(15 23 42 / 45%);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 4px 8px -6px rgb(15 23 42 / 35%);
+  }
 }
 
 .btn.clear-content-button {
@@ -288,6 +327,12 @@ $input-focus-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
   &[x-placement^='top'] {
     margin: 0;
   }
+}
+
+.table-th,
+.table-th .column-capture {
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 .b-skeleton-animate-wave::after,

@@ -192,11 +192,17 @@ export default class HeaderPanel extends Vue {
   }
   private mounted() {
     if (this.$refs['headerPanel']) {
-      /* eslint-disable-next-line @typescript-eslint/unbound-method */
-      this.panelResizeObserver = new ResizeObserver(
-        debounceTillAnimationFrame(() => this.onPanelResize()),
-      )
-      this.panelResizeObserver.observe(this.$refs['headerPanel'] as HTMLElement)
+      if (typeof ResizeObserver !== 'undefined') {
+        /* eslint-disable-next-line @typescript-eslint/unbound-method */
+        this.panelResizeObserver = new ResizeObserver(
+          debounceTillAnimationFrame(() => this.onPanelResize()),
+        )
+        this.panelResizeObserver.observe(
+          this.$refs['headerPanel'] as HTMLElement,
+        )
+      } else {
+        this.onPanelResize()
+      }
     }
   }
 }
@@ -336,6 +342,18 @@ export default class HeaderPanel extends Vue {
   margin-left: 0;
   overflow: hidden;
   color: var(--MainTextColor);
+  font-family:
+    Manrope,
+    -apple-system,
+    BlinkMacSystemFont,
+    'SF Pro Display',
+    'SF Pro Text',
+    Inter,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
   font-weight: 600;
   font-size: 1.25rem;
   text-overflow: ellipsis;

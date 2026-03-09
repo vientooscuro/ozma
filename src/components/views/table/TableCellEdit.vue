@@ -82,8 +82,10 @@ export default class TableCellEdit extends Vue {
     if (!cellRef) {
       throw Error("Can't find `cellEdit` ref")
     }
-    this.resizeObserver = new ResizeObserver(() => this.updateMovedCoords())
-    this.resizeObserver.observe(cellRef)
+    if (typeof ResizeObserver !== 'undefined') {
+      this.resizeObserver = new ResizeObserver(() => this.updateMovedCoords())
+      this.resizeObserver.observe(cellRef)
+    }
     this.updateMovedCoords()
     this.updateMaxHeight()
 

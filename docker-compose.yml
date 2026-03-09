@@ -87,7 +87,9 @@ services:
       - keycloak
 
   ozma:
-    image: ghcr.io/vientooscuro/ozma:master
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.ozma
     restart: unless-stopped
     logging:
       driver: "json-file"

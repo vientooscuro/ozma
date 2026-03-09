@@ -985,10 +985,14 @@ WHERE id = ANY($ids)
 }
 
 .option-text {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
   overflow: hidden;
   line-height: 1.1rem;
   text-align: left;
   text-overflow: ellipsis;
+  white-space: nowrap;
 
   &.no-label {
     opacity: 0.5;

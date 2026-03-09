@@ -950,8 +950,8 @@ div.select-container__options__actions {
   display: inline-flex;
   align-items: center;
   border-radius: 0.5rem;
-  padding: 0.125rem 0.5rem;
-  height: 1.3rem;
+  padding: 0.3rem 0.5rem;
+  height: 1.7rem;
   overflow: hidden;
   line-height: 0.9rem;
   white-space: pre;
@@ -968,7 +968,26 @@ div.select-container__options__actions {
   }
 
   .compact-mode & {
-    height: 1.5rem; /* To match with usual inputs. */
+    height: 1.9rem; /* To match with usual inputs. */
+  }
+}
+
+.selected-values > .single-value {
+  max-width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+
+  > span,
+  .option-wrapper,
+  .option-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  br {
+    display: none;
   }
 }
 
@@ -987,7 +1006,7 @@ div.select-container__options__actions {
     background: var(--option-backgroundColor, var(--default-backgroundDarker1Color));
     color: var(--option-foregroundColor);
     border: 1px solid var(--option-borderColor, transparent);
-    padding: 0.3125rem 0.75rem;
+    padding: 0.5rem 0.75rem;
   }
 }
 
