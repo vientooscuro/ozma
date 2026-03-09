@@ -282,7 +282,7 @@
                 }"
                 :title="$ustOrEmpty(columns[i].caption)"
                 draggable="true"
-                @click="loadAllRowsAndUpdateSort(i)"
+                @click="(event) => handleColumnHeaderClick(i, event)"
                 @contextmenu.prevent="(event) => openColumnContextMenu(i, event)"
                 @dragstart="(event) => handleColumnDragStart(i, event)"
                 @dragover.prevent="(event) => handleColumnDragOver(i, event)"
@@ -300,7 +300,7 @@
                   </div>
                   <div
                     class="resize-column-thumb"
-                    @mousedown="
+                    @mousedown.stop.prevent="
                       (event) => handleColumnResizeMouseDown(i, event)
                     "
                     @click.stop
@@ -1677,6 +1677,7 @@ export default class UserViewTable extends mixins<
   customColumnOrder: number[] = []
   draggedColumnIndex: number | null = null
   draggedOverColumnIndex: number | null = null
+  suppressNextColumnHeaderClick = false
   persistColumnLayoutTimeoutId: ReturnType<typeof setTimeout> | null = null
 
   private getColumnAttr(columnIndex: number, name: string): unknown {
@@ -2979,6 +2980,7 @@ export default class UserViewTable extends mixins<
       } = { type: 'idle' }
   private handleColumnResizeMouseDown(columnIndex: number, event: MouseEvent) {
     const oldDeltaX = this.resizedColumnDeltaXs[columnIndex] ?? 0
+    this.suppressNextColumnHeaderClick = true
     this.columnResizeState = {
       type: 'resizing',
       columnIndex,
@@ -3007,7 +3009,21 @@ export default class UserViewTable extends mixins<
     this.schedulePersistColumnLayout()
   }
 
+  private handleColumnHeaderClick(columnIndex: number, event: MouseEvent) {
+    if (this.suppressNextColumnHeaderClick) {
+      this.suppressNextColumnHeaderClick = false
+      event.preventDefault()
+      event.stopPropagation()
+      return
+    }
+    this.loadAllRowsAndUpdateSort(columnIndex)
+  }
+
   private handleColumnDragStart(columnIndex: number, event: DragEvent) {
+    if (this.columnResizeState.type !== 'idle') {
+      event.preventDefault()
+      return
+    }
     this.draggedColumnIndex = columnIndex
     this.draggedOverColumnIndex = null
     if (event.dataTransfer) {

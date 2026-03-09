@@ -13,6 +13,9 @@
     "build": "vue-cli-service build --no-module",
     "lint": "vue-cli-service lint",
     "lint:style": "stylelint src/",
+    "e2e": "playwright test",
+    "e2e:headed": "playwright test --headed",
+    "e2e:install": "playwright install chromium",
     "prepare": "husky",
     "prettier": "prettier -w ./"
   },
@@ -67,6 +70,7 @@
     "@babel/core": "^7.19.1",
     "@intlify/vue-i18n-loader": "^1.1.0",
     "@ozma-io/ozma-embedded": "^0.0.7",
+    "@playwright/test": "^1.58.2",
     "@types/bootstrap": "^4",
     "@types/papaparse": "^5.3.5",
     "@types/psl": "^1.1.3",
