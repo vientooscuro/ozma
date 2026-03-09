@@ -200,10 +200,20 @@ export default class TableCell extends Vue {
   get cellColorVariantAttribute(): ColorVariantAttribute {
     const cellColorVariantAttribute = this.getCellAttr('cell_variant')
     const cellColor = this.getCellAttr('cell_color')
+    const background = this.getCellAttr('background')
+    const backgroundColor = this.getCellAttr('background_color')
     if (cellColorVariantAttribute) {
       return colorVariantFromAttribute(cellColorVariantAttribute)
     } else if (typeof cellColor === 'string') {
       return colorVariantFromCellColor(cellColor)
+    } else if (typeof backgroundColor === 'string') {
+      return colorVariantFromCellColor(backgroundColor)
+    } else if (typeof backgroundColor === 'object' && backgroundColor !== null) {
+      return colorVariantFromAttribute(backgroundColor)
+    } else if (typeof background === 'string') {
+      return colorVariantFromCellColor(background)
+    } else if (typeof background === 'object' && background !== null) {
+      return colorVariantFromAttribute(background)
     } else {
       return defaultVariantAttribute
     }
@@ -233,13 +243,16 @@ export default class TableCell extends Vue {
   }
 
   get link() {
-    return this.value.info?.field?.fieldType.type === 'reference'
-      ? attrToLinkRef(
-          this.getCellAttr('link'),
-          currentValue(this.value),
-          this.uv.extra.linkOpts,
-        )
-      : null
+    const rawLink = this.getCellAttr('link')
+    if (!rawLink) {
+      return null
+    }
+
+    return attrToLinkRef(
+      rawLink,
+      currentValue(this.value),
+      this.uv.extra.linkOpts,
+    )
   }
 
   get treeLevel() {
