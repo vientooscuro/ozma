@@ -17,29 +17,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22.x
-      - name: Enable Corepack Yarn
-        run: |
-          corepack enable
-          corepack prepare yarn@4.9.2 --activate
-
-      - name: Build ozma-embedded
-        working-directory: ./ozma-embedded
-        run: |
-          yarn install --immutable
-          yarn build
-
-      - name: Install Dependencies
-        run: |
-          yarn install --immutable
-          yarn link ./ozma-embedded
-
-      - name: Build
-        run: yarn build
-
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
