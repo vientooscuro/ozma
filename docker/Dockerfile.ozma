@@ -1,6 +1,19 @@
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+COPY package.json yarn.lock .yarnrc.yml ./
+COPY .yarn ./.yarn
+COPY .pnp.cjs .pnp.loader.mjs ./
+
+RUN corepack enable && yarn install --immutable
+
+COPY . .
+RUN yarn build
+
 FROM caddy
 
 # https://kofi.sexy/blog/zero-downtime-render-disk
 RUN setcap -r /usr/bin/caddy
-COPY ./dist /usr/share/caddy
+COPY --from=build /app/dist /usr/share/caddy
 COPY ./docker/Caddyfile.ozma /etc/caddy/Caddyfile
