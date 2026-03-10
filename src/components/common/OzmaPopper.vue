@@ -157,12 +157,23 @@ export default {
   created() {
     this.appendedArrow = false
     this.appendedToBody = false
+    this.isForceShowControlled = Object.prototype.hasOwnProperty.call(
+      this.$options.propsData || {},
+      'forceShow',
+    )
     this.popperOptions = Object.assign(this.popperOptions, this.options)
   },
 
   mounted() {
     this.referenceElm = this.reference || this.$slots.reference?.[0]?.elm || null
     this.popper = this.$slots.default?.[0]?.elm || null
+
+    // If visibility is controlled from parent via `force-show`,
+    // avoid internal trigger listeners to prevent click state races.
+    if (this.isForceShowControlled) {
+      on(document, 'click', this.handleDocumentClick)
+      return
+    }
 
     switch (this.trigger) {
       case 'clickToOpen':
@@ -205,14 +216,17 @@ export default {
       return null
     },
 
-    getAnimatedContentElement(containerElement) {
+    getAnimatedContentElements(containerElement) {
       if (!(containerElement instanceof HTMLElement)) {
-        return null
+        return []
       }
 
-      return containerElement.firstElementChild instanceof HTMLElement
-        ? containerElement.firstElementChild
-        : null
+      return Array.from(containerElement.children).filter(
+        (child) =>
+          child instanceof HTMLElement &&
+          !child.hasAttribute('x-arrow') &&
+          !child.classList.contains('popper__arrow'),
+      )
     },
 
     clearAnimationHandles() {
@@ -240,6 +254,34 @@ export default {
       element.style.transition = ''
       element.style.willChange = ''
       element.style.opacity = ''
+      element.style.visibility = ''
+    },
+
+    clearAnimatedContentStyles(element) {
+      if (!(element instanceof HTMLElement)) {
+        return
+      }
+
+      this.clearAnimatedStyles(element)
+      element.style.transform = ''
+      element.style.transformOrigin = ''
+    },
+
+    prepareOpenAnimationState(containerElement, contentElements) {
+      this.clearAnimatedStyles(containerElement)
+      containerElement.style.transition = 'none'
+      containerElement.style.willChange = 'opacity'
+      containerElement.style.visibility = 'hidden'
+      containerElement.style.opacity = '0'
+
+      contentElements.forEach((contentElement) => {
+        this.clearAnimatedContentStyles(contentElement)
+        contentElement.style.transition = 'none'
+        contentElement.style.willChange = 'opacity, transform'
+        contentElement.style.transformOrigin = 'top center'
+        contentElement.style.opacity = '0'
+        contentElement.style.transform = 'translateY(6px) scale(0.985)'
+      })
     },
 
     animateIn() {
@@ -247,23 +289,9 @@ export default {
       if (!(containerElement instanceof HTMLElement)) {
         return
       }
-      const contentElement = this.getAnimatedContentElement(containerElement)
+      const contentElements = this.getAnimatedContentElements(containerElement)
 
-      this.clearAnimatedStyles(containerElement)
-      containerElement.style.transition = 'none'
-      containerElement.style.willChange = 'opacity'
-      containerElement.style.opacity = '0'
-
-      if (contentElement instanceof HTMLElement) {
-        this.clearAnimatedStyles(contentElement)
-        contentElement.style.transition = 'none'
-        contentElement.style.willChange = 'opacity, transform'
-        contentElement.style.transformOrigin = 'top center'
-        contentElement.style.opacity = '0'
-        contentElement.style.transform = 'translateY(6px) scale(0.985)'
-      }
-      // Force style flush before starting transition.
-      void containerElement.offsetWidth
+      containerElement.style.visibility = 'visible'
 
       this.animationFrame1 = requestAnimationFrame(() => {
         this.animationFrame2 = requestAnimationFrame(() => {
@@ -271,18 +299,18 @@ export default {
             `opacity ${SHOW_ANIMATION_DURATION_MS}ms cubic-bezier(0.16, 1, 0.3, 1)`
           containerElement.style.opacity = '1'
 
-          if (contentElement instanceof HTMLElement) {
+          contentElements.forEach((contentElement) => {
             contentElement.style.transition =
               `transform ${CONTENT_SHOW_ANIMATION_DURATION_MS}ms cubic-bezier(0.16, 1, 0.3, 1), opacity ${CONTENT_SHOW_ANIMATION_DURATION_MS}ms cubic-bezier(0.16, 1, 0.3, 1)`
             contentElement.style.opacity = '1'
             contentElement.style.transform = 'translateY(0) scale(1)'
-          }
+          })
 
           this.transitionTimer = setTimeout(() => {
             this.clearAnimatedStyles(containerElement)
-            if (contentElement instanceof HTMLElement) {
-              this.clearAnimatedStyles(contentElement)
-            }
+            contentElements.forEach((contentElement) => {
+              this.clearAnimatedContentStyles(contentElement)
+            })
             this.clearAnimationHandles()
           }, Math.max(SHOW_ANIMATION_DURATION_MS, CONTENT_SHOW_ANIMATION_DURATION_MS))
         })
@@ -295,21 +323,21 @@ export default {
         onDone()
         return
       }
-      const contentElement = this.getAnimatedContentElement(containerElement)
+      const contentElements = this.getAnimatedContentElements(containerElement)
 
       this.clearAnimatedStyles(containerElement)
       containerElement.style.transition = 'none'
       containerElement.style.willChange = 'opacity'
       containerElement.style.opacity = '1'
 
-      if (contentElement instanceof HTMLElement) {
-        this.clearAnimatedStyles(contentElement)
+      contentElements.forEach((contentElement) => {
+        this.clearAnimatedContentStyles(contentElement)
         contentElement.style.transition = 'none'
         contentElement.style.willChange = 'opacity, transform'
         contentElement.style.transformOrigin = 'top center'
         contentElement.style.opacity = '1'
         contentElement.style.transform = 'translateY(0) scale(1)'
-      }
+      })
       // Force style flush before starting transition.
       void containerElement.offsetWidth
 
@@ -319,18 +347,18 @@ export default {
             `opacity ${HIDE_ANIMATION_DURATION_MS}ms cubic-bezier(0.4, 0, 1, 1)`
           containerElement.style.opacity = '0'
 
-          if (contentElement instanceof HTMLElement) {
+          contentElements.forEach((contentElement) => {
             contentElement.style.transition =
               `transform ${CONTENT_HIDE_ANIMATION_DURATION_MS}ms cubic-bezier(0.4, 0, 1, 1), opacity ${CONTENT_HIDE_ANIMATION_DURATION_MS}ms cubic-bezier(0.4, 0, 1, 1)`
             contentElement.style.opacity = '0'
             contentElement.style.transform = 'translateY(4px) scale(0.99)'
-          }
+          })
 
           this.transitionTimer = setTimeout(() => {
             this.clearAnimatedStyles(containerElement)
-            if (contentElement instanceof HTMLElement) {
-              this.clearAnimatedStyles(contentElement)
-            }
+            contentElements.forEach((contentElement) => {
+              this.clearAnimatedContentStyles(contentElement)
+            })
             this.clearAnimationHandles()
             onDone()
           }, Math.max(HIDE_ANIMATION_DURATION_MS, CONTENT_HIDE_ANIMATION_DURATION_MS))
@@ -362,7 +390,21 @@ export default {
       this.showPopper = true
 
       this.$nextTick(() => {
-        this.animateIn()
+        const containerElement = this.getAnimatedElement()
+        if (!(containerElement instanceof HTMLElement)) {
+          return
+        }
+
+        const contentElements = this.getAnimatedContentElements(containerElement)
+        this.prepareOpenAnimationState(containerElement, contentElements)
+        this.updatePopper()
+
+        // Let Popper compute final placement first, then run animation.
+        this.animationFrame1 = requestAnimationFrame(() => {
+          this.animationFrame2 = requestAnimationFrame(() => {
+            this.animateIn()
+          })
+        })
       })
     },
 
