@@ -17,6 +17,9 @@
             "vertical_borders": "Vertical borders",
             "vertical_borders_on": "on",
             "vertical_borders_off": "off",
+            "ui_animations": "Animations",
+            "ui_animations_on": "on",
+            "ui_animations_off": "off",
             "en": "English",
             "es": "Spanish (Español)",
             "ru": "Russian (Русский)",
@@ -39,6 +42,9 @@
             "vertical_borders": "Вертикальные границы",
             "vertical_borders_on": "вкл",
             "vertical_borders_off": "выкл",
+            "ui_animations": "Анимации",
+            "ui_animations_on": "вкл",
+            "ui_animations_off": "выкл",
             "en": "Английский (English)",
             "es": "Испанский (Español)",
             "ru": "Русский",
@@ -61,6 +67,9 @@
             "vertical_borders": "Bordes verticales",
             "vertical_borders_on": "activados",
             "vertical_borders_off": "desactivados",
+            "ui_animations": "Animaciones",
+            "ui_animations_on": "activadas",
+            "ui_animations_off": "desactivadas",
             "en": "Inglés (English)",
             "es": "Español",
             "ru": "Ruso (Русский)",
@@ -240,6 +249,25 @@ export default class AppHeader extends Vue {
     return `${this.$t('vertical_borders')}: ${stateText}`
   }
 
+  private get uiAnimationsEnabled(): boolean {
+    return this.currentSettings.getEntry('ui_animations_enabled', Boolean, true)
+  }
+
+  private toggleUiAnimations() {
+    const value = this.uiAnimationsEnabled ? 'false' : 'true'
+    void this.writeUserSettings({
+      name: 'ui_animations_enabled',
+      value,
+    })
+  }
+
+  private get uiAnimationsCaption(): string {
+    const stateText = this.$t(
+      this.uiAnimationsEnabled ? 'ui_animations_on' : 'ui_animations_off',
+    ).toString()
+    return `${this.$t('ui_animations')}: ${stateText}`
+  }
+
   private get buttons() {
     const buttons: Button[] = []
 
@@ -270,6 +298,13 @@ export default class AppHeader extends Vue {
         variant: defaultVariantAttribute,
       })
     }
+
+    buttons.push({
+      caption: this.uiAnimationsCaption,
+      type: 'callback',
+      callback: () => this.toggleUiAnimations(),
+      variant: defaultVariantAttribute,
+    })
 
     buttons.push({
       caption: this.$t('change_language').toString(),

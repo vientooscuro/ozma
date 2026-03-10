@@ -35,6 +35,7 @@
     :class="[
       'view-form',
       { 'contains-only-one-iframe': containsOnlyOneIframe },
+      { 'animations-disabled': !uiAnimationsEnabled },
     ]"
   >
     <Errorbox
@@ -967,6 +968,14 @@ export default class UserViewForm extends mixins<
       this.uv.columnAttributes[0].control === 'iframe'
     )
   }
+
+  private get uiAnimationsEnabled(): boolean {
+    return this.$store.state.settings.current.getEntry(
+      'ui_animations_enabled',
+      Boolean,
+      true,
+    )
+  }
 }
 </script>
 
@@ -992,6 +1001,10 @@ export default class UserViewForm extends mixins<
       margin-bottom: 0 !important;
     }
   }
+}
+
+.view-form.animations-disabled {
+  animation: none !important;
 }
 
 @keyframes form-screen-enter {

@@ -201,6 +201,20 @@ export default {
   },
 
   methods: {
+    animationsEnabled() {
+      const currentSettings = this.$store?.state?.settings?.current
+      if (currentSettings === undefined || currentSettings === null) {
+        return true
+      }
+
+      if (typeof currentSettings.getEntry === 'function') {
+        return currentSettings.getEntry('ui_animations_enabled', Boolean, true)
+      }
+
+      const rawValue = currentSettings.settings?.ui_animations_enabled
+      return rawValue === undefined ? true : rawValue !== 'false'
+    },
+
     getAnimatedElement() {
       if (this.popper instanceof HTMLElement) {
         return this.popper
@@ -389,6 +403,22 @@ export default {
       this.isDisplayed = true
       this.showPopper = true
 
+      if (!this.animationsEnabled()) {
+        this.$nextTick(() => {
+          const containerElement = this.getAnimatedElement()
+          if (!(containerElement instanceof HTMLElement)) {
+            return
+          }
+
+          this.clearAnimatedStyles(containerElement)
+          this.getAnimatedContentElements(containerElement).forEach((element) => {
+            this.clearAnimatedContentStyles(element)
+          })
+          this.updatePopper()
+        })
+        return
+      }
+
       this.$nextTick(() => {
         const containerElement = this.getAnimatedElement()
         if (!(containerElement instanceof HTMLElement)) {
@@ -415,6 +445,12 @@ export default {
 
       this.clearAnimationHandles()
       this.showPopper = false
+
+      if (!this.animationsEnabled()) {
+        this.isDisplayed = false
+        this.doDestroy()
+        return
+      }
 
       this.$nextTick(() => {
         this.animateOut(() => {
