@@ -8,6 +8,7 @@ OZMADB_LOCAL_IMAGE="ghcr.io/vientooscuro/ozmadb:master"
 OZMADB_BIN_PATH="$OZMADB_LOCAL_DIR/out/ozmadb/OzmaDB"
 OZMADB_DOCKER_PLATFORM="${OZMADB_DOCKER_PLATFORM:-}"
 MODE="all"
+NO_REBUILD=false
 
 log() {
   printf '\n[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"
@@ -15,11 +16,12 @@ log() {
 
 usage() {
   cat <<'EOF'
-Usage: ./local_rebuild_and_publish.sh [--only_ui | --only_db]
+Usage: ./local_rebuild_and_publish.sh [--only_ui | --only_db] [--no_rebuild]
 
 Options:
   --only_ui  Build and restart only ozma (UI) container.
   --only_db  Build and restart only ozmadb container.
+  --no_rebuild  For --only_ui, skip rebuilding ozma image and copy local ./dist into container.
   -h, --help Show this help.
 EOF
 }
@@ -46,6 +48,9 @@ for arg in "$@"; do
         exit 1
       fi
       MODE="only_db"
+      ;;
+    --no_rebuild)
+      NO_REBUILD=true
       ;;
     -h|--help)
       usage
@@ -75,6 +80,11 @@ case "$MODE" in
 esac
 
 require_cmd docker
+
+if [[ "$NO_REBUILD" == true ]] && [[ "$MODE" != "only_ui" ]]; then
+  echo "Error: --no_rebuild is supported only with --only_ui." >&2
+  exit 1
+fi
 
 if [[ "$BUILD_DB" == true ]]; then
   require_cmd file
@@ -139,7 +149,11 @@ if [[ "$BUILD_DB" == true ]]; then
   DOCKER_DEFAULT_PLATFORM="$OZMADB_DOCKER_PLATFORM" docker compose build ozmadb
 fi
 if [[ "$BUILD_UI" == true ]]; then
-  docker compose build ozma
+  if [[ "$NO_REBUILD" == true ]]; then
+    log "Skipping ozma image rebuild (--no_rebuild)."
+  else
+    docker compose build ozma
+  fi
 fi
 
 log "Publishing changes and restarting containers..."
@@ -147,7 +161,26 @@ if [[ "$BUILD_DB" == true ]]; then
   DOCKER_DEFAULT_PLATFORM="$OZMADB_DOCKER_PLATFORM" docker compose up -d --no-deps ozmadb
 fi
 if [[ "$BUILD_UI" == true ]]; then
-  docker compose up -d --no-deps ozma
+  if [[ "$NO_REBUILD" == true ]]; then
+    if [[ ! -d "$ROOT_DIR/dist" ]]; then
+      echo "Error: local dist directory not found: $ROOT_DIR/dist" >&2
+      echo "Run yarn build first, then re-run with --no_rebuild." >&2
+      exit 1
+    fi
+
+    docker compose up -d --no-deps ozma
+    OZMA_CONTAINER_ID="$(docker compose ps -q ozma)"
+    if [[ -z "$OZMA_CONTAINER_ID" ]]; then
+      echo "Error: failed to resolve ozma container id." >&2
+      exit 1
+    fi
+
+    log "Copying local dist/ into ozma container..."
+    docker exec "$OZMA_CONTAINER_ID" sh -lc 'rm -rf /usr/share/caddy/*'
+    docker cp "$ROOT_DIR/dist/." "$OZMA_CONTAINER_ID:/usr/share/caddy"
+  else
+    docker compose up -d --no-deps ozma
+  fi
 fi
 
 log "Current status:"
