@@ -3,6 +3,9 @@
   <popper
     ref="popup"
     trigger="clickToOpen"
+    transition="ozma-popover"
+    enter-active-class="ozma-popover-enter ozma-popover-enter-active"
+    leave-active-class="ozma-popover-leave ozma-popover-leave-active"
     :visible-arrow="false"
     :options="{
       placement: listItem ? 'right-start' : 'bottom-end',

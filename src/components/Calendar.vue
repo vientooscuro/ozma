@@ -32,9 +32,9 @@
       ref="popup"
       v-click-outside="closePopup"
       :trigger="null"
-      transition="fade"
-      enter-active-class="fade-enter fade-enter-active"
-      leave-active-class="fade-leave fade-leave-active"
+      transition="ozma-popover"
+      enter-active-class="ozma-popover-enter ozma-popover-enter-active"
+      leave-active-class="ozma-popover-leave ozma-popover-leave-active"
       :visible-arrow="false"
       :options="{
         placement: 'bottom-start',
@@ -331,21 +331,6 @@ export default class Calendar extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 1s;
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-enter-to,
-.fade-leave {
-  opacity: 1;
-}
-
 .popup-container {
   position: relative;
   z-index: 30;

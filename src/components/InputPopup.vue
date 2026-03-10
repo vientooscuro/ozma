@@ -32,9 +32,9 @@
       <popper
         ref="popup"
         trigger="clickToToggle"
-        transition="fade"
-        enter-active-class="fade-enter fade-enter-active"
-        leave-active-class="fade-leave fade-leave-active"
+        transition="ozma-popover"
+        enter-active-class="ozma-popover-enter ozma-popover-enter-active"
+        leave-active-class="ozma-popover-leave ozma-popover-leave-active"
         :visible-arrow="false"
         :options="popperOptions"
         :disabled="!show"

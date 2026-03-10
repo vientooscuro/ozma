@@ -978,6 +978,8 @@ export default class UserViewForm extends mixins<
   overflow-x: hidden;
   overflow-y: auto;
   color: var(--form-foregroundColor);
+  animation: form-screen-enter 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center top;
 
   @include mobile {
     padding: 1rem !important;
@@ -989,6 +991,24 @@ export default class UserViewForm extends mixins<
     ::v-deep .first_level_grid_block {
       margin-bottom: 0 !important;
     }
+  }
+}
+
+@keyframes form-screen-enter {
+  from {
+    transform: translateY(0.75rem);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view-form {
+    animation: none;
   }
 }
 

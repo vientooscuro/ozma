@@ -22,7 +22,8 @@
     :min-height="100"
     :pivot-y="0.8"
     :name="uid"
-    transition="tabbed-modal-transiton"
+    transition="tabbed-modal-transition"
+    overlay-transition="tabbed-modal-overlay-transition"
     :resizable="!$isMobile"
     :draggable="$isMobile ? false : '.tab-headers'"
     @before-close="beforeClose"
@@ -320,16 +321,26 @@ export default class TabbedModal extends Vue {
 }
 
 ::v-deep {
+  .tabbed-modal-overlay-transition-enter-active,
+  .tabbed-modal-overlay-transition-leave-active {
+    transition: opacity 0.24s ease;
+  }
+
+  .tabbed-modal-overlay-transition-enter,
+  .tabbed-modal-overlay-transition-leave-to {
+    opacity: 0;
+  }
+
   .tabbed-modal-transition-enter-active,
   .tabbed-modal-transition-leave-active {
     transition:
-      opacity 0.4s,
-      transform 0.4s;
+      opacity 0.34s ease,
+      transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .tabbed-modal-transition-enter,
   .tabbed-modal-transition-leave-to {
-    transform: translateY(5rem);
+    transform: translateY(2rem) scale(0.98);
     opacity: 0;
   }
 }

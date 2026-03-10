@@ -155,9 +155,9 @@
           force-show
           :trigger="null"
           :reference="cellContextMenu.reference"
-          transition="fade"
-          enter-active-class="fade-enter fade-enter-active"
-          leave-active-class="fade-leave fade-leave-active"
+          transition="ozma-popover"
+          enter-active-class="ozma-popover-enter ozma-popover-enter-active"
+          leave-active-class="ozma-popover-leave ozma-popover-leave-active"
           :visible-arrow="false"
           :options="{
             placement: 'bottom-start',
@@ -182,9 +182,9 @@
           force-show
           :trigger="null"
           :reference="columnContextMenu.reference"
-          transition="fade"
-          enter-active-class="fade-enter fade-enter-active"
-          leave-active-class="fade-leave fade-leave-active"
+          transition="ozma-popover"
+          enter-active-class="ozma-popover-enter ozma-popover-enter-active"
+          leave-active-class="ozma-popover-leave ozma-popover-leave-active"
           :visible-arrow="false"
           :options="{
             placement: 'bottom-start',

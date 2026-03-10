@@ -65,6 +65,9 @@
   <popper
     ref="popup"
     trigger="clickToOpen"
+    transition="ozma-popover"
+    enter-active-class="ozma-popover-enter ozma-popover-enter-active"
+    leave-active-class="ozma-popover-leave ozma-popover-leave-active"
     :style="{ height: '2rem' }"
     :visible-arrow="false"
     :options="{
