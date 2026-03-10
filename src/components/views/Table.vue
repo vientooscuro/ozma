@@ -103,9 +103,12 @@
           mobile: $isMobile,
           'multiple-cells-selected': selectedCells.length > 1,
           'show-fixed-column-border':
-            showFixedColumnBorder && stickFixedColumns,
+            showFixedColumnBorder &&
+            stickFixedColumns &&
+            !showVerticalBorders,
           'stick-fixed-columns': stickFixedColumns,
           'selection-column-enabled': showSelectionColumn,
+          'show-vertical-borders': showVerticalBorders,
         },
       ]"
       :infinite-wrapper="isRoot"
@@ -1876,6 +1879,10 @@ export default class UserViewTable extends mixins<
 
   get fixedColumnsLength(): number {
     return this.columns.filter((item) => item.fixed).length
+  }
+
+  private get showVerticalBorders(): boolean {
+    return this.settings.getEntry('table_vertical_borders', Boolean, true)
   }
 
   get fixedColumnPositions() {
@@ -4128,6 +4135,18 @@ export default class UserViewTable extends mixins<
 th,
 ::v-deep td {
   border-bottom: 1px solid var(--table-borderColor);
+}
+
+.show-vertical-borders {
+  th,
+  ::v-deep td {
+    border-right: 0.5px solid var(--table-borderColor);
+  }
+
+  th:last-child,
+  ::v-deep td:last-child {
+    border-right: none;
+  }
 }
 
 th[draggable='true'] {

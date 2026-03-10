@@ -14,6 +14,9 @@
             "disable_development_mode": "Disable development mode",
             "development_mode_indicator": "Development mode is on",
             "change_language": "Language",
+            "vertical_borders": "Vertical borders",
+            "vertical_borders_on": "on",
+            "vertical_borders_off": "off",
             "en": "English",
             "es": "Spanish (Español)",
             "ru": "Russian (Русский)",
@@ -33,6 +36,9 @@
             "disable_development_mode": "Выключить режим разработки",
             "development_mode_indicator": "Включён режим разработки",
             "change_language": "Язык",
+            "vertical_borders": "Вертикальные границы",
+            "vertical_borders_on": "вкл",
+            "vertical_borders_off": "выкл",
             "en": "Английский (English)",
             "es": "Испанский (Español)",
             "ru": "Русский",
@@ -52,6 +58,9 @@
             "disable_development_mode": "Deshabilitar el modo de desarrollo",
             "development_mode_indicator": "El modo de desarrollo está activado",
             "change_language": "El idioma",
+            "vertical_borders": "Bordes verticales",
+            "vertical_borders_on": "activados",
+            "vertical_borders_off": "desactivados",
             "en": "Inglés (English)",
             "es": "Español",
             "ru": "Ruso (Русский)",
@@ -206,6 +215,31 @@ export default class AppHeader extends Vue {
     )
   }
 
+  private get tableVerticalBordersEnabled(): boolean {
+    return this.currentSettings.getEntry(
+      'table_vertical_borders',
+      Boolean,
+      true,
+    )
+  }
+
+  private toggleTableVerticalBorders() {
+    const value = this.tableVerticalBordersEnabled ? 'false' : 'true'
+    void this.writeUserSettings({
+      name: 'table_vertical_borders',
+      value,
+    })
+  }
+
+  private get tableVerticalBordersCaption(): string {
+    const stateText = this.$t(
+      this.tableVerticalBordersEnabled
+        ? 'vertical_borders_on'
+        : 'vertical_borders_off',
+    ).toString()
+    return `${this.$t('vertical_borders')}: ${stateText}`
+  }
+
   private get buttons() {
     const buttons: Button[] = []
 
@@ -227,6 +261,12 @@ export default class AppHeader extends Vue {
         caption: this.$t('theme').toString(),
         type: 'button-group',
         buttons: this.themeButtons,
+        variant: defaultVariantAttribute,
+      })
+      buttons.push({
+        caption: this.tableVerticalBordersCaption,
+        type: 'callback',
+        callback: () => this.toggleTableVerticalBorders(),
         variant: defaultVariantAttribute,
       })
     }
