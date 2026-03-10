@@ -68,6 +68,7 @@ $color-transition:
   /* stylelint-disable value-keyword-case */
   $keys: foregroundColor, foregroundDarkerColor, foregroundContrastColor,
     backgroundColor, backgroundDarker1Color, backgroundDarker2Color, borderColor,
+    shadowColor,
     fontWeightStyle, fontStyleStyle, textDecorationStyle;
 
   .#{$local-name}-local-variant {

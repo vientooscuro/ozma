@@ -40,6 +40,7 @@ export const colorVariantKeys = [
   'backgroundDarker1',
   'backgroundDarker2',
   'border',
+  'shadow',
 ] as const
 export type ColorVariantKey = (typeof colorVariantKeys)[number]
 export const styleVariantKeys = [
@@ -81,6 +82,7 @@ export const colorVariantFromRaw = (raw: RawColorVariant): ColorVariant => {
   const foreground =
     toRgbaOrNull(raw.foreground) ?? darkenOrLighten(background, 0.8)
   const border = toRgbaOrNull(raw.border) ?? mix(background, 'black', 0.06)
+  const shadow = toRgbaOrNull(raw.shadow) ?? rgba(15, 23, 42, 0.45)
   const backgroundDarker1 = mix(background, foreground, 0.05)
   const backgroundDarker2 = mix(background, foreground, 0.15)
   const foregroundContrast = readableColor(background)
@@ -98,6 +100,7 @@ export const colorVariantFromRaw = (raw: RawColorVariant): ColorVariant => {
     backgroundDarker1,
     backgroundDarker2,
     border,
+    shadow,
     fontWeight,
     fontStyle,
     textDecoration,
@@ -364,6 +367,7 @@ export const colorVariantFromCellColor = (
           '--backgroundDarker1Color': 'var(--table-backgroundDarker1Color)',
           '--backgroundDarker2Color': 'var(--table-backgroundDarker2Color)',
           '--borderColor': 'var(--table-borderColor)',
+          '--shadowColor': 'var(--table-shadowColor)',
           '--fontWeightStyle': 'var(--table-fontWeightStyle, normal)',
           '--fontStyleStyle': 'var(--table-fontStyleStyle, normal)',
           '--textDecorationStyle': 'var(--table-textDecorationStyle, none)',
