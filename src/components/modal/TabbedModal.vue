@@ -334,14 +334,16 @@ export default class TabbedModal extends Vue {
   .tabbed-modal-transition-enter-active,
   .tabbed-modal-transition-leave-active {
     transition:
-      opacity 0.34s ease,
-      transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity 0.3s ease,
+      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: center top;
   }
 
   .tabbed-modal-transition-enter,
   .tabbed-modal-transition-leave-to {
-    transform: translateY(2rem) scale(0.98);
+    transform: translateY(0.75rem) scale(0.985);
     opacity: 0;
   }
 }
+
 </style>
