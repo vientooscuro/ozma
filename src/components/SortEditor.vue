@@ -36,8 +36,8 @@
       ref="popup"
       trigger="clickToOpen"
       transition="ozma-popover"
-      enter-active-class="ozma-popover-enter ozma-popover-enter-active"
-      leave-active-class="ozma-popover-leave ozma-popover-leave-active"
+      enter-active-class="ozma-popover-enter-active"
+      leave-active-class="ozma-popover-leave-active"
       :visible-arrow="false"
       :options="{
         placement: 'bottom-end',
@@ -88,7 +88,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import Popper from 'vue-popperjs'
+import Popper from '@/components/common/OzmaPopper.vue'
 
 import { outlinedInterfaceButtonVariant } from '@/utils_colors'
 import { Button } from './buttons/buttons'

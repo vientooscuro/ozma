@@ -4,8 +4,8 @@
     ref="popup"
     trigger="clickToOpen"
     transition="ozma-popover"
-    enter-active-class="ozma-popover-enter ozma-popover-enter-active"
-    leave-active-class="ozma-popover-leave ozma-popover-leave-active"
+    enter-active-class="ozma-popover-enter-active"
+    leave-active-class="ozma-popover-leave-active"
     :visible-arrow="false"
     :options="{
       placement: listItem ? 'right-start' : 'bottom-end',
@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import Popper from 'vue-popperjs'
+import Popper from '@/components/common/OzmaPopper.vue'
 
 import type { IButton, IButtonGroup } from '@/components/buttons/buttons'
 import ButtonView from '@/components/buttons/ButtonView.vue'

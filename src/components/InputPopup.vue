@@ -33,8 +33,8 @@
         ref="popup"
         trigger="clickToToggle"
         transition="ozma-popover"
-        enter-active-class="ozma-popover-enter ozma-popover-enter-active"
-        leave-active-class="ozma-popover-leave ozma-popover-leave-active"
+        enter-active-class="ozma-popover-enter-active"
+        leave-active-class="ozma-popover-leave-active"
         :visible-arrow="false"
         :options="popperOptions"
         :disabled="!show"
@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import Popper from 'vue-popperjs'
+import Popper from '@/components/common/OzmaPopper.vue'
 import { Portal } from 'portal-vue'
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 

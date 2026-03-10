@@ -282,7 +282,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import InfiniteLoading, { StateChanger } from 'vue-infinite-loading'
-import Popper from 'vue-popperjs'
+import Popper from '@/components/common/OzmaPopper.vue'
 
 import {
   deepClone,

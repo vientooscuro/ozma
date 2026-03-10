@@ -126,18 +126,81 @@ button:not(.btn) {
 }
 
 /* Popper transitions */
+@keyframes ozma-popover-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ozma-popover-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes ozma-popover-content-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ozma-popover-content-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
 .ozma-popover-enter-active,
 .ozma-popover-leave-active {
-  transition:
-    opacity 0.22s ease,
-    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  transform-origin: center top;
-  will-change: opacity, transform;
+  animation-duration: 0.34s;
+  animation-fill-mode: both;
+  animation-timing-function: linear;
+  will-change: opacity;
+}
+
+.ozma-popover-enter-active {
+  animation-name: ozma-popover-fade-in;
+}
+
+.ozma-popover-leave-active {
+  animation-name: ozma-popover-fade-out;
+}
+
+.ozma-popover-enter-active > .popper,
+.ozma-popover-leave-active > .popper {
+  animation-duration: 0.34s;
+  animation-fill-mode: both;
+  will-change: opacity;
+}
+
+.ozma-popover-enter-active > .popper {
+  animation-name: ozma-popover-content-in;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ozma-popover-leave-active > .popper {
+  animation-name: ozma-popover-content-out;
+  animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
 
 .ozma-popover-enter,
 .ozma-popover-leave-to {
-  transform: translateY(0.5rem) scale(0.98);
   opacity: 0;
 }
 
@@ -156,10 +219,9 @@ button:not(.btn) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ozma-popover-enter-active,
-  .ozma-popover-leave-active,
   .modal.fade .modal-dialog {
     transition: none;
+    animation: none;
   }
 }
 

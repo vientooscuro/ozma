@@ -75,8 +75,8 @@
     ref="popup"
     trigger="clickToOpen"
     transition="ozma-popover"
-    enter-active-class="ozma-popover-enter ozma-popover-enter-active"
-    leave-active-class="ozma-popover-leave ozma-popover-leave-active"
+    enter-active-class="ozma-popover-enter-active"
+    leave-active-class="ozma-popover-leave-active"
     :style="{ height: '2rem' }"
     :visible-arrow="false"
     :options="{
@@ -122,7 +122,7 @@
 <script lang="ts">
 import { namespace } from 'vuex-class'
 import { Component, Vue } from 'vue-property-decorator'
-import Popper from 'vue-popperjs'
+import Popper from '@/components/common/OzmaPopper.vue'
 
 import * as Api from '@/api'
 import { Button } from '@/components/buttons/buttons'

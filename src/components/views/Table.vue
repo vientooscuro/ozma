@@ -159,8 +159,8 @@
           :trigger="null"
           :reference="cellContextMenu.reference"
           transition="ozma-popover"
-          enter-active-class="ozma-popover-enter ozma-popover-enter-active"
-          leave-active-class="ozma-popover-leave ozma-popover-leave-active"
+          enter-active-class="ozma-popover-enter-active"
+          leave-active-class="ozma-popover-leave-active"
           :visible-arrow="false"
           :options="{
             placement: 'bottom-start',
@@ -186,8 +186,8 @@
           :trigger="null"
           :reference="columnContextMenu.reference"
           transition="ozma-popover"
-          enter-active-class="ozma-popover-enter ozma-popover-enter-active"
-          leave-active-class="ozma-popover-leave ozma-popover-leave-active"
+          enter-active-class="ozma-popover-enter-active"
+          leave-active-class="ozma-popover-leave-active"
           :visible-arrow="false"
           :options="{
             placement: 'bottom-start',
@@ -536,7 +536,7 @@ import {
   IEntityRef,
   AttributeName,
 } from '@ozma-io/ozmadb-js/client'
-import Popper from 'vue-popperjs'
+import Popper from '@/components/common/OzmaPopper.vue'
 
 import {
   deepEquals,

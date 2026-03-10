@@ -33,8 +33,8 @@
       v-click-outside="closePopup"
       :trigger="null"
       transition="ozma-popover"
-      enter-active-class="ozma-popover-enter ozma-popover-enter-active"
-      leave-active-class="ozma-popover-leave ozma-popover-leave-active"
+      enter-active-class="ozma-popover-enter-active"
+      leave-active-class="ozma-popover-leave-active"
       :visible-arrow="false"
       :options="{
         placement: 'bottom-start',
@@ -133,7 +133,7 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import moment, { Moment } from 'moment'
 
-import Popper from 'vue-popperjs'
+import Popper from '@/components/common/OzmaPopper.vue'
 import DatePicker from '@/components/calendar/DatePicker.vue'
 import TimePicker from '@/components/calendar/TimePicker.vue'
 

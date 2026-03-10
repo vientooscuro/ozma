@@ -113,7 +113,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import Popper from 'vue-popperjs'
+import Popper from '@/components/common/OzmaPopper.vue'
 
 import { debounceTillAnimationFrame } from '@/utils'
 import type { IUserViewType } from '@/components/FormControl.vue'
