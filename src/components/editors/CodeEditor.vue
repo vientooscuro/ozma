@@ -56,6 +56,33 @@ monaco.editor.defineTheme('ozma-light', {
   },
 })
 
+monaco.editor.defineTheme('ozma-light-glass', {
+  base: 'vs',
+  inherit: true,
+  rules: tokenRules(
+    '0f766e', // keyword: glass accent teal
+    'b45309', // string: warm amber-brown
+    '2563eb', // number: clean blue
+    '7c6f60', // comment: warm neutral
+    '0b5e5a', // type: deep teal
+    '525252', // operator: neutral dark gray
+  ),
+  colors: {
+    'editor.background': '#fffdf8',
+    'editor.foreground': '#1f1f1f',
+    'editorLineNumber.foreground': '#9f9689',
+    'editorLineNumber.activeForeground': '#5f5850',
+    'editor.selectionBackground': '#59d6cf33',
+    'editor.inactiveSelectionBackground': '#59d6cf20',
+    'editor.lineHighlightBackground': '#f4efe4cc',
+    'editorCursor.foreground': '#0f766e',
+    'editor.findMatchBackground': '#f6b94166',
+    'editor.findMatchHighlightBackground': '#f6b94133',
+    'editorIndentGuide.background1': '#c4b6a34d',
+    'editorIndentGuide.activeBackground1': '#c4b6a380',
+  },
+})
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ;(monaco.editor.defineTheme as any)('ozma-dark', {
   base: 'vs-dark',
@@ -134,6 +161,82 @@ monaco.editor.defineTheme('ozma-light', {
   },
 })
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+;(monaco.editor.defineTheme as any)('ozma-dark-glass', {
+  base: 'vs-dark',
+  inherit: true,
+  semanticHighlighting: true,
+  semanticTokenColors: {
+    'variable': '#8ad8ff',
+    'variable.readonly': '#9de7e1',
+    'variable.defaultLibrary': '#8ad8ff',
+    'parameter': '#d4dee6',
+    'function': '#f6b941',
+    'function.defaultLibrary': '#8ad8ff',
+    'method': '#f6b941',
+    'method.defaultLibrary': '#8ad8ff',
+    'class': '#f6b941',
+    'class.defaultLibrary': '#f6b941',
+    'interface': '#f6b941',
+    'type': '#f6b941',
+    'typeParameter': '#f6b941',
+    'namespace': '#d4dee6',
+    'property': '#9de7e1',
+    'enumMember': '#9de7e1',
+    'event': '#9de7e1',
+    'macro': '#59d6cf',
+    'label': '#d4dee6',
+    'property.declaration': '#59d6cf',
+  },
+  rules: [
+    { token: 'keyword', foreground: '59D6CF', fontStyle: 'bold' },
+    { token: 'keyword.sql', foreground: '59D6CF', fontStyle: 'bold' },
+    { token: 'string', foreground: 'F6B941' },
+    { token: 'string.sql', foreground: 'F6B941' },
+    { token: 'number', foreground: '8AD8FF' },
+    { token: 'number.sql', foreground: '8AD8FF' },
+    { token: 'comment', foreground: '7E94A6', fontStyle: 'italic' },
+    { token: 'comment.sql', foreground: '7E94A6', fontStyle: 'italic' },
+    { token: 'type', foreground: 'F6B941' },
+    { token: 'predefined', foreground: '8AD8FF' },
+    { token: 'operator', foreground: 'D4DEE6' },
+    { token: 'operator.sql', foreground: '59D6CF' },
+    { token: 'identifier', foreground: 'D4DEE6' },
+    { token: 'identifier.quote', foreground: 'D4DEE6' },
+    { token: 'identifier.quote.sql', foreground: 'D4DEE6' },
+    { token: 'variable', foreground: '8AD8FF' },
+    { token: 'constant', foreground: '9DE7E1' },
+    { token: 'string.escape', foreground: '9DE7E1' },
+    { token: 'string.escape.sql', foreground: '9DE7E1' },
+    { token: 'number.float', foreground: '8AD8FF' },
+    { token: 'number.hex', foreground: '8AD8FF' },
+    { token: 'comment.block', foreground: '7E94A6', fontStyle: 'italic' },
+    { token: 'comment.block.sql', foreground: '7E94A6', fontStyle: 'italic' },
+    { token: 'delimiter', foreground: 'D4DEE680' },
+    { token: 'delimiter.sql', foreground: 'D4DEE680' },
+    { token: 'delimiter.parenthesis', foreground: 'D4DEE6CC' },
+    { token: 'delimiter.parenthesis.sql', foreground: 'D4DEE6CC' },
+    { token: 'key.json', foreground: '59D6CF' },
+    { token: 'string.value.json', foreground: 'F6B941' },
+    { token: 'number.json', foreground: '8AD8FF' },
+    { token: 'keyword.json', foreground: '9DE7E1' },
+  ],
+  colors: {
+    'editor.background': '#0b1623',
+    'editor.foreground': '#e7ecef',
+    'editorLineNumber.foreground': '#95a7b666',
+    'editorLineNumber.activeForeground': '#d4dee6b3',
+    'editor.selectionBackground': '#59d6cf3d',
+    'editor.inactiveSelectionBackground': '#59d6cf26',
+    'editor.lineHighlightBackground': '#122235cc',
+    'editorCursor.foreground': '#59d6cf',
+    'editor.findMatchBackground': '#f6b94170',
+    'editor.findMatchHighlightBackground': '#f6b94142',
+    'editorIndentGuide.background1': '#8cb0c81a',
+    'editorIndentGuide.activeBackground1': '#8cb0c838',
+  },
+})
+
 const settings = namespace('settings')
 
 @Component
@@ -172,7 +275,18 @@ export default class CodeEditor extends Vue {
   }
 
   private get monacoTheme(): string {
+    const themeStyleName = this.currentThemeStyleName
+    if (themeStyleName === 'light-glass') return 'ozma-light-glass'
+    if (themeStyleName === 'dark-glass') return 'ozma-dark-glass'
+    if (themeStyleName.endsWith('-glass')) {
+      return this.isDarkTheme ? 'ozma-dark-glass' : 'ozma-light-glass'
+    }
     return this.isDarkTheme ? 'ozma-dark' : 'ozma-light'
+  }
+
+  private get currentThemeStyleName(): string {
+    const themeRef = this.currentThemeRef as { name?: string } | null
+    return themeRef?.name ?? document.documentElement.dataset.themeStyle ?? ''
   }
 
   get options(): monaco.editor.IStandaloneEditorConstructionOptions {
