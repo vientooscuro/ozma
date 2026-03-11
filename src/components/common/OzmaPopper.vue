@@ -208,8 +208,19 @@ export default {
       typeof this.$slots.default === 'function'
         ? this.$slots.default({})
         : []
-    this.referenceElm = this.reference || referenceNodes?.[0]?.elm || null
-    this.popper = defaultNodes?.[0]?.elm || null
+    const rootElement = this.$el instanceof HTMLElement ? this.$el : null
+    const referenceFallback =
+      rootElement instanceof HTMLElement ? rootElement.children.item(1) : null
+    const wrapperElement =
+      this.$refs.popperWrapper instanceof HTMLElement ? this.$refs.popperWrapper : null
+    const popperFallback =
+      wrapperElement instanceof HTMLElement
+        ? wrapperElement.firstElementChild || wrapperElement
+        : null
+
+    this.referenceElm =
+      this.reference || referenceNodes?.[0]?.elm || referenceFallback || null
+    this.popper = defaultNodes?.[0]?.elm || popperFallback || null
 
     // If visibility is controlled from parent via `force-show`,
     // avoid internal trigger listeners to prevent click state races.
@@ -536,12 +547,22 @@ export default {
 
       if (this.appendedToBody) {
         this.appendedToBody = false
-        document.body.removeChild(this.popper.parentElement)
+        if (
+          this.popper &&
+          this.popper.parentElement &&
+          this.popper.parentElement.parentElement === document.body
+        ) {
+          document.body.removeChild(this.popper.parentElement)
+        }
       }
     },
 
     createPopper() {
       this.$nextTick(() => {
+        if (!this.referenceElm || !this.popper) {
+          return
+        }
+
         if (this.visibleArrow) {
           this.appendArrow(this.popper)
         }
