@@ -88,8 +88,7 @@
           "columnFields": {
             "schema_id": { "type": "reference(\"public\".\"schemas\")" },
             "name": { "type": "string" },
-            "localized_name": { "type": "json", "defaultValue": "{}" },
-            "table_background": { "type": "string", "isNullable": true }
+            "localized_name": { "type": "json", "defaultValue": "{}" }
           },
           "computedFields": {
             "full_name": { "expression": "schema_id=>__main || '.' || name" }
@@ -279,9 +278,6 @@
                         "select": "true"
                       },
                       "localized_name": {
-                        "select": "true"
-                      },
-                      "table_background": {
                         "select": "true"
                       }
                     }

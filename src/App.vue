@@ -386,13 +386,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     const oldDefaultVariant = colorVariantFromRaw({ background })
     const defaultVariant =
       currentTheme?.colorVariants['default'] ?? oldDefaultVariant
-    const existingTableVariant = currentTheme?.colorVariants['table']
+    const existingTableVariant =
+      currentTheme?.colorVariants['table'] ??
+      currentTheme?.colorVariants['table-background']
     const tableVariant =
       existingTableVariant ??
-      (currentTheme?.tableBackground !== null &&
-      currentTheme?.tableBackground !== undefined
-        ? colorVariantFromRaw({ background: currentTheme.tableBackground })
-        : colorVariantFromRaw({ background: defaultVariant.background }))
+      colorVariantFromRaw({ background: defaultVariant.background })
     const interfaceButton = {
       ...transparentVariant,
       backgroundDarker1: defaultVariant.backgroundDarker1,
