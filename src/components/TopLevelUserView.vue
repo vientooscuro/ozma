@@ -523,6 +523,11 @@ export default class TopLevelUserView extends Vue {
           cancelTitle: this.$t('cancel').toString(),
           okVariant: 'danger',
           cancelVariant: 'outline-secondary',
+          modalClass: 'glass-confirm-modal',
+          dialogClass: 'glass-confirm-dialog',
+          contentClass: 'glass-confirm-content',
+          bodyClass: 'glass-confirm-body',
+          footerClass: 'glass-confirm-footer',
           centered: true,
         },
       )

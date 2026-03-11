@@ -683,6 +683,111 @@ html[data-theme-style='dark-glass'] .modal-content {
   animation: glass-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+html[data-theme-style='light-glass'] .glass-confirm-dialog,
+html[data-theme-style='dark-glass'] .glass-confirm-dialog {
+  max-width: min(560px, calc(100vw - 1.5rem));
+}
+
+html[data-theme-style='light-glass'] .glass-confirm-content,
+html[data-theme-style='dark-glass'] .glass-confirm-content {
+  border-radius: 22px;
+}
+
+html[data-theme-style='light-glass'] .glass-confirm-content {
+  border-color: rgb(210 194 143 / 55%);
+  background:
+    linear-gradient(180deg, rgb(248 241 216 / 98%) 0%, rgb(244 236 211 / 96%) 100%),
+    var(--panel-bg);
+}
+
+html[data-theme-style='dark-glass'] .glass-confirm-content,
+html[data-theme-style='dark-glass'] .glass-confirm-content .modal-title,
+html[data-theme-style='dark-glass'] .glass-confirm-content .modal-body {
+  color: var(--ink);
+}
+
+html[data-theme-style='dark-glass'] .glass-confirm-content .close {
+  color: var(--ink);
+  text-shadow: none;
+  opacity: 0.88;
+}
+
+html[data-theme-style='dark-glass'] .glass-confirm-content .close:hover,
+html[data-theme-style='dark-glass'] .glass-confirm-content .close:focus {
+  color: #fff;
+  opacity: 1;
+}
+
+html[data-theme-style='dark-glass'] .modal-content,
+html[data-theme-style='dark-glass'] .modal-content .modal-title,
+html[data-theme-style='dark-glass'] .modal-content .modal-body,
+html[data-theme-style='dark-glass'] .modal-content .modal-header,
+html[data-theme-style='dark-glass'] .modal-content .modal-footer {
+  color: var(--ink);
+}
+
+html[data-theme-style='dark-glass'] .modal-content .close {
+  color: var(--ink) !important;
+  text-shadow: none;
+  opacity: 0.9;
+}
+
+html[data-theme-style='dark-glass'] .modal-content .close:hover,
+html[data-theme-style='dark-glass'] .modal-content .close:focus {
+  color: #fff !important;
+  opacity: 1;
+}
+
+html[data-theme-style='light-glass'] .modal-content,
+html[data-theme-style='light-glass'] .modal-content .modal-title,
+html[data-theme-style='light-glass'] .modal-content .modal-body,
+html[data-theme-style='light-glass'] .modal-content .modal-header,
+html[data-theme-style='light-glass'] .modal-content .modal-footer {
+  color: #fff;
+}
+
+html[data-theme-style='light-glass'] .modal-content .close {
+  color: #fff !important;
+  text-shadow: none;
+  opacity: 0.92;
+}
+
+html[data-theme-style='light-glass'] .modal-content .close:hover,
+html[data-theme-style='light-glass'] .modal-content .close:focus {
+  color: #fff !important;
+  opacity: 1;
+}
+
+html[data-theme-style='light-glass'] .glass-confirm-body,
+html[data-theme-style='dark-glass'] .glass-confirm-body {
+  padding: 1.5rem 1.75rem 1.15rem;
+  font-size: clamp(1.05rem, 0.92rem + 0.65vw, 1.35rem);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+html[data-theme-style='light-glass'] .glass-confirm-body {
+  color: #fff;
+}
+
+html[data-theme-style='dark-glass'] .glass-confirm-body {
+  color: var(--ink);
+}
+
+html[data-theme-style='light-glass'] .glass-confirm-footer,
+html[data-theme-style='dark-glass'] .glass-confirm-footer {
+  border-top: 1px solid var(--line);
+  padding: 1rem 1.75rem 1.35rem;
+  gap: 0.65rem;
+}
+
+html[data-theme-style='light-glass'] .glass-confirm-footer .btn-outline-secondary,
+html[data-theme-style='dark-glass'] .glass-confirm-footer .btn-outline-secondary {
+  border-color: var(--line);
+  background: var(--surface-strong);
+  color: var(--ink);
+}
+
 html[data-theme-style='light-glass'] .popper,
 html[data-theme-style='dark-glass'] .popper {
   z-index: 100050 !important;
