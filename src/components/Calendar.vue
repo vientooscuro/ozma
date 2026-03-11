@@ -229,6 +229,15 @@ export default class Calendar extends Vue {
     this.isPopupOpen = false
   }
 
+  private beforeUnmount() {
+    const popupRef: any = this.$refs.popup
+    popupRef?.destroyPopper?.()
+  }
+
+  private unmounted() {
+    this.beforeUnmount()
+  }
+
   private focusInput() {
     ;(this.$refs.control as HTMLInputElement | undefined)?.focus()
   }

@@ -552,12 +552,13 @@ export default {
 
       if (this.appendedToBody) {
         this.appendedToBody = false
+        const popperContainer = this.popper?.parentElement ?? null
         if (
-          this.popper &&
-          this.popper.parentElement &&
-          this.popper.parentElement.parentElement === document.body
+          popperContainer &&
+          popperContainer !== document.body &&
+          document.body.contains(popperContainer)
         ) {
-          document.body.removeChild(this.popper.parentElement)
+          popperContainer.remove()
         }
       }
     },
