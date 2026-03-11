@@ -288,7 +288,46 @@ WHERE uv.schema_id = (SELECT id FROM public.schemas WHERE name = 'funapp')
   AND uv.name = 'color_variants'
   AND strpos(query, 'font_weight') = 0;
 
--- 6) Exactly-once history table for time triggers.
+-- 6) Optional table background per theme.
+ALTER TABLE IF EXISTS funapp.color_themes
+  ADD COLUMN IF NOT EXISTS table_background text;
+
+WITH color_themes_entity AS (
+    SELECT e.id AS entity_id
+    FROM public.entities e
+    JOIN public.schemas s ON s.id = e.schema_id
+    WHERE s.name = 'funapp' AND e.name = 'color_themes'
+)
+INSERT INTO public.column_fields (entity_id, name, type, "default", is_nullable, is_immutable)
+SELECT t.entity_id, 'table_background', 'string', null, true, false
+FROM color_themes_entity t
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM public.column_fields cf
+    WHERE cf.entity_id = t.entity_id
+      AND cf.name = 'table_background'
+);
+
+UPDATE public.user_views uv
+SET query = replace(
+    query,
+    $q$  localized_name
+FROM$q$,
+    $q$  localized_name,
+  table_background
+FROM$q$
+)
+WHERE uv.schema_id = (SELECT id FROM public.schemas WHERE name = 'funapp')
+  AND uv.name = 'color_themes'
+  AND strpos(query, 'table_background') = 0;
+
+UPDATE funapp.color_themes
+SET table_background = '#f3f4f8'
+WHERE schema_id = (SELECT id FROM public.schemas WHERE name = 'admin')
+  AND name = 'light_old'
+  AND (table_background IS NULL OR table_background = '');
+
+-- 7) Exactly-once history table for time triggers.
 CREATE SEQUENCE IF NOT EXISTS public.time_trigger_fired_id_seq;
 
 CREATE TABLE IF NOT EXISTS public.time_trigger_fired (

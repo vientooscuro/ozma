@@ -30,7 +30,8 @@ SELECT
   id,
   schema_id=>name as schema_name,
   name,
-  localized_name
+  localized_name,
+  table_background
 FROM
   funapp.color_themes`,
   color_variants: `

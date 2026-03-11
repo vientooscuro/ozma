@@ -67,6 +67,7 @@ export type ThemeName = string
 
 export interface ITheme {
   localized: Record<string, string>
+  tableBackground: string | null
   colorVariants: Record<string, ColorVariant>
 }
 
@@ -210,6 +211,9 @@ const loadColorThemeHeaders = async (): Promise<
   const localizedNameColumnIndex = res.info.columns.findIndex(
     (column) => column.name === 'localized_name',
   )
+  const tableBackgroundColumnIndex = res.info.columns.findIndex(
+    (column) => column.name === 'table_background',
+  )
 
   const themes: Record<
     SchemaName,
@@ -229,6 +233,10 @@ const loadColorThemeHeaders = async (): Promise<
         string,
         string
       >,
+      tableBackground:
+        tableBackgroundColumnIndex >= 0
+          ? (row.values[tableBackgroundColumnIndex].value as string | null)
+          : null,
       colorVariants: {},
     }
     schema[name] = { id, theme }

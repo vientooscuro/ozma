@@ -96,6 +96,7 @@
       :class="[
         'table-wrapper',
         'default-variant',
+        'table-variant',
         'table-local-variant',
         {
           root: isRoot,
