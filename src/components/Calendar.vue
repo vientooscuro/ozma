@@ -32,6 +32,7 @@
       ref="popup"
       v-click-outside="closePopup"
       :trigger="null"
+      :append-to-body="!isCellEdit"
       transition="ozma-popover"
       enter-active-class="ozma-popover-enter-active"
       leave-active-class="ozma-popover-leave-active"
