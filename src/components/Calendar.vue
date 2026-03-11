@@ -32,7 +32,6 @@
       ref="popup"
       v-click-outside="closePopup"
       :trigger="null"
-      :append-to-body="!isCellEdit"
       transition="ozma-popover"
       enter-active-class="ozma-popover-enter-active"
       leave-active-class="ozma-popover-leave-active"
@@ -230,13 +229,18 @@ export default class Calendar extends Vue {
     this.isPopupOpen = false
   }
 
-  private beforeUnmount() {
+  // eslint-disable-next-line vue/no-deprecated-destroyed-lifecycle
+  private beforeDestroy() {
     const popupRef: any = this.$refs.popup
     popupRef?.destroyPopper?.()
   }
 
+  private beforeUnmount() {
+    this.beforeDestroy()
+  }
+
   private unmounted() {
-    this.beforeUnmount()
+    this.beforeDestroy()
   }
 
   private focusInput() {

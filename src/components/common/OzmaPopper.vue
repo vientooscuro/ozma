@@ -254,14 +254,19 @@ export default {
     }
   },
 
-  beforeUnmount() {
+  // eslint-disable-next-line vue/no-deprecated-destroyed-lifecycle
+  beforeDestroy() {
     this.clearAnimationHandles()
     this.destroyPopper()
   },
 
+  beforeUnmount() {
+    this.beforeDestroy()
+  },
+
   // Fallback in case environment only fires `unmounted`.
   unmounted() {
-    this.beforeUnmount()
+    this.beforeDestroy()
   },
 
   methods: {
