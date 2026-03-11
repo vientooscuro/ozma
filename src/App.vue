@@ -18,7 +18,7 @@
     :data-window="uid"
     :data-theme-style="themeStyleName"
     :style="styleSettings"
-    class="default-variant default-local-variant"
+    class="default-variant default-local-variant pageBackground-variant pageBackground-local-variant"
   >
     <div class="app-container">
       <ModalPortalTarget name="tabbed-modal" multiple />
