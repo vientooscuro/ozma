@@ -14,6 +14,9 @@ const SHOW_ANIMATION_DURATION_MS = 260
 const HIDE_ANIMATION_DURATION_MS = 140
 const CONTENT_SHOW_ANIMATION_DURATION_MS = 280
 const CONTENT_HIDE_ANIMATION_DURATION_MS = 140
+const POPPER_Z_INDEX_BASE = 100050
+
+let nextPopperZIndex = POPPER_Z_INDEX_BASE
 
 function on(element, event, handler) {
   if (element && event && handler) {
@@ -359,6 +362,16 @@ export default {
       element.style.transformOrigin = ''
     },
 
+    bringToFront() {
+      const popperElement = this.popper
+      if (!(popperElement instanceof HTMLElement)) {
+        return
+      }
+
+      nextPopperZIndex += 1
+      popperElement.style.zIndex = String(nextPopperZIndex)
+    },
+
     prepareOpenAnimationState(containerElement, contentElements) {
       this.clearAnimatedStyles(containerElement)
       containerElement.style.transition = 'none'
@@ -484,6 +497,7 @@ export default {
       this.clearAnimationHandles()
       this.isDisplayed = true
       this.showPopper = true
+      this.bringToFront()
 
       if (!this.animationsEnabled()) {
         this.$nextTick(() => {
@@ -573,6 +587,8 @@ export default {
         if (!this.referenceElm || !this.popper) {
           return
         }
+
+        this.bringToFront()
 
         if (this.visibleArrow) {
           this.appendArrow(this.popper)

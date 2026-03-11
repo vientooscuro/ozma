@@ -143,6 +143,7 @@ export default class InputPopup extends Vue {
 .popup {
   display: flex;
   flex-direction: column;
+  z-index: 1002;
   box-shadow: 0px 3px 12px 0px rgba(0, 0, 0, 0.08);
   border: 1px solid #efefef;
   border-radius: 0.5rem;
