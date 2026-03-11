@@ -4,19 +4,23 @@
             "new_entry": "New entry",
             "error": "Error",
             "saved": "All changes saved",
-            "show_errors": "Show errors",
-            "staging_error": "Error while submitting changes: {msg}",
-            "save_scoped": "Save scoped",
-            "save_and_select_scoped": "Save and select"
-        },
-        "ru": {
+        "show_errors": "Show errors",
+        "staging_error": "Error while submitting changes: {msg}",
+        "save_scoped": "Save scoped",
+        "save_and_select_scoped": "Save and select",
+        "disable_background_blur": "Disable background blur",
+        "enable_background_blur": "Enable background blur"
+      },
+      "ru": {
             "new_entry": "Новая запись",
             "error": "Ошибка",
             "saved": "Все изменения сохранены",
             "show_errors": "Показать ошибки",
             "staging_error": "Ошибка сохранения изменений: {msg}",
             "save_scoped": "Сохранить вложенное",
-            "save_and_select_scoped": "Сохранить и выбрать"
+            "save_and_select_scoped": "Сохранить и выбрать",
+            "disable_background_blur": "Выключить размытие фона",
+            "enable_background_blur": "Включить размытие фона"
         },
         "es": {
             "new_entry": "La nueva entrada",
@@ -25,7 +29,9 @@
             "show_errors": "Mostrar  los errores",
             "staging_error": "El error al enviar cambios: {msg}",
             "save_scoped": "Guardar con el ámbito",
-            "save_and_select_scoped": "Guardar y seleccionar"
+            "save_and_select_scoped": "Guardar y seleccionar",
+            "disable_background_blur": "Desactivar desenfoque de fondo",
+            "enable_background_blur": "Activar desenfoque de fondo"
         }
     }
 </i18n>
@@ -35,6 +41,7 @@
     to="tabbed-modal"
     :autofocus="autofocus"
     :view="view"
+    :overlay-blur-enabled="overlayBlurEnabled"
     @close="$emit('close')"
     @go-back="$emit('go-back')"
   >
@@ -142,6 +149,7 @@ export default class ModalUserView extends Vue {
 
   private argumentEditorProps: IArgumentEditorProps | null = null
   private sortEditorProps: ISortEditorProps | null = null
+  private overlayBlurEnabled = true
 
   private savedRecently: { show: boolean; timeoutId: NodeJS.Timeout | null } = {
     show: false,
@@ -192,6 +200,18 @@ export default class ModalUserView extends Vue {
     return [
       {
         type: 'callback',
+        icon: this.overlayBlurEnabled ? 'blur_off' : 'blur_on',
+        tooltip: this.overlayBlurEnabled
+          ? this.$t('disable_background_blur').toString()
+          : this.$t('enable_background_blur').toString(),
+        variant: interfaceButtonVariant,
+        callback: () => {
+          this.overlayBlurEnabled = !this.overlayBlurEnabled
+          this.applyCurrentOverlayBlurState()
+        },
+      },
+      {
+        type: 'callback',
         icon: 'arrow_back',
         variant: interfaceButtonVariant,
         callback: () => this.$emit('go-back'),
@@ -203,7 +223,42 @@ export default class ModalUserView extends Vue {
     void router.push(queryLocation(this.view))
   }
 
+  private get currentModalOverlayEl(): HTMLElement | null {
+    const exact = document.body.querySelector(
+      `.vm--overlay[data-modal="${this.uid}"]`,
+    ) as HTMLElement | null
+    if (exact) return exact
+
+    const root = this.$el as HTMLElement | undefined
+    const container = root?.closest('.vm--container')
+    if (!container) return null
+
+    return container.querySelector('.vm--overlay') as HTMLElement | null
+  }
+
+  private applyCurrentOverlayBlurState() {
+    const overlayEl = this.currentModalOverlayEl
+    if (!overlayEl) return
+
+    if (this.overlayBlurEnabled) {
+      overlayEl.style.removeProperty('backdrop-filter')
+      overlayEl.style.removeProperty('-webkit-backdrop-filter')
+      return
+    }
+
+    overlayEl.style.setProperty('backdrop-filter', 'none')
+    overlayEl.style.setProperty('-webkit-backdrop-filter', 'none')
+  }
+
+  private mounted() {
+    this.$nextTick(() => {
+      this.applyCurrentOverlayBlurState()
+    })
+  }
+
   private destroyed() {
+    this.overlayBlurEnabled = true
+    this.applyCurrentOverlayBlurState()
     void this.clearAdded({ scope: this.uid })
   }
 }

@@ -15,6 +15,7 @@ export default class ModalPortalTarget extends mixins(PortalTarget) {
     return createElement(TabbedModal, {
       props: {
         modalTabs: this.modalTabs,
+        overlayBlurEnabled: this.modalTabs[0]?.overlayBlurEnabled ?? true,
         show: this.showModal,
         width: '90%',
         minWidth: 1140,
@@ -44,6 +45,7 @@ export default class ModalPortalTarget extends mixins(PortalTarget) {
           header: modalHeader,
           content: node,
           autofocus,
+          overlayBlurEnabled: modalPortal.overlayBlurEnabled,
         }
       })
       .sort((a, b) => a.order - b.order)

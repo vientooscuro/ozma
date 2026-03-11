@@ -125,6 +125,7 @@ export default class TabbedModal extends Vue {
   @Prop({ type: Array }) modalTabs!: IModalTab[] | undefined
   @Prop({ type: Boolean, default: true }) show!: boolean
   @Prop({ type: Boolean, default: false }) fullscreen!: boolean
+  @Prop({ type: Boolean, default: true }) overlayBlurEnabled!: boolean
   @Prop({ type: String }) width!: string
   @Prop({ type: Number, default: 200 }) minWidth!: number
   @Prop({ type: String }) height!: string
@@ -175,6 +176,21 @@ export default class TabbedModal extends Vue {
     }
   }
 
+  @Watch('overlayBlurEnabled')
+  private watchOverlayBlurEnabled() {
+    this.applyOverlayBlurState()
+  }
+
+  @Watch('modalTabs', { deep: true })
+  private watchModalTabsForOverlay() {
+    this.applyOverlayBlurState()
+  }
+
+  @Watch('selectedTab')
+  private watchSelectedTabForOverlay() {
+    this.applyOverlayBlurState()
+  }
+
   private get displayedTabs(): IModalTab[] | undefined {
     return this.frozenModalTabs === null ? this.modalTabs : this.frozenModalTabs
   }
@@ -205,6 +221,54 @@ export default class TabbedModal extends Vue {
   private get currentModalEl(): HTMLElement | null {
     const root = this.$el as HTMLElement | undefined
     return root?.closest('.vm--modal') as HTMLElement | null
+  }
+
+  private get currentOverlayEl(): HTMLElement | null {
+    const root = document.body
+    const exact = root.querySelector(
+      `.vm--overlay[data-modal="${this.uid}"]`,
+    ) as HTMLElement | null
+    if (exact) return exact
+
+    const modalEl = this.currentModalEl
+    if (!modalEl) return null
+
+    const container = modalEl.parentElement
+    if (!container) return null
+
+    return container.querySelector('.vm--overlay') as HTMLElement | null
+  }
+
+  private get shouldBlurOverlay(): boolean {
+    const tabs = this.displayedTabs
+    if (tabs && tabs.length > 0) {
+      return tabs[this.selectedTab]?.overlayBlurEnabled ?? true
+    }
+    return this.overlayBlurEnabled
+  }
+
+  private applyOverlayBlurState() {
+    if (!this.show) return
+
+    const overlayEl = this.currentOverlayEl
+    if (!overlayEl) return
+
+    if (this.shouldBlurOverlay) {
+      overlayEl.style.removeProperty('backdrop-filter')
+      overlayEl.style.removeProperty('-webkit-backdrop-filter')
+      return
+    }
+
+    overlayEl.style.setProperty('backdrop-filter', 'none')
+    overlayEl.style.setProperty('-webkit-backdrop-filter', 'none')
+  }
+
+  private resetOverlayBlurState() {
+    const overlayEl = this.currentOverlayEl
+    if (!overlayEl) return
+
+    overlayEl.style.removeProperty('backdrop-filter')
+    overlayEl.style.removeProperty('-webkit-backdrop-filter')
   }
 
   private lockModalSizeForClose() {
@@ -267,17 +331,23 @@ export default class TabbedModal extends Vue {
   }
 
   private onOpened() {
+    this.applyOverlayBlurState()
     if (!this.modalTabs) {
       this.createWindow(this.uid)
     }
   }
 
   private onClosed() {
+    this.resetOverlayBlurState()
     this.unlockModalSizeAfterClose()
     this.frozenModalTabs = null
     if (!this.modalTabs) {
       this.destroyWindow(this.uid)
     }
+  }
+
+  private beforeDestroy() {
+    this.resetOverlayBlurState()
   }
 }
 </script>
