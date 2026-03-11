@@ -316,12 +316,22 @@ export default class TableCell extends Vue {
   }
 
   private getCellAttr(name: string) {
-    return (
-      this.value.attributes?.[name] ||
-      this.uv.columnAttributes[this.columnIndex][name] ||
-      this.row.attributes?.[name] ||
-      this.uv.attributes[name]
-    )
+    const valueAttr = this.value.attributes?.[name]
+    if (valueAttr !== undefined) {
+      return valueAttr
+    }
+
+    const columnAttr = this.uv.columnAttributes[this.columnIndex][name]
+    if (columnAttr !== undefined) {
+      return columnAttr
+    }
+
+    const rowAttr = this.row.attributes?.[name]
+    if (rowAttr !== undefined) {
+      return rowAttr
+    }
+
+    return this.uv.attributes[name]
   }
 
   get style() {
@@ -668,11 +678,11 @@ export default class TableCell extends Vue {
     cursor: pointer;
 
     &:link {
-      color: rgb(0, 123, 255) !important;
+      color: inherit !important;
     }
 
     &:visited {
-      color: #551a8b !important;
+      color: inherit !important;
     }
   }
 
