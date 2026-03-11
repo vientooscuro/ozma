@@ -30,7 +30,7 @@ import windowsModule from '@/state/windows'
 import translationsModule from '@/state/translations'
 
 import '@/styles/style.scss'
-import { IEmbeddedPageRef } from '@/api'
+import { apiUrl, IEmbeddedPageRef } from '@/api'
 
 export interface IShowHelpModalArgs {
   // `null` when we don't store "page is read" state.
@@ -64,6 +64,73 @@ export const store = new Vuex.Store({
     translations: translationsModule,
   },
 })
+
+const getThemeHeaderValue = (): string => {
+  const themeRef = (store.state as any)?.settings?.currentThemeRef
+
+  if (
+    themeRef !== null &&
+    themeRef !== undefined &&
+    typeof themeRef.schema === 'string' &&
+    typeof themeRef.name === 'string'
+  ) {
+    return `${themeRef.schema}.${themeRef.name}`
+  }
+
+  try {
+    const rawStored = localStorage.getItem('preferredTheme')
+    if (rawStored !== null) {
+      const stored = JSON.parse(rawStored) as { schema?: unknown; name?: unknown }
+      if (typeof stored.schema === 'string' && typeof stored.name === 'string') {
+        return `${stored.schema}.${stored.name}`
+      }
+    }
+  } catch {
+    // Ignore malformed localStorage value.
+  }
+
+  return 'default'
+}
+
+const installThemeHeaderFetchInterceptor = () => {
+  const originalFetch = window.fetch.bind(window)
+  const apiBase = new URL(apiUrl, window.location.origin)
+
+  const shouldInjectThemeHeader = (input: RequestInfo): boolean => {
+    const url = new URL(
+      typeof input === 'string' || input instanceof URL ? String(input) : input.url,
+      window.location.origin,
+    )
+
+    return (
+      url.origin === apiBase.origin &&
+      (url.pathname === apiBase.pathname ||
+        url.pathname.startsWith(`${apiBase.pathname}/`))
+    )
+  }
+
+  window.fetch = (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+    if (!shouldInjectThemeHeader(input as RequestInfo)) {
+      return originalFetch(input, init)
+    }
+
+    const headers = new Headers(input instanceof Request ? input.headers : undefined)
+    if (init?.headers !== undefined) {
+      const initHeaders = new Headers(init.headers)
+      initHeaders.forEach((value, key) => {
+        headers.set(key, value)
+      })
+    }
+
+    if (!headers.has('X-OzmaDB-Theme')) {
+      headers.set('X-OzmaDB-Theme', getThemeHeaderValue())
+    }
+
+    return originalFetch(input, { ...init, headers })
+  }
+}
+
+installThemeHeaderFetchInterceptor()
 
 const CHUNK_RELOAD_KEY = 'ozma:chunk-reload-once'
 let hasAttemptedChunkReload = false
