@@ -518,7 +518,8 @@ html[data-theme-style='dark-glass'] {
   --muted: #6f6a62;
   --accent: #0f766e;
   --accent-2: #f6b941;
-  --line: rgb(196 182 163 / 46%);
+  --line: rgb(196 182 163 / 28%);
+  --control-line: rgb(196 182 163 / 20%);
   --surface: rgb(255 255 255 / 50%);
   --surface-strong: rgb(255 255 255 / 58%);
   --panel-bg: rgb(255 255 255 / 0%);
@@ -544,7 +545,8 @@ html[data-theme-style='dark-glass'] {
   --muted: #95a7b6;
   --accent: #59d6cf;
   --accent-2: #f6b941;
-  --line: rgb(140 176 200 / 22%);
+  --line: rgb(140 176 200 / 14%);
+  --control-line: rgb(140 176 200 / 10%);
   --surface: rgb(17 32 46 / 42%);
   --surface-strong: rgb(17 32 46 / 56%);
   --panel-bg: rgb(10 20 33 / 28%);
@@ -816,7 +818,7 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 #app[data-theme-style='dark-glass'] .input-group-text,
 #app[data-theme-style='light-glass'] .custom-select,
 #app[data-theme-style='dark-glass'] .custom-select {
-  border-color: var(--line) !important;
+  border-color: var(--control-line, var(--line)) !important;
   background: var(--surface) !important;
   color: var(--ink) !important;
   backdrop-filter: blur(12px) saturate(130%);
@@ -826,7 +828,43 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 #app[data-theme-style='light-glass'] .form-control:focus,
 #app[data-theme-style='dark-glass'] .form-control:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 0.2rem rgb(15 118 110 / 20%);
+  box-shadow: 0 0 0 0.12rem rgb(15 118 110 / 10%);
+}
+
+#app[data-theme-style='light-glass'] .select-container,
+#app[data-theme-style='dark-glass'] .select-container {
+  border-color: var(--control-line, var(--line));
+  background: var(--surface);
+  overflow: hidden;
+}
+
+#app[data-theme-style='light-glass'] .select-container:focus-within,
+#app[data-theme-style='dark-glass'] .select-container:focus-within,
+#app[data-theme-style='light-glass'] .select-container:focus,
+#app[data-theme-style='dark-glass'] .select-container:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.12rem rgb(15 118 110 / 10%);
+}
+
+#app[data-theme-style='light-glass'] .select-container .input-group-append,
+#app[data-theme-style='dark-glass'] .select-container .input-group-append {
+  margin-left: 0;
+}
+
+#app[data-theme-style='light-glass'] .select-container .select-icon,
+#app[data-theme-style='dark-glass'] .select-container .select-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: none !important;
+  border-left: 1px solid var(--control-line, var(--line)) !important;
+  border-radius: 0 !important;
+  border-top-right-radius: 0.5rem !important;
+  border-bottom-right-radius: 0.5rem !important;
+  background: var(--surface-strong);
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 #app[data-theme-style='light-glass'] .btn,
@@ -837,7 +875,7 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 #app[data-theme-style='dark-glass'] .menu-entry,
 #app[data-theme-style='light-glass'] .save-cluster-button,
 #app[data-theme-style='dark-glass'] .save-cluster-button {
-  border: 1px solid var(--line);
+  border: 1px solid var(--control-line, var(--line));
   background: var(--surface);
   transition:
     transform 0.5s ease,
