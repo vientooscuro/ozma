@@ -254,9 +254,14 @@ export default {
     }
   },
 
-  unmounted() {
+  beforeUnmount() {
     this.clearAnimationHandles()
     this.destroyPopper()
+  },
+
+  // Fallback in case environment only fires `unmounted`.
+  unmounted() {
+    this.beforeUnmount()
   },
 
   methods: {
