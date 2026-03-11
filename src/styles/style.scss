@@ -859,6 +859,19 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
   box-shadow: var(--contact-hover-shadow);
 }
 
+#app[data-theme-style='dark-glass']
+  .table-td
+  .reference-open-modal:hover:not(.disabled),
+#app[data-theme-style='dark-glass']
+  .table-td
+  .reference-open-modal:focus:not(.disabled),
+#app[data-theme-style='dark-glass']
+  .table-td
+  .reference-open-modal:focus-visible:not(.disabled) {
+  border-color: rgb(255 255 255 / 20%) !important;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 14%) !important;
+}
+
 #app[data-theme-style='light-glass']
   .menu_category_block.menuEntry-variant.menuEntry-local-variant
   .menu-entry:hover:not(.disabled),
