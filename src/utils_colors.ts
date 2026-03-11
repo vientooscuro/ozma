@@ -426,7 +426,9 @@ export const getPreferredTheme = (
   themes: ThemesMap,
   defaultSchema?: SchemaName,
 ): IThemeRef | null => {
-  const storedTheme = ThemeRef.safeParse(safeJsonParse(localStorage.getItem("preferredTheme")))
+  const storedTheme = ThemeRef.safeParse(
+    safeJsonParse(localStorage.getItem('preferredTheme')),
+  )
 
   if (storedTheme.success) {
     const themesSchema = themes[storedTheme.data.schema]
@@ -454,7 +456,14 @@ export const getPreferredTheme = (
     }
   }
 
-  return tryFindTheme('light')
+  // Keep light as the default for users without an explicit preference.
+  return (
+    tryFindTheme('light') ??
+    tryFindTheme('light-glass') ??
+    tryFindTheme('dark') ??
+    tryFindTheme('dark-glass') ??
+    null
+  )
 }
 
 export type ColorVariantCssVariableName =

@@ -39,7 +39,7 @@
         :options="popperOptions"
         :disabled="!show"
         :force-show="show"
-        @documentClick="onDocumentClick"
+        @document-click="onDocumentClick"
       >
         <!-- eslint-disable vue/no-deprecated-slot-attribute -->
         <!-- TODO: Find or make not deprecated popper.js wrapper -->
@@ -62,10 +62,10 @@
 </template>
 
 <script lang="ts">
-import Popper from '@/components/common/OzmaPopper.vue'
 import { Portal } from 'portal-vue'
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 
+import Popper from '@/components/common/OzmaPopper.vue'
 import TabbedModal from '@/components/modal/TabbedModal.vue'
 import { nextRender } from '@/utils'
 import { UserString, isOptionalUserString } from '@/state/translations'

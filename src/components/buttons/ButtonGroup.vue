@@ -19,7 +19,7 @@
     }"
     :disabled="!show"
     :force-show="show"
-    @documentClick="onDocumentClick"
+    @document-click="onDocumentClick"
   >
     <div class="popper shadow">
       <ButtonList

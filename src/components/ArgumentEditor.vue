@@ -48,7 +48,7 @@
       }"
       :disabled="!visible"
       :force-show="visible"
-      @documentClick="visible = false"
+      @document-click="visible = false"
     >
       <div class="popper shadow">
         <div
@@ -96,7 +96,6 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import Popper from '@/components/common/OzmaPopper.vue'
 import { Debounce } from 'vue-debounce-decorator'
 import { namespace } from 'vuex-class'
 
@@ -106,6 +105,7 @@ import {
   FieldType,
   ValueType,
 } from '@ozma-io/ozmadb-js/client'
+import Popper from '@/components/common/OzmaPopper.vue'
 import { deserializeValueFunction, fieldToValueType } from '@/values'
 import FormControl from '@/components/FormControl.vue'
 import type {

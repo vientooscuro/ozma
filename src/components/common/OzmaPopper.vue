@@ -1,6 +1,6 @@
 <template>
   <component :is="tagName">
-    <span ref="popperWrapper" :class="rootClass" v-show="isDisplayed">
+    <span v-show="isDisplayed" ref="popperWrapper" :class="rootClass">
       <slot>{{ content }}</slot>
     </span>
     <slot name="reference"></slot>
@@ -17,17 +17,21 @@ const CONTENT_HIDE_ANIMATION_DURATION_MS = 140
 
 function on(element, event, handler) {
   if (element && event && handler) {
-    document.addEventListener
-      ? element.addEventListener(event, handler, false)
-      : element.attachEvent('on' + event, handler)
+    if (document.addEventListener) {
+      element.addEventListener(event, handler, false)
+    } else {
+      element.attachEvent('on' + event, handler)
+    }
   }
 }
 
 function off(element, event, handler) {
   if (element && event) {
-    document.removeEventListener
-      ? element.removeEventListener(event, handler, false)
-      : element.detachEvent('on' + event, handler)
+    if (document.removeEventListener) {
+      element.removeEventListener(event, handler, false)
+    } else {
+      element.detachEvent('on' + event, handler)
+    }
   }
 }
 
@@ -65,12 +69,16 @@ export default {
     enterActiveClass: String,
     leaveActiveClass: String,
     boundariesSelector: String,
-    reference: {},
+    reference: {
+      type: [Object, HTMLElement],
+      default: null,
+    },
     forceShow: {
       type: Boolean,
       default: false,
     },
     dataValue: {
+      type: [String, Number, Boolean, Object, Array, Function],
       default: null,
     },
     appendToBody: {
@@ -104,6 +112,7 @@ export default {
       default: '',
     },
   },
+  emits: ['show', 'hide', 'created', 'document-click'],
 
   data() {
     return {
@@ -123,6 +132,7 @@ export default {
           },
         },
       },
+      boundHandlers: null,
     }
   },
 
@@ -179,42 +189,63 @@ export default {
       ...this.options,
       modifiers: mergedModifiers,
     }
+    this.boundHandlers = {
+      doShow: (event) => this.doShow(event),
+      doClose: (event) => this.doClose(event),
+      doToggle: (event) => this.doToggle(event),
+      onMouseOver: (event) => this.onMouseOver(event),
+      onMouseOut: (event) => this.onMouseOut(event),
+      handleDocumentClick: (event) => this.handleDocumentClick(event),
+    }
   },
 
   mounted() {
-    this.referenceElm = this.reference || this.$slots.reference?.[0]?.elm || null
-    this.popper = this.$slots.default?.[0]?.elm || null
+    const referenceNodes =
+      typeof this.$slots.reference === 'function'
+        ? this.$slots.reference({})
+        : []
+    const defaultNodes =
+      typeof this.$slots.default === 'function'
+        ? this.$slots.default({})
+        : []
+    this.referenceElm = this.reference || referenceNodes?.[0]?.elm || null
+    this.popper = defaultNodes?.[0]?.elm || null
 
     // If visibility is controlled from parent via `force-show`,
     // avoid internal trigger listeners to prevent click state races.
     if (this.isForceShowControlled) {
-      on(document, 'click', this.handleDocumentClick)
+      on(document, 'click', this.boundHandlers.handleDocumentClick)
       return
     }
 
     switch (this.trigger) {
       case 'clickToOpen':
-        on(this.referenceElm, 'click', this.doShow)
-        on(document, 'click', this.handleDocumentClick)
+        on(this.referenceElm, 'click', this.boundHandlers.doShow)
+        on(document, 'click', this.boundHandlers.handleDocumentClick)
         break
       case 'click': // Same as clickToToggle, provided for backwards compatibility.
       case 'clickToToggle':
-        on(this.referenceElm, 'click', this.doToggle)
-        on(document, 'click', this.handleDocumentClick)
+        on(this.referenceElm, 'click', this.boundHandlers.doToggle)
+        on(document, 'click', this.boundHandlers.handleDocumentClick)
         break
       case 'hover':
-        on(this.referenceElm, 'mouseover', this.onMouseOver)
-        on(this.popper, 'mouseover', this.onMouseOver)
-        on(this.referenceElm, 'mouseout', this.onMouseOut)
-        on(this.popper, 'mouseout', this.onMouseOut)
+        on(this.referenceElm, 'mouseover', this.boundHandlers.onMouseOver)
+        on(this.popper, 'mouseover', this.boundHandlers.onMouseOver)
+        on(this.referenceElm, 'mouseout', this.boundHandlers.onMouseOut)
+        on(this.popper, 'mouseout', this.boundHandlers.onMouseOut)
         break
       case 'focus':
-        on(this.referenceElm, 'focus', this.onMouseOver)
-        on(this.popper, 'focus', this.onMouseOver)
-        on(this.referenceElm, 'blur', this.onMouseOut)
-        on(this.popper, 'blur', this.onMouseOut)
+        on(this.referenceElm, 'focus', this.boundHandlers.onMouseOver)
+        on(this.popper, 'focus', this.boundHandlers.onMouseOver)
+        on(this.referenceElm, 'blur', this.boundHandlers.onMouseOut)
+        on(this.popper, 'blur', this.boundHandlers.onMouseOut)
         break
     }
+  },
+
+  unmounted() {
+    this.clearAnimationHandles()
+    this.destroyPopper()
   },
 
   methods: {
@@ -416,7 +447,11 @@ export default {
       }
 
       if (!this.forceShow) {
-        this.showPopper ? this.doClose() : this.doShow()
+        if (this.showPopper) {
+          this.doClose()
+        } else {
+          this.doShow()
+        }
       }
     },
 
@@ -524,14 +559,12 @@ export default {
           const boundariesElement = document.querySelector(this.boundariesSelector)
 
           if (boundariesElement) {
-            this.popperOptions.modifiers = Object.assign(
-              {},
-              this.popperOptions.modifiers,
-            )
-            this.popperOptions.modifiers.preventOverflow = Object.assign(
-              {},
-              this.popperOptions.modifiers.preventOverflow,
-            )
+            this.popperOptions.modifiers = {
+              ...this.popperOptions.modifiers,
+            }
+            this.popperOptions.modifiers.preventOverflow = {
+              ...this.popperOptions.modifiers.preventOverflow,
+            }
             this.popperOptions.modifiers.preventOverflow.boundariesElement =
               boundariesElement
           }
@@ -539,7 +572,7 @@ export default {
 
         this.popperOptions.onCreate = () => {
           this.$emit('created', this)
-          this.$nextTick(this.updatePopper)
+          this.$nextTick(() => this.updatePopper())
         }
 
         this.popperJS = new Popper(this.referenceElm, this.popper, this.popperOptions)
@@ -547,14 +580,14 @@ export default {
     },
 
     destroyPopper() {
-      off(this.referenceElm, 'click', this.doToggle)
-      off(this.referenceElm, 'mouseup', this.doClose)
-      off(this.referenceElm, 'mousedown', this.doShow)
-      off(this.referenceElm, 'focus', this.doShow)
-      off(this.referenceElm, 'blur', this.doClose)
-      off(this.referenceElm, 'mouseout', this.onMouseOut)
-      off(this.referenceElm, 'mouseover', this.onMouseOver)
-      off(document, 'click', this.handleDocumentClick)
+      off(this.referenceElm, 'click', this.boundHandlers?.doToggle)
+      off(this.referenceElm, 'mouseup', this.boundHandlers?.doClose)
+      off(this.referenceElm, 'mousedown', this.boundHandlers?.doShow)
+      off(this.referenceElm, 'focus', this.boundHandlers?.doShow)
+      off(this.referenceElm, 'blur', this.boundHandlers?.doClose)
+      off(this.referenceElm, 'mouseout', this.boundHandlers?.onMouseOut)
+      off(this.referenceElm, 'mouseover', this.boundHandlers?.onMouseOver)
+      off(document, 'click', this.boundHandlers?.handleDocumentClick)
 
       this.clearAnimationHandles()
       this.isDisplayed = false
@@ -576,7 +609,11 @@ export default {
     },
 
     updatePopper() {
-      this.popperJS ? this.popperJS.scheduleUpdate() : this.createPopper()
+      if (this.popperJS) {
+        this.popperJS.scheduleUpdate()
+      } else {
+        this.createPopper()
+      }
     },
 
     onMouseOver() {
@@ -605,7 +642,7 @@ export default {
         return
       }
 
-      this.$emit('documentClick', this)
+      this.$emit('document-click', this)
 
       if (this.forceShow) {
         return
@@ -621,11 +658,6 @@ export default {
 
       return false
     },
-  },
-
-  destroyed() {
-    this.clearAnimationHandles()
-    this.destroyPopper()
   },
 }
 </script>

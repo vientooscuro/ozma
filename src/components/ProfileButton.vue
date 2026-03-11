@@ -99,7 +99,7 @@
     }"
     :disabled="!show"
     :force-show="show"
-    @documentClick="show = false"
+    @document-click="show = false"
   >
     <div class="popper">
       <div class="profile-block">
