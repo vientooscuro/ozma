@@ -144,6 +144,8 @@
               @keydown.enter.prevent.stop="filterInputFinished"
               @keydown.esc.prevent.stop="showPopup = false"
               @focus="onFilterInputFocus"
+              @mousedown.stop
+              @click.stop
             />
             <slot name="qrcode-button" />
           </b-input-group>
@@ -869,7 +871,8 @@ export default class MultiSelect extends Vue {
     border: none;
     border-color: var(--default-borderColor);
     background-color: var(--default-backgroundColor);
-    padding: 0;
+    border-radius: 0.5rem;
+    padding: 0.35rem 0.6rem;
     color: var(--default-foregroundColor);
 
     &::placeholder {
@@ -904,13 +907,19 @@ export default class MultiSelect extends Vue {
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  border-radius: 0;
-  background: var(--default-backgroundColor);
+  border: 1px solid var(--default-borderColor);
+  border-radius: 0.5rem;
+  background: var(--default-backgroundDarker1Color);
   padding: 0.6rem 1rem;
   width: 100%;
+  color: var(--default-foregroundColor);
+  transition:
+    background-color 0.16s ease,
+    border-color 0.16s ease;
 
   &:hover {
     background: var(--default-backgroundDarker2Color);
+    border-color: var(--default-borderColor, var(--cell-borderColor));
   }
 }
 

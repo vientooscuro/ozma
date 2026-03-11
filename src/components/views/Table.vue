@@ -4134,7 +4134,8 @@ export default class UserViewTable extends mixins<
 
 th,
 ::v-deep td {
-  border-bottom: 1px solid var(--table-borderColor);
+  border-bottom: 1px solid
+    var(--table-horizontal-borderColor, var(--table-borderColor));
 }
 
 .show-vertical-borders {
@@ -4159,7 +4160,8 @@ th.column-drop-target {
 }
 
 .table-footer-row .table-footer-cell {
-  border-top: 1px solid var(--table-borderColor);
+  border-top: 1px solid
+    var(--table-horizontal-borderColor, var(--table-borderColor));
   border-bottom: 0;
   background-color: var(--table-backgroundDarker1Color);
   font-size: 0.75rem;
@@ -4202,7 +4204,8 @@ th.column-drop-target {
   z-index: 30;
   margin-top: revert; // Fix for Safari, huge margin otherwise. Caused by `reset.css`.
   margin-top: auto;
-  border-top: 1px solid var(--table-borderColor);
+  border-top: 1px solid
+    var(--table-horizontal-borderColor, var(--table-borderColor));
   background-color: var(--table-backgroundColor);
   padding: 0.75rem;
 
@@ -4322,7 +4325,8 @@ th {
   top: -1px; /* Instead of `0` to fix Safari's gap bug, not needed in normal browsers, but easier to set same for all. */
   vertical-align: middle;
   z-index: 20;
-  border-top: 1px solid var(--table-borderColor);
+  border-top: 1px solid
+    var(--table-horizontal-borderColor, var(--table-borderColor));
   height: 3.35rem;
   user-select: none;
 

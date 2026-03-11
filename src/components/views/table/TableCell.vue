@@ -24,6 +24,7 @@
       cellVariantClassName,
       'cell-local-variant',
       {
+        'cell-alpha-blur': cellHasAlphaColor,
         'fixed-cell': column.fixed,
         'last-fixed-cell': lastFixed,
         select_fixed: value.extra.selected && column.fixed,
@@ -137,6 +138,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { ValueType } from '@ozma-io/ozmadb-js/client'
+import { parseToRgba } from 'color2k'
 
 import { valueIsNull } from '@/values'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
@@ -169,6 +171,8 @@ import { formatValueToHtml } from '@/user_views/format'
   },
 })
 export default class TableCell extends Vue {
+  private cellHasAlphaColorByComputedStyle = false
+
   // We don't bother to set types here properly, they matter no more than for TableRow.
   // The reason this is not a functional component is because of performance.
   // See https://forum.vuejs.org/t/performance-for-large-numbers-of-components/13545/10
@@ -344,6 +348,148 @@ export default class TableCell extends Vue {
 
     return style
   }
+
+  get cellHasAlphaColor(): boolean {
+    const colorCandidates = [
+      this.getCellAttr('cell_color'),
+      this.getCellAttr('background_color'),
+      this.getCellAttr('background'),
+      getColorVariantAttributeVariables(this.cellColorVariantAttribute)?.[
+        '--backgroundColor'
+      ],
+    ]
+    const hasAlphaFromAttrs = colorCandidates.some(
+      (color): color is string =>
+        typeof color === 'string' && this.hasAlphaChannel(color),
+    )
+    return hasAlphaFromAttrs || this.cellHasAlphaColorByComputedStyle
+  }
+
+  private parseAlphaValue(rawAlpha: string): number | null {
+    const normalized = rawAlpha.trim()
+    if (!normalized) {
+      return null
+    }
+    if (normalized.endsWith('%')) {
+      const percent = Number(normalized.slice(0, -1))
+      return Number.isFinite(percent) ? Math.max(0, Math.min(1, percent / 100)) : null
+    }
+    const value = Number(normalized)
+    return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : null
+  }
+
+  private getColorAlpha(color: string): number | null {
+    const normalizedColor = color.trim()
+    if (!normalizedColor) {
+      return null
+    }
+
+    try {
+      const rgba = parseToRgba(normalizedColor)
+      return rgba[3]
+    } catch {
+      // Fallbacks for notations not fully supported by parser.
+    }
+
+    if (/^#[\da-f]{4}$/i.test(normalizedColor)) {
+      return parseInt(normalizedColor[4], 16) / 15
+    }
+
+    if (/^#[\da-f]{8}$/i.test(normalizedColor)) {
+      return parseInt(normalizedColor.slice(7), 16) / 255
+    }
+
+    const fnMatch = normalizedColor.match(/^(rgba?|hsla?)\((.+)\)$/i)
+    if (fnMatch) {
+      const fnName = fnMatch[1].toLowerCase()
+      const fnArgs = fnMatch[2].trim()
+      const slashIndex = fnArgs.lastIndexOf('/')
+      if (slashIndex >= 0) {
+        return this.parseAlphaValue(fnArgs.slice(slashIndex + 1))
+      }
+      const parts = fnArgs.split(',').map((part) => part.trim())
+      if ((fnName === 'rgba' || fnName === 'hsla') && parts.length >= 4) {
+        return this.parseAlphaValue(parts[3])
+      }
+      return 1
+    }
+
+    return null
+  }
+
+  private hasAlphaChannel(color: string): boolean {
+    const alpha = this.getColorAlpha(color)
+    return alpha !== null && alpha < 1
+  }
+
+  private isCssColor(color: string): boolean {
+    return this.getColorAlpha(color) !== null
+  }
+
+  private resolveCssColor(
+    value: string,
+    computedStyle: CSSStyleDeclaration,
+    depth = 0,
+  ): string | null {
+    const trimmed = value.trim()
+    if (!trimmed) {
+      return null
+    }
+    if (this.isCssColor(trimmed)) {
+      return trimmed
+    }
+    if (depth > 8 || !trimmed.startsWith('var(') || !trimmed.endsWith(')')) {
+      return null
+    }
+
+    const inside = trimmed.slice(4, -1)
+    const commaIndex = inside.indexOf(',')
+    const varName =
+      commaIndex >= 0 ? inside.slice(0, commaIndex).trim() : inside.trim()
+    const fallback =
+      commaIndex >= 0 ? inside.slice(commaIndex + 1).trim() : null
+
+    if (!varName.startsWith('--')) {
+      return null
+    }
+
+    const varValue = computedStyle.getPropertyValue(varName).trim()
+    const resolvedVar = this.resolveCssColor(varValue, computedStyle, depth + 1)
+    if (resolvedVar !== null) {
+      return resolvedVar
+    }
+
+    if (fallback) {
+      return this.resolveCssColor(fallback, computedStyle, depth + 1)
+    }
+    return null
+  }
+
+  mounted() {
+    this.updateComputedBackgroundAlphaFlag()
+  }
+
+  updated() {
+    this.updateComputedBackgroundAlphaFlag()
+  }
+
+  private updateComputedBackgroundAlphaFlag() {
+    const cell = this.$refs.cell as HTMLElement | undefined
+    if (!cell) {
+      return
+    }
+    const computedStyle = getComputedStyle(cell)
+    const hasAlpha = [
+      computedStyle.backgroundColor,
+      computedStyle.getPropertyValue('--backgroundColor'),
+      computedStyle.getPropertyValue('--cell-backgroundColor'),
+    ]
+      .map((color) => this.resolveCssColor(color, computedStyle) ?? color.trim())
+      .some((color) => this.hasAlphaChannel(color))
+    if (hasAlpha !== this.cellHasAlphaColorByComputedStyle) {
+      this.cellHasAlphaColorByComputedStyle = hasAlpha
+    }
+  }
 }
 </script>
 
@@ -455,6 +601,31 @@ export default class TableCell extends Vue {
   &.selected {
     border-bottom-color: var(--FocusBorderColor);
   }
+}
+
+.table-td.cell-alpha-blur::before,
+.table-td.fixed-cell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--cell-backgroundColor, var(--table-backgroundColor));
+  pointer-events: none;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.table-td.cell-alpha-blur,
+.table-td.fixed-cell {
+  isolation: isolate;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.table-td.cell-alpha-blur > .td-content,
+.table-td.fixed-cell > .td-content {
+  position: relative;
+  z-index: 1;
 }
 
 .selection-overlay {

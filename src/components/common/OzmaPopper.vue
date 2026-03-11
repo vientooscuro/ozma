@@ -117,8 +117,10 @@ export default {
       animationFrame2: null,
       popperOptions: {
         placement: 'bottom',
-        computeStyle: {
-          gpuAcceleration: false,
+        modifiers: {
+          computeStyle: {
+            gpuAcceleration: false,
+          },
         },
       },
     }
@@ -161,7 +163,22 @@ export default {
       this.$options.propsData || {},
       'forceShow',
     )
-    this.popperOptions = Object.assign(this.popperOptions, this.options)
+    const optionModifiers = this.options?.modifiers || {}
+    const baseModifiers = this.popperOptions.modifiers || {}
+    const mergedModifiers = { ...baseModifiers, ...optionModifiers }
+
+    if (baseModifiers.computeStyle || optionModifiers.computeStyle) {
+      mergedModifiers.computeStyle = {
+        ...(baseModifiers.computeStyle || {}),
+        ...(optionModifiers.computeStyle || {}),
+      }
+    }
+
+    this.popperOptions = {
+      ...this.popperOptions,
+      ...this.options,
+      modifiers: mergedModifiers,
+    }
   },
 
   mounted() {
