@@ -708,10 +708,14 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header {
 
 #app[data-theme-style='light-glass'] .tabbed-modal .header-panel,
 #app[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+  border: none !important;
+  border-top: none !important;
+  border-right: none !important;
+  border-left: none !important;
+  border-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
   border-bottom-left-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 html[data-theme-style='light-glass'] .tabbed-modal .header-panel,

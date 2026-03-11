@@ -305,6 +305,9 @@ export default class TabbedModal extends Vue {
 
 .header {
   border-bottom: 1px solid var(--userview-background-color);
+  overflow: hidden;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
 }
 
 .tab-headers {
