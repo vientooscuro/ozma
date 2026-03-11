@@ -34,7 +34,6 @@
   <div
     :class="[
       'view-form',
-      'table-variant',
       { 'contains-only-one-iframe': containsOnlyOneIframe },
       { 'animations-disabled': !uiAnimationsEnabled },
     ]"
@@ -982,7 +981,7 @@ export default class UserViewForm extends mixins<
 
 <style lang="scss" scoped>
 .view-form {
-  background-color: var(--backgroundColor, var(--userview-background-color));
+  background-color: var(--userview-background-color);
   /* Don't use `height: 100%` here! It breaks table lazy-loading */
   padding: 1.875rem 2.25rem !important;
   overflow-x: hidden;
