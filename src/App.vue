@@ -389,9 +389,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     const pageBackgroundVariant =
       currentTheme?.colorVariants['pageBackground'] ??
       colorVariantFromRaw({ background: defaultVariant.backgroundDarker1 })
-    const pageBackgroundDarkerVariant = colorVariantFromRaw({
-      background: pageBackgroundVariant.backgroundDarker1,
-    })
     const existingTableVariant =
       currentTheme?.colorVariants['table'] ??
       currentTheme?.colorVariants['table-background']
@@ -424,7 +421,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     const defaultColorVariants = {
       default: defaultVariant,
       'global-userview-background': pageBackgroundVariant,
-      'global-userview-background-darker': pageBackgroundDarkerVariant,
       table: tableVariant,
       interfaceButton,
       outlinedInterfaceButton,
