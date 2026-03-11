@@ -18,7 +18,7 @@
     :data-window="uid"
     :data-theme-style="themeStyleName"
     :style="styleSettings"
-    class="default-variant default-local-variant pageBackground-variant pageBackground-local-variant"
+    class="default-variant default-local-variant"
   >
     <div class="app-container">
       <ModalPortalTarget name="tabbed-modal" multiple />
@@ -386,6 +386,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     const oldDefaultVariant = colorVariantFromRaw({ background })
     const defaultVariant =
       currentTheme?.colorVariants['default'] ?? oldDefaultVariant
+    const pageBackgroundVariant =
+      currentTheme?.colorVariants['pageBackground'] ??
+      colorVariantFromRaw({ background: defaultVariant.backgroundDarker1 })
+    const pageBackgroundDarkerVariant = colorVariantFromRaw({
+      background: pageBackgroundVariant.backgroundDarker1,
+    })
     const existingTableVariant =
       currentTheme?.colorVariants['table'] ??
       currentTheme?.colorVariants['table-background']
@@ -417,6 +423,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     })
     const defaultColorVariants = {
       default: defaultVariant,
+      'global-userview-background': pageBackgroundVariant,
+      'global-userview-background-darker': pageBackgroundDarkerVariant,
       table: tableVariant,
       interfaceButton,
       outlinedInterfaceButton,
@@ -599,14 +607,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   ) !important;
   --MainBorderColor: var(--borderColor, var(--OldMainBorderColor)) !important;
 
-  --userview-background-color: var(--pageBackground-backgroundColor, var(--default-backgroundDarker1Color, #f2f4f7));
+  --userview-background-color: var(--userview-background, var(--default-backgroundDarker1Color, #f2f4f7));
 
   background-color: var(--backgroundColor);
   color: var(--foregroundColor);
 }
 
 @include variant-to-local('default');
-@include variant-to-local('pageBackground');
 
 .app-container {
   position: relative;

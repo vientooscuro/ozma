@@ -981,7 +981,10 @@ export default class UserViewForm extends mixins<
 
 <style lang="scss" scoped>
 .view-form {
-  background-color: var(--userview-background-color);
+  background-color: var(
+    --userview-background-darker,
+    var(--userview-background-color)
+  );
   /* Don't use `height: 100%` here! It breaks table lazy-loading */
   padding: 1.875rem 2.25rem !important;
   overflow-x: hidden;

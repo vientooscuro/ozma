@@ -87,7 +87,7 @@
 <template>
   <wrapped-component :wrap="isRoot">
     <template #wrapper>
-      <div class="root-wrapper table-variant table-local-variant" />
+      <div class="root-wrapper" />
     </template>
 
     <div
@@ -4120,7 +4120,7 @@ export default class UserViewTable extends mixins<
 @include variant-to-local('default');
 
 .root-wrapper {
-  background-color: var(--table-backgroundColor, var(--userview-background-color));
+  background-color: var(--userview-background-color);
   padding: 1.875rem 2.25rem;
   height: 100%;
 

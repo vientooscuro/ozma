@@ -20,7 +20,7 @@ Usage: ./local_rebuild_and_publish.sh [--only_ui | --only_db] [--no_rebuild]
 
 Options:
   --only_ui  Build and restart only ozma (UI) container.
-  --only_db  Build and restart only ozmadb container.
+  --only_db  Build ozmadb from local sources, then build and restart only ozmadb container.
   --no_rebuild  For --only_ui, skip rebuilding ozma image and copy local ./dist into container.
   -h, --help Show this help.
 EOF
@@ -31,6 +31,20 @@ require_cmd() {
     echo "Error: required command not found: $1" >&2
     exit 1
   fi
+}
+
+platform_to_runtime() {
+  case "$1" in
+    linux/amd64)
+      echo "linux-x64"
+      ;;
+    linux/arm64)
+      echo "linux-arm64"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
 }
 
 for arg in "$@"; do
@@ -89,6 +103,7 @@ fi
 if [[ "$BUILD_DB" == true ]]; then
   require_cmd file
   require_cmd git
+  require_cmd dotnet
 
   if [[ ! -d "$OZMADB_LOCAL_DIR" ]]; then
     echo "Error: local ozmadb directory not found: $OZMADB_LOCAL_DIR" >&2
@@ -105,10 +120,26 @@ if [[ "$BUILD_DB" == true ]]; then
     exit 1
   fi
 
-  if [[ ! -d "$OZMADB_LOCAL_DIR/out/ozmadb" ]]; then
-    echo "Error: build output missing: $OZMADB_LOCAL_DIR/out/ozmadb" >&2
-    echo "Build ozmadb binaries first, then re-run this script." >&2
-    exit 1
+  OZMADB_RUNTIME_ID=""
+  if [[ -n "$OZMADB_DOCKER_PLATFORM" ]]; then
+    if ! OZMADB_RUNTIME_ID="$(platform_to_runtime "$OZMADB_DOCKER_PLATFORM")"; then
+      echo "Error: unsupported OZMADB_DOCKER_PLATFORM: $OZMADB_DOCKER_PLATFORM" >&2
+      echo "Supported values: linux/amd64, linux/arm64" >&2
+      exit 1
+    fi
+  fi
+
+  log "Building OzmaDB binaries from source..."
+  rm -rf "$OZMADB_LOCAL_DIR/out/ozmadb"
+  if [[ -n "$OZMADB_RUNTIME_ID" ]]; then
+    dotnet publish "$OZMADB_LOCAL_DIR/OzmaDB/OzmaDB.fsproj" \
+      -c Release \
+      -o "$OZMADB_LOCAL_DIR/out/ozmadb" \
+      -p:RuntimeIdentifier="$OZMADB_RUNTIME_ID"
+  else
+    dotnet publish "$OZMADB_LOCAL_DIR/OzmaDB/OzmaDB.fsproj" \
+      -c Release \
+      -o "$OZMADB_LOCAL_DIR/out/ozmadb"
   fi
 
   if [[ -z "$OZMADB_DOCKER_PLATFORM" ]]; then
