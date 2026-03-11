@@ -14,7 +14,7 @@
 
 <template>
   <VueModal
-    adaptive
+    :adaptive="false"
     class="tabbed-modal"
     :width="modalWidth"
     :height="modalHeight"
@@ -22,8 +22,8 @@
     :min-height="100"
     :pivot-y="0.8"
     :name="uid"
-    transition="tabbed-modal-transition"
-    overlay-transition="tabbed-modal-overlay-transition"
+    :transition="modalTransition"
+    :overlay-transition="modalOverlayTransition"
     :resizable="!$isMobile"
     :draggable="$isMobile ? false : '.tab-headers'"
     @before-close="beforeClose"
@@ -49,20 +49,13 @@
     <!-- eslint-enable vue/no-deprecated-slot-attribute -->
 
     <div class="header d-flex align-items-center">
-      <ButtonsPanel
-        v-if="!$isMobile"
-        class="main-buttons"
-        :buttons="mainButtons"
-        @goto="$emit('goto', $event)"
-      />
-
       <div v-if="hasTabs" :class="['tab-headers', { 'is-mobile': $isMobile }]">
         <ModalTabHeader
-          v-for="(tab, index) in modalTabs"
+          v-for="(tab, index) in displayedTabs"
           :key="tab.key"
           :is-active="index === selectedTab"
           :window-key="tab.key"
-          :only-tab="modalTabs.length === 1"
+          :only-tab="displayedTabs.length === 1"
           @tab-click="switchTab(index)"
           @tab-close="$emit('tab-close', index)"
         >
@@ -84,7 +77,7 @@
       ]"
     >
       <div
-        v-for="(tab, index) in modalTabs"
+        v-for="(tab, index) in displayedTabs"
         v-show="index === selectedTab"
         :key="tab.key"
         :data-window="tab.key"
@@ -114,19 +107,20 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 
 import { WindowKey } from '@/state/windows'
+import { CurrentSettings } from '@/state/settings'
 import ModalContent from '@/components/modal/ModalContent'
 import ModalTabHeader from '@/components/modal/ModalTabHeader.vue'
-import { interfaceButtonVariant } from '@/utils_colors'
-import { Button } from '../buttons/buttons'
 import { IModalTab } from './types'
 
 const windows = namespace('windows')
+const settings = namespace('settings')
 
 @Component({ components: { ModalContent, ModalTabHeader } })
 export default class TabbedModal extends Vue {
   @windows.Mutation('createWindow') createWindow!: (_: WindowKey) => void
   @windows.Mutation('destroyWindow') destroyWindow!: (_: WindowKey) => void
   @windows.Mutation('activateWindow') activateWindow!: (_: WindowKey) => void
+  @settings.State('current') currentSettings!: CurrentSettings
 
   @Prop({ type: Array }) modalTabs!: IModalTab[] | undefined
   @Prop({ type: Boolean, default: true }) show!: boolean
@@ -137,6 +131,8 @@ export default class TabbedModal extends Vue {
   @Prop({ type: Number, default: 0 }) startingTab!: number
 
   private selectedTab = 0
+  private frozenModalTabs: IModalTab[] | undefined | null = null
+  private closeLockedModalEl: HTMLElement | null = null
 
   private mounted() {
     if (this.show) {
@@ -149,8 +145,12 @@ export default class TabbedModal extends Vue {
     if (show === oldShow) return
 
     if (show) {
+      this.frozenModalTabs = null
+      this.unlockModalSizeAfterClose()
       this.$modal.show(this.uid)
     } else {
+      this.lockModalSizeForClose()
+      this.frozenModalTabs = this.modalTabs
       this.$modal.hide(this.uid)
     }
   }
@@ -167,7 +167,7 @@ export default class TabbedModal extends Vue {
   }
 
   private fixSelectedTab() {
-    const tabsCount = this.modalTabs?.length ?? 0
+    const tabsCount = this.displayedTabs?.length ?? 0
     if (tabsCount === 0 || this.selectedTab < 0) {
       this.selectedTab = 0
     } else if (this.selectedTab >= tabsCount) {
@@ -175,37 +175,59 @@ export default class TabbedModal extends Vue {
     }
   }
 
+  private get displayedTabs(): IModalTab[] | undefined {
+    return this.frozenModalTabs === null ? this.modalTabs : this.frozenModalTabs
+  }
+
   get hasTabs() {
-    return this.modalTabs !== undefined
+    return this.displayedTabs !== undefined
   }
 
   @Watch('selectedTab', { immediate: true })
   private watchSelectedTab() {
-    if (!this.modalTabs) return
+    if (!this.displayedTabs) return
 
-    if (this.modalTabs.length > 0) {
-      const tab = this.modalTabs[this.selectedTab]
+    if (this.displayedTabs.length > 0) {
+      const tab = this.displayedTabs[this.selectedTab]
       this.activateWindow(tab.key) // TODO: This activation happens before window creation.
     }
-  }
-
-  private get mainButtons(): Button[] {
-    return [
-      {
-        type: 'callback',
-        icon: 'arrow_back',
-        variant: interfaceButtonVariant,
-        callback: () => this.$emit('go-back'),
-      },
-    ]
   }
 
   // Event is not typed for vue-js-modal
   private beforeClose(ev: any) {
     if (this.show) {
       ev.cancel()
+      this.lockModalSizeForClose()
       this.$emit('close')
     }
+  }
+
+  private get currentModalEl(): HTMLElement | null {
+    const root = this.$el as HTMLElement | undefined
+    return root?.closest('.vm--modal') as HTMLElement | null
+  }
+
+  private lockModalSizeForClose() {
+    if (this.closeLockedModalEl) return
+
+    const modalEl = this.currentModalEl
+    if (!modalEl) return
+
+    const rect = modalEl.getBoundingClientRect()
+    modalEl.style.width = `${rect.width}px`
+    modalEl.style.height = `${rect.height}px`
+    modalEl.style.maxHeight = `${rect.height}px`
+    this.closeLockedModalEl = modalEl
+  }
+
+  private unlockModalSizeAfterClose() {
+    if (!this.closeLockedModalEl) return
+
+    const modalEl = this.closeLockedModalEl
+    modalEl.style.removeProperty('width')
+    modalEl.style.removeProperty('height')
+    modalEl.style.removeProperty('max-height')
+    this.closeLockedModalEl = null
   }
 
   private switchTab(index: number) {
@@ -228,6 +250,22 @@ export default class TabbedModal extends Vue {
     return this.fullscreen || this.$isMobile ? '100%' : this.height
   }
 
+  private get uiAnimationsEnabled(): boolean {
+    return this.currentSettings.getEntry('ui_animations_enabled', Boolean, true)
+  }
+
+  private get modalTransition(): string {
+    return this.uiAnimationsEnabled
+      ? 'tabbed-modal-transition'
+      : 'tabbed-modal-transition-noop'
+  }
+
+  private get modalOverlayTransition(): string {
+    return this.uiAnimationsEnabled
+      ? 'tabbed-modal-overlay-transition'
+      : 'tabbed-modal-overlay-transition-noop'
+  }
+
   private onOpened() {
     if (!this.modalTabs) {
       this.createWindow(this.uid)
@@ -235,6 +273,8 @@ export default class TabbedModal extends Vue {
   }
 
   private onClosed() {
+    this.unlockModalSizeAfterClose()
+    this.frozenModalTabs = null
     if (!this.modalTabs) {
       this.destroyWindow(this.uid)
     }
@@ -243,12 +283,6 @@ export default class TabbedModal extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.main-buttons {
-  flex-shrink: 0;
-  margin-right: 0.25rem;
-  margin-left: 0.25rem;
-}
-
 .mobile-close-button-wrapper {
   position: fixed;
   top: 0.25rem;
@@ -300,16 +334,23 @@ export default class TabbedModal extends Vue {
   display: flex;
   flex-grow: 1;
   flex-flow: column nowrap;
+  animation: none !important;
   margin-top: 38px;
   border-radius: 1rem;
   background-color: var(--default-backgroundColor);
   max-height: calc(100% - 38px - 2rem);
   color: var(--MainTextColor);
   box-shadow: 0 20px 60px -2px var(--default-shadowColor);
+  backface-visibility: hidden;
+  will-change: opacity, transform;
 
   @include mobile {
     max-height: calc(100% - 38px);
   }
+}
+
+.tabbed-modal ::v-deep .modal-content {
+  animation: none !important;
 }
 
 .tab-content {
@@ -321,9 +362,12 @@ export default class TabbedModal extends Vue {
 }
 
 ::v-deep {
-  .tabbed-modal-overlay-transition-enter-active,
+  .tabbed-modal-overlay-transition-enter-active {
+    transition: opacity 0.22s ease-out;
+  }
+
   .tabbed-modal-overlay-transition-leave-active {
-    transition: opacity 0.24s ease;
+    transition: opacity 0.2s ease-in;
   }
 
   .tabbed-modal-overlay-transition-enter,
@@ -331,18 +375,56 @@ export default class TabbedModal extends Vue {
     opacity: 0;
   }
 
-  .tabbed-modal-transition-enter-active,
-  .tabbed-modal-transition-leave-active {
+  .tabbed-modal-transition-enter-active {
     transition:
-      opacity 0.3s ease,
-      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity 0.24s ease,
+      transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
     transform-origin: center top;
   }
 
-  .tabbed-modal-transition-enter,
-  .tabbed-modal-transition-leave-to {
-    transform: translateY(0.75rem) scale(0.985);
+  .tabbed-modal-transition-leave-active {
+    transition: opacity 0.2s ease-in;
+    transform-origin: center top;
+  }
+
+  .tabbed-modal-transition-enter {
+    transform: translateY(0.5rem) scale(0.992);
     opacity: 0;
+  }
+
+  .tabbed-modal-transition-leave {
+    opacity: 1;
+  }
+
+  .tabbed-modal-transition-leave-to {
+    opacity: 0;
+  }
+
+  .tabbed-modal-transition-leave-active > .vm--modal,
+  .tabbed-modal-transition-leave > .vm--modal,
+  .tabbed-modal-transition-leave-to > .vm--modal {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .tabbed-modal-transition-leave-active > .vm--modal {
+    transition: opacity 0.2s ease-in !important;
+  }
+
+  .tabbed-modal-transition-leave > .vm--modal {
+    opacity: 1 !important;
+  }
+
+  .tabbed-modal-transition-leave-to > .vm--modal {
+    opacity: 0 !important;
+  }
+
+  .tabbed-modal-transition-noop-enter-active,
+  .tabbed-modal-transition-noop-leave-active,
+  .tabbed-modal-overlay-transition-noop-enter-active,
+  .tabbed-modal-overlay-transition-noop-leave-active {
+    transition: none !important;
   }
 }
 

@@ -21,6 +21,9 @@ $input-border-color: var(--cell-borderColor, $border-color);
 @import 'reset.css';
 @import '~bootstrap/scss/bootstrap';
 @import '~vue-popperjs/dist/vue-popper.css';
+@import 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap';
+
+@include variant-to-local('default');
 
 html {
   overflow: hidden;
@@ -503,5 +506,419 @@ $input-focus-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
 
   100% {
     background-position: 0% 50%;
+  }
+}
+
+/* Full gelfand.dev visual language applied to ozma glass themes. */
+html[data-theme-style='light-glass'],
+html[data-theme-style='dark-glass'] {
+  --bg: #f6f4ef;
+  --card: #fffdf8;
+  --ink: #1f1f1f;
+  --muted: #6f6a62;
+  --accent: #0f766e;
+  --accent-2: #f6b941;
+  --line: rgb(196 182 163 / 46%);
+  --surface: rgb(255 255 255 / 50%);
+  --surface-strong: rgb(255 255 255 / 58%);
+  --panel-bg: rgb(255 255 255 / 0%);
+  --panel-border: rgb(255 255 255 / 72%);
+  --text-soft: #3f3b35;
+  --glow-1: #fff8e6;
+  --glow-2: #e2f8f4;
+  --glow-3: transparent;
+  --shape-1: #fde68a;
+  --shape-2: #a7f3d0;
+  --contact-hover-bg: var(--card);
+  --contact-hover-border: rgb(196 182 163 / 50%);
+  --contact-hover-shadow: 0 22px 54px rgb(28 23 15 / 14%);
+  --shadow: 0 14px 40px rgb(28 23 15 / 8%);
+  --overlay-bg: rgb(10 14 20 / 35%);
+}
+
+html[data-theme-style='dark-glass'] {
+  --bg: #070e17;
+  --card: #0b1623;
+  --ink: #e7ecef;
+  --muted: #95a7b6;
+  --accent: #59d6cf;
+  --accent-2: #f6b941;
+  --line: rgb(140 176 200 / 22%);
+  --surface: rgb(17 32 46 / 42%);
+  --surface-strong: rgb(17 32 46 / 56%);
+  --panel-bg: rgb(10 20 33 / 28%);
+  --panel-border: rgb(169 209 232 / 16%);
+  --text-soft: #d4dee6;
+  --glow-1: #0b2633;
+  --glow-2: #050a18;
+  --shape-1: #071427;
+  --shape-2: #0b5e5a;
+  --contact-hover-border: rgb(169 209 232 / 18%);
+  --contact-hover-shadow: 0 34px 90px rgb(0 0 0 / 55%);
+  --shadow: 0 18px 50px rgb(0 0 0 / 28%);
+  --overlay-bg: rgb(2 8 17 / 58%);
+}
+
+#app[data-theme-style='light-glass'],
+#app[data-theme-style='dark-glass'] {
+  --MainTextColor: var(--ink);
+  --MainTextColorLight: var(--muted);
+  --MainBackgroundColor: var(--card);
+  --MainBorderColor: var(--line);
+  --default-foregroundColor: var(--ink);
+  --default-foregroundDarkerColor: var(--muted);
+  --default-backgroundColor: var(--card);
+  --default-backgroundDarker1Color: var(--surface);
+  --default-backgroundDarker2Color: var(--surface-strong);
+  --default-borderColor: var(--line);
+  --default-shadowColor: rgb(15 23 42 / 40%);
+
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 0% 0%, var(--glow-1) 0%, transparent 35%),
+    radial-gradient(circle at 90% 20%, var(--glow-2) 0%, transparent 35%),
+    radial-gradient(circle at 92% 88%, var(--glow-3) 0%, transparent 42%),
+    var(--bg);
+  color: var(--ink);
+  font-family:
+    Manrope,
+    -apple-system,
+    BlinkMacSystemFont,
+    'SF Pro Text',
+    'SF Pro Display',
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+}
+
+#app[data-theme-style='light-glass'] h1,
+#app[data-theme-style='dark-glass'] h1,
+#app[data-theme-style='light-glass'] h2,
+#app[data-theme-style='dark-glass'] h2,
+#app[data-theme-style='light-glass'] h3,
+#app[data-theme-style='dark-glass'] h3,
+#app[data-theme-style='light-glass'] .menu-header,
+#app[data-theme-style='dark-glass'] .menu-header,
+#app[data-theme-style='light-glass'] .button-caption,
+#app[data-theme-style='dark-glass'] .button-caption {
+  font-family:
+    'Space Grotesk',
+    Manrope,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Arial,
+    sans-serif;
+}
+
+#app[data-theme-style='light-glass']::before,
+#app[data-theme-style='dark-glass']::before,
+#app[data-theme-style='light-glass']::after,
+#app[data-theme-style='dark-glass']::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  opacity: 0.55;
+  border-radius: 999px;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+#app[data-theme-style='light-glass']::before,
+#app[data-theme-style='dark-glass']::before {
+  top: -80px;
+  left: -60px;
+  width: 320px;
+  height: 320px;
+  background: var(--shape-1);
+}
+
+#app[data-theme-style='light-glass']::after,
+#app[data-theme-style='dark-glass']::after {
+  top: 20%;
+  right: -80px;
+  width: 280px;
+  height: 280px;
+  background: var(--shape-2);
+}
+
+@keyframes glass-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#app[data-theme-style='light-glass'] .header-panel,
+#app[data-theme-style='dark-glass'] .header-panel,
+#app[data-theme-style='light-glass'] .menu_category_block,
+#app[data-theme-style='dark-glass'] .menu_category_block,
+#app[data-theme-style='light-glass'] .root-wrapper,
+#app[data-theme-style='dark-glass'] .root-wrapper,
+#app[data-theme-style='light-glass'] .table-wrapper.root,
+#app[data-theme-style='dark-glass'] .table-wrapper.root,
+html[data-theme-style='light-glass'] .vm--modal,
+html[data-theme-style='dark-glass'] .vm--modal,
+html[data-theme-style='light-glass'] .modal-content,
+html[data-theme-style='dark-glass'] .modal-content {
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  background: var(--panel-bg);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(22px) saturate(135%);
+  -webkit-backdrop-filter: blur(22px) saturate(135%);
+  animation: glass-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+html[data-theme-style='light-glass'] .popper,
+html[data-theme-style='dark-glass'] .popper {
+  z-index: 100050 !important;
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  background: var(--panel-bg);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(22px) saturate(135%);
+  -webkit-backdrop-filter: blur(22px) saturate(135%);
+  animation: none !important;
+}
+
+html[data-theme-style='light-glass'] .vm--modal,
+html[data-theme-style='dark-glass'] .vm--modal {
+  overflow: hidden;
+}
+
+html[data-theme-style='light-glass'] .tabbed-modal .header,
+html[data-theme-style='dark-glass'] .tabbed-modal .header {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+#app[data-theme-style='light-glass'] .tabbed-modal .header-panel,
+#app[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+html[data-theme-style='light-glass'] .tabbed-modal .header-panel,
+html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
+  border-bottom-right-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+#app[data-theme-style='light-glass'] .header-panel.is-root,
+#app[data-theme-style='dark-glass'] .header-panel.is-root {
+  margin: 0.55rem 0.55rem 0;
+  box-sizing: border-box;
+  width: calc(100% - 1.1rem);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+#app[data-theme-style='light-glass'] .userview-upper-div > .userview-div,
+#app[data-theme-style='dark-glass'] .userview-upper-div > .userview-div {
+  margin: 0.5rem 0.55rem 0;
+  box-sizing: border-box;
+  width: calc(100% - 1.1rem);
+}
+
+#app[data-theme-style='light-glass'] .header-panel,
+#app[data-theme-style='dark-glass'] .header-panel {
+  border-bottom-color: var(--line);
+  background: var(--surface);
+}
+
+#app[data-theme-style='light-glass'] .menu_category_block,
+#app[data-theme-style='dark-glass'] .menu_category_block {
+  padding: 1rem;
+}
+
+#app[data-theme-style='light-glass']
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant,
+#app[data-theme-style='dark-glass']
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant {
+  border: none;
+}
+
+#app[data-theme-style='light-glass']
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant
+  .menu-entry,
+#app[data-theme-style='dark-glass']
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant
+  .menu-entry {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transform: none !important;
+}
+
+#app[data-theme-style='light-glass'] .table-wrapper.root,
+#app[data-theme-style='dark-glass'] .table-wrapper.root {
+  border-color: var(--panel-border);
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#app[data-theme-style='light-glass'] .root-wrapper,
+#app[data-theme-style='dark-glass'] .root-wrapper {
+  padding: 0.5rem;
+}
+
+#app[data-theme-style='light-glass'] .custom-table,
+#app[data-theme-style='dark-glass'] .custom-table {
+  background: transparent;
+}
+
+#app[data-theme-style='light-glass'] .table-th,
+#app[data-theme-style='dark-glass'] .table-th,
+#app[data-theme-style='light-glass'] .table-footer-row .table-footer-cell,
+#app[data-theme-style='dark-glass'] .table-footer-row .table-footer-cell {
+  border-color: var(--line);
+  background: var(--surface);
+}
+
+#app[data-theme-style='light-glass'] th,
+#app[data-theme-style='dark-glass'] th,
+#app[data-theme-style='light-glass'] th.fixed-cell,
+#app[data-theme-style='dark-glass'] th.fixed-cell,
+#app[data-theme-style='light-glass'] .table-th,
+#app[data-theme-style='dark-glass'] .table-th {
+  background: var(--surface);
+  backdrop-filter: blur(6px) saturate(130%);
+  -webkit-backdrop-filter: blur(6px) saturate(130%);
+}
+
+#app[data-theme-style='light-glass'] .list-group-item,
+#app[data-theme-style='dark-glass'] .list-group-item,
+#app[data-theme-style='light-glass'] .form-control,
+#app[data-theme-style='dark-glass'] .form-control,
+#app[data-theme-style='light-glass'] .input-group-text,
+#app[data-theme-style='dark-glass'] .input-group-text,
+#app[data-theme-style='light-glass'] .custom-select,
+#app[data-theme-style='dark-glass'] .custom-select {
+  border-color: var(--line) !important;
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+}
+
+#app[data-theme-style='light-glass'] .form-control:focus,
+#app[data-theme-style='dark-glass'] .form-control:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.2rem rgb(15 118 110 / 20%);
+}
+
+#app[data-theme-style='light-glass'] .btn,
+#app[data-theme-style='dark-glass'] .btn,
+#app[data-theme-style='light-glass'] .material-button,
+#app[data-theme-style='dark-glass'] .material-button,
+#app[data-theme-style='light-glass'] .menu-entry,
+#app[data-theme-style='dark-glass'] .menu-entry,
+#app[data-theme-style='light-glass'] .save-cluster-button,
+#app[data-theme-style='dark-glass'] .save-cluster-button {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  transition:
+    transform 0.5s ease,
+    box-shadow 0.5s ease,
+    background 0.5s ease,
+    border-color 0.5s ease;
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+}
+
+#app[data-theme-style='light-glass'] .btn:hover:not(:disabled),
+#app[data-theme-style='dark-glass'] .btn:hover:not(:disabled),
+#app[data-theme-style='light-glass'] .material-button:hover:not(:disabled),
+#app[data-theme-style='dark-glass'] .material-button:hover:not(:disabled),
+#app[data-theme-style='light-glass'] .menu-entry:hover:not(.disabled),
+#app[data-theme-style='dark-glass'] .menu-entry:hover:not(.disabled),
+#app[data-theme-style='light-glass'] .btn:focus-visible:not(:disabled),
+#app[data-theme-style='dark-glass'] .btn:focus-visible:not(:disabled),
+#app[data-theme-style='light-glass'] .material-button:focus-visible:not(:disabled),
+#app[data-theme-style='dark-glass'] .material-button:focus-visible:not(:disabled),
+#app[data-theme-style='light-glass'] .menu-entry:focus-visible:not(.disabled),
+#app[data-theme-style='dark-glass'] .menu-entry:focus-visible:not(.disabled) {
+  transform: translateY(-2px);
+  border-color: var(--contact-hover-border);
+  background: var(--contact-hover-bg);
+  box-shadow: var(--contact-hover-shadow);
+}
+
+#app[data-theme-style='light-glass']
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant
+  .menu-entry:hover:not(.disabled),
+#app[data-theme-style='dark-glass']
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant
+  .menu-entry:hover:not(.disabled),
+#app[data-theme-style='light-glass']
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant
+  .menu-entry:focus-visible:not(.disabled),
+#app[data-theme-style='dark-glass']
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant
+  .menu-entry:focus-visible:not(.disabled) {
+  border: none;
+  box-shadow: none;
+  transform: none;
+}
+
+#app[data-theme-style='dark-glass']
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant
+  .menu-entry:hover:not(.disabled),
+#app[data-theme-style='dark-glass']
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant
+  .menu-entry:focus-visible:not(.disabled) {
+  background: rgb(169 209 232 / 10%);
+}
+
+#app[data-theme-style='light-glass'] .badge,
+#app[data-theme-style='dark-glass'] .badge {
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+  color: var(--text-soft);
+}
+
+#app[data-theme-style='light-glass'] .save-button,
+#app[data-theme-style='dark-glass'] .save-button,
+#app[data-theme-style='light-glass'] .saving-indicator,
+#app[data-theme-style='dark-glass'] .saving-indicator {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--card);
+}
+
+html[data-theme-style='light-glass'] .vm--overlay,
+html[data-theme-style='dark-glass'] .vm--overlay {
+  background: var(--overlay-bg) !important;
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  #app[data-theme-style='light-glass'] .header-panel,
+  #app[data-theme-style='dark-glass'] .header-panel,
+  #app[data-theme-style='light-glass'] .menu_category_block,
+  #app[data-theme-style='dark-glass'] .menu_category_block,
+  #app[data-theme-style='light-glass'] .table-wrapper.root,
+  #app[data-theme-style='dark-glass'] .table-wrapper.root,
+  html[data-theme-style='light-glass'] .popper,
+  html[data-theme-style='dark-glass'] .popper,
+  html[data-theme-style='light-glass'] .vm--modal,
+  html[data-theme-style='dark-glass'] .vm--modal {
+    background: var(--card);
   }
 }

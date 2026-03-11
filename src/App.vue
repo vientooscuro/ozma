@@ -16,6 +16,7 @@
   <div
     id="app"
     :data-window="uid"
+    :data-theme-style="themeStyleName"
     :style="styleSettings"
     class="default-variant default-local-variant"
   >
@@ -278,6 +279,34 @@ export default class App extends Vue {
   private loadLanguage(language: string) {
     moment.locale(language)
     void this.getTranslations(language)
+  }
+
+  get themeStyleName(): string {
+    return this.currentThemeRef?.name ?? 'default'
+  }
+
+  @Watch('themeStyleName', { immediate: true })
+  private syncThemeStyleName(themeStyleName: string) {
+    document.documentElement.setAttribute('data-theme-style', themeStyleName)
+    document.body?.setAttribute('data-theme-style', themeStyleName)
+    document.documentElement.classList.add(
+      'default-variant',
+      'default-local-variant',
+    )
+    document.body?.classList.add('default-variant', 'default-local-variant')
+  }
+
+  @Watch('styleSettings', { immediate: true, deep: true })
+  private syncGlobalStyleSettings(styleSettings: Record<string, unknown>) {
+    const applyVars = (element: HTMLElement | null) => {
+      if (!element) return
+      for (const [name, value] of Object.entries(styleSettings)) {
+        element.style.setProperty(name, String(value))
+      }
+    }
+
+    applyVars(document.documentElement)
+    applyVars(document.body)
   }
 
   @Watch('settings', { immediate: true })

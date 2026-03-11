@@ -580,6 +580,10 @@ export default class TopLevelUserView extends Vue {
     return this.currentSettings.getEntry('custom_css', String, '')
   }
 
+  private get uiAnimationsEnabled(): boolean {
+    return this.currentSettings.getEntry('ui_animations_enabled', Boolean, true)
+  }
+
   // async to import additional sanitizeCSS module
   @Watch('settingsStyle', { deep: true, immediate: true })
   private async customStyle(styleString: string): Promise<void> {
@@ -599,6 +603,14 @@ export default class TopLevelUserView extends Vue {
     if (this.styleNode) {
       this.styleNode.innerHTML = this.finalStyle
     }
+  }
+
+  @Watch('uiAnimationsEnabled', { immediate: true })
+  private onUiAnimationsEnabledChanged(enabled: boolean) {
+    document.documentElement.setAttribute(
+      'data-ui-animations',
+      enabled ? 'on' : 'off',
+    )
   }
 
   private get finalStyle() {

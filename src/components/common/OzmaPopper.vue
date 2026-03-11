@@ -75,7 +75,7 @@ export default {
     },
     appendToBody: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     visibleArrow: {
       type: Boolean,
@@ -202,6 +202,15 @@ export default {
 
   methods: {
     animationsEnabled() {
+      const globalFlag =
+        document.documentElement.getAttribute('data-ui-animations')
+      if (globalFlag === 'off') {
+        return false
+      }
+      if (globalFlag === 'on') {
+        return true
+      }
+
       const currentSettings = this.$store?.state?.settings?.current
       if (currentSettings === undefined || currentSettings === null) {
         return true

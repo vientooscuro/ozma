@@ -50,7 +50,15 @@
         :argument-editor-props="argumentEditorProps"
         :sort-editor-props="sortEditorProps"
         @goto="$emit('goto', $event)"
-      />
+      >
+        <template #left-slot>
+          <ButtonsPanel
+            v-if="!$isMobile"
+            class="main-buttons"
+            :buttons="mainButtons"
+          />
+        </template>
+      </HeaderPanel>
     </template>
 
     <section class="section-modal">
@@ -95,6 +103,8 @@ import ModalPortal from '@/components/modal/ModalPortal'
 import { router } from '@/modules'
 import type { Button } from '@/components/buttons/buttons'
 import HeaderPanel from '@/components/panels/HeaderPanel.vue'
+import ButtonsPanel from '@/components/panels/ButtonsPanel.vue'
+import { interfaceButtonVariant } from '@/utils_colors'
 import { convertToWords } from '@/utils'
 import { ErrorKey } from '@/state/errors'
 import { UserString } from '@/state/translations'
@@ -105,7 +115,7 @@ const staging = namespace('staging')
 const errors = namespace('errors')
 const auth = namespace('auth')
 
-@Component({ components: { ModalPortal, HeaderPanel } })
+@Component({ components: { ModalPortal, HeaderPanel, ButtonsPanel } })
 export default class ModalUserView extends Vue {
   @auth.State('protectedCalls') protectedCalls!: number
   @staging.State('current') changes!: CurrentChanges
@@ -178,6 +188,17 @@ export default class ModalUserView extends Vue {
     return []
   }
 
+  private get mainButtons(): Button[] {
+    return [
+      {
+        type: 'callback',
+        icon: 'arrow_back',
+        variant: interfaceButtonVariant,
+        callback: () => this.$emit('go-back'),
+      },
+    ]
+  }
+
   private openFullscreen() {
     void router.push(queryLocation(this.view))
   }
@@ -189,6 +210,12 @@ export default class ModalUserView extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.main-buttons {
+  flex-shrink: 0;
+  margin-right: 0.25rem;
+  margin-left: 0.25rem;
+}
+
 .section-modal {
   display: flex;
   position: relative;
