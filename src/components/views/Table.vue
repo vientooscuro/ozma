@@ -3498,8 +3498,21 @@ export default class UserViewTable extends mixins<
     return elementWindow(this.$el as HTMLElement)
   }
 
-  private checkWindow() {
-    return this.activeWindow === this.parentWindow
+  private checkWindow(event?: Event) {
+    if (this.activeWindow !== this.parentWindow) {
+      return false
+    }
+
+    const target = event?.target
+    if (!(target instanceof Node)) {
+      return true
+    }
+
+    const isCalendarClick = Array.from(
+      document.querySelectorAll('.calendar-popper'),
+    ).some((el) => el.contains(target))
+
+    return !isCalendarClick
   }
 
   private closeCellContextMenu() {
