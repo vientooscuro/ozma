@@ -555,7 +555,6 @@ import {
 } from '@/utils'
 import { valueIsNull } from '@/values'
 import { UserView } from '@/components'
-import { maxPerFetch } from '@/components/UserView.vue'
 import { AddedRowId } from '@/state/staging_changes'
 import { IAttrToQueryOpts, ICurrentQueryHistory } from '@/state/query'
 import BaseUserView, {
@@ -1500,6 +1499,7 @@ interface IShownRow {
 }
 
 const defaultPageSize = 5
+const maxPaginationPerPage = 500
 // Just look at `ITableLazyLoad` to see which type this mess makes.
 export const TableLazyLoad = z
   .union([
@@ -1517,7 +1517,7 @@ export const TableLazyLoad = z
       .transform((obj) => ({
         type: 'pagination' as const,
         pagination: {
-          perPage: R.clamp(0, maxPerFetch, obj.pagination['per_page']),
+          perPage: R.clamp(0, maxPaginationPerPage, obj.pagination['per_page']),
           currentPage: 0,
           loading: false,
           autoscrollSeconds: obj.pagination['autoscroll_seconds'] ?? null,
@@ -1919,7 +1919,7 @@ export default class UserViewTable extends mixins<
   get pageSizes() {
     if (this.uv.extra.lazyLoad.type !== 'pagination') return []
 
-    const defaultSizes = [5, 10, 25, 50]
+    const defaultSizes = [5, 10, 25, 50, 100, 500]
     if (!defaultSizes.includes(this.uv.extra.lazyLoad.pagination.perPage)) {
       return [this.uv.extra.lazyLoad.pagination.perPage, ...defaultSizes].map(
         (num) => ({ value: num, text: String(num) }),
