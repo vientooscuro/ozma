@@ -200,6 +200,12 @@ export default class ModalUserView extends Vue {
     return [
       {
         type: 'callback',
+        icon: 'arrow_back',
+        variant: interfaceButtonVariant,
+        callback: () => this.$emit('go-back'),
+      },
+      {
+        type: 'callback',
         icon: this.overlayBlurEnabled ? 'blur_off' : 'blur_on',
         tooltip: this.overlayBlurEnabled
           ? this.$t('disable_background_blur').toString()
@@ -209,12 +215,6 @@ export default class ModalUserView extends Vue {
           this.overlayBlurEnabled = !this.overlayBlurEnabled
           this.applyCurrentOverlayBlurState()
         },
-      },
-      {
-        type: 'callback',
-        icon: 'arrow_back',
-        variant: interfaceButtonVariant,
-        callback: () => this.$emit('go-back'),
       },
     ]
   }
