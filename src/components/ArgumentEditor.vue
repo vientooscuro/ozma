@@ -48,7 +48,7 @@
       }"
       :disabled="!visible"
       :force-show="visible"
-      @document-click="visible = false"
+      @document-click="onPopupDocumentClick"
     >
       <div class="popper shadow">
         <div
@@ -151,6 +151,25 @@ export default class ArgumentEditor extends Vue {
 
   private visible = false
   private updatedArguments: Record<ArgumentName, unknown> = {}
+
+  private onPopupDocumentClick(_popup: unknown, event?: MouseEvent) {
+    if (this.isClickInsideCalendar(event)) {
+      return
+    }
+
+    this.visible = false
+  }
+
+  private isClickInsideCalendar(event?: MouseEvent): boolean {
+    const target = event?.target
+    if (!(target instanceof Node)) {
+      return false
+    }
+
+    return Array.from(document.querySelectorAll('.calendar-popper')).some((el) =>
+      el.contains(target),
+    )
+  }
 
   @Watch('userView')
   propsChanged() {

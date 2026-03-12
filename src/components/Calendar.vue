@@ -30,7 +30,6 @@
   >
     <popper
       ref="popup"
-      v-click-outside="closePopup"
       :trigger="null"
       transition="ozma-popover"
       enter-active-class="ozma-popover-enter-active"
@@ -80,7 +79,7 @@
         </div>
       </div>
 
-      <div class="popper border rounded overflow-hidden shadow">
+      <div class="popper calendar-popper border rounded overflow-hidden shadow">
         <div class="popper-inner">
           <div class="days">
             <div v-if="!required" class="clear-button-wrapper">
@@ -98,7 +97,7 @@
               </button>
             </div>
 
-            <DatePicker :value="dateValue" @update:value="updateDate" />
+            <DatePicker :value="dateValue" @update:value="onDatePicked" />
             <button class="today material-button" @click="setDateToday($event)">
               <span class="material-icons md-18 mr-1">today</span>
               {{ $t('today').toString() }}
@@ -163,6 +162,8 @@ export default class Calendar extends Vue {
   @Prop({ type: Boolean, default: false }) isCellEdit!: boolean
 
   private isPopupOpen = false
+  private documentMouseDownHandler = (event: MouseEvent) =>
+    this.onDocumentMouseDown(event)
 
   get usedFormat() {
     if (this.format) {
@@ -218,6 +219,7 @@ export default class Calendar extends Vue {
   private async onOpenPopup() {
     this.$emit('focus')
     this.isPopupOpen = true
+    document.addEventListener('mousedown', this.documentMouseDownHandler)
 
     await Vue.nextTick()
     this.focusInput()
@@ -227,10 +229,12 @@ export default class Calendar extends Vue {
   private onClosePopup() {
     this.$emit('blur')
     this.isPopupOpen = false
+    document.removeEventListener('mousedown', this.documentMouseDownHandler)
   }
 
   // eslint-disable-next-line vue/no-deprecated-destroyed-lifecycle
   private beforeDestroy() {
+    document.removeEventListener('mousedown', this.documentMouseDownHandler)
     const popupRef: any = this.$refs.popup
     popupRef?.destroyPopper?.()
   }
@@ -258,9 +262,6 @@ export default class Calendar extends Vue {
   private selectValue(newValue: Moment | null) {
     if (moment.isMoment(newValue) && newValue.isSame(this.value)) return
     this.$emit('update:value', newValue)
-    if (!this.showTime) {
-      void this.closePopup()
-    }
   }
 
   private onPressEnter(event: KeyboardEvent) {
@@ -276,6 +277,24 @@ export default class Calendar extends Vue {
     // but it can broke some cases on smartphones with keyboard and it's just a little ugly fix.
     if (this.$isMobile && !this.isPopupOpen) {
       ;(this.$refs.control as HTMLInputElement).blur()
+    }
+  }
+
+  private onDocumentMouseDown(event: MouseEvent) {
+    if (!this.isPopupOpen) return
+
+    const target = event.target as Node | null
+    if (!target) return
+
+    const rootEl = this.$el as HTMLElement | null
+    const popupRef: any = this.$refs.popup
+    const popperEl = popupRef?.popper as HTMLElement | null
+
+    const isInsideRoot = rootEl?.contains(target) ?? false
+    const isInsidePopper = popperEl?.contains(target) ?? false
+
+    if (!isInsideRoot && !isInsidePopper) {
+      void this.closePopup()
     }
   }
 
@@ -305,12 +324,19 @@ export default class Calendar extends Vue {
     this.selectValue(newValue)
   }
 
-  private updateDate(val: Moment) {
+  private updateDate(val: Moment, closeIfDateOnly = false) {
     this.updatePart((newValue) => {
       newValue.year(val.year())
       newValue.month(val.month())
       newValue.date(val.date())
     })
+    if (closeIfDateOnly && !this.showTime) {
+      void this.closePopup()
+    }
+  }
+
+  private onDatePicked(val: Moment) {
+    this.updateDate(val, true)
   }
 
   private updateMins(val: number) {

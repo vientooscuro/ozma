@@ -690,7 +690,7 @@ export default {
         return
       }
 
-      this.$emit('document-click', this)
+      this.$emit('document-click', this, e)
 
       if (this.forceShow) {
         return
