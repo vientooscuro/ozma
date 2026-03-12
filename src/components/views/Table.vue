@@ -26,7 +26,8 @@
       "pin_column": "Pin column",
       "unpin_column": "Unpin column",
       "count": "Count",
-      "sum": "Sum"
+      "sum": "Sum",
+      "selected_cells_sum": "Sum"
     },
     "ru": {
       "pagination_select": "Строк на странице",
@@ -54,9 +55,13 @@
       "pin_column": "Закрепить столбец",
       "unpin_column": "Открепить столбец",
       "count": "Кол-во",
-      "sum": "Сумма"
+      "sum": "Сумма",
+      "selected_cells_sum": "Сумма"
     },
     "es": {
+      "pagination_select": "Filas por página",
+      "total_rows": "Filas totales",
+      "of": "de",
       "cut": "Cortar",
       "copy": "Copiar",
       "paste": "Pegar",
@@ -79,7 +84,8 @@
       "pin_column": "Fijar columna",
       "unpin_column": "Desfijar columna",
       "count": "Cantidad",
-      "sum": "Suma"
+      "sum": "Suma",
+      "selected_cells_sum": "Suma"
     }
   }
 </i18n>
@@ -456,10 +462,10 @@
             showBottomAddButton
           "
           class="footer"
-          :style="{
-            justifyContent: showBottomAddButton ? 'space-between' : 'flex-end',
-          }"
         >
+          <div v-if="selectedCellsSumLabel" class="selected-cells-sum">
+            {{ selectedCellsSumLabel }}
+          </div>
           <ButtonItem
             v-if="showBottomAddButton"
             class="add-row-button"
@@ -2507,6 +2513,47 @@ export default class UserViewTable extends mixins<
     return Number(value.toFixed(6)).toLocaleString()
   }
 
+  private formatSelectedCellsGroupedSum(value: number): string {
+    return new Intl.NumberFormat('en-US', {
+      useGrouping: true,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+      .format(value)
+      .replaceAll(',', ' ')
+  }
+
+  private normalizeSelectionSum(value: number): number {
+    return Number(value.toFixed(12))
+  }
+
+  private get selectedCellsSumLabel(): string | null {
+    if (this.selectedCells.length === 0) return null
+
+    let sum = 0
+    for (const ref of this.selectedCells) {
+      const cell = this.uv.getValueByRef(ref)
+      if (!cell) continue
+
+      const rawValue = currentValue(cell.value)
+      const parsed =
+        typeof rawValue === 'number'
+          ? rawValue
+          : typeof rawValue === 'string' && rawValue.trim() !== ''
+            ? Number(rawValue)
+            : Number.NaN
+
+      if (Number.isFinite(parsed)) {
+        sum += parsed
+      }
+    }
+
+    const normalizedSum = this.normalizeSelectionSum(sum)
+    return `${this.$t('selected_cells_sum')}: ${this.formatSelectedCellsGroupedSum(
+      normalizedSum,
+    )} (${normalizedSum.toString()})`
+  }
+
   get footerByColumn(): Record<number, string> {
     const result: Record<number, string> = {}
     for (const columnIndex of this.columnIndexes) {
@@ -4198,6 +4245,11 @@ th.column-drop-target {
 
 .add-row-button {
   font-size: 0.875rem;
+}
+
+.selected-cells-sum {
+  font-size: 0.75rem;
+  white-space: nowrap;
 }
 
 .context-menu-wrapper {
