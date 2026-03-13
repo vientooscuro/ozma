@@ -616,11 +616,24 @@ export default class MultiSelect extends Vue {
   }
 
   focusInput() {
-    ;(this.$refs.filterInput as HTMLInputElement | undefined)?.focus()
+    const input = this.$refs.filterInput as HTMLInputElement | undefined
+    input?.focus()
+    return input
   }
 
   focusSelect() {
     ;(this.$refs.selectContainer as HTMLElement | undefined)?.focus()
+  }
+
+  private async focusFilterInputWhenReady(attempt = 0): Promise<void> {
+    await nextRender()
+    const input = this.focusInput()
+    if (input && document.activeElement === input) {
+      return
+    }
+    if (attempt < 4) {
+      await this.focusFilterInputWhenReady(attempt + 1)
+    }
   }
 
   onFilterInputFocus() {
@@ -643,7 +656,7 @@ export default class MultiSelect extends Vue {
 
       // On-screen keyboard disturbs if there are not so many options to filter.
       if (!this.$isMobile) {
-        this.focusInput()
+        await this.focusFilterInputWhenReady()
       }
     } else {
       this.filterValue = ''
