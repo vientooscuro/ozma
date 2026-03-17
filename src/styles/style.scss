@@ -437,12 +437,11 @@ $input-focus-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
 
   .tooltip-inner {
     position: relative;
-    isolation: isolate;
     border-radius: 12px;
     padding: 6px 12px;
     font-size: inherit;
     max-width: 320px;
-    background: rgb(255 255 255 / 20%);
+    background: transparent;
     color: var(--ink, #fff);
     text-shadow: 0 1px 3px rgb(0 0 0 / 20%);
     box-shadow: 0 6px 6px rgb(0 0 0 / 20%), 0 0 20px rgb(0 0 0 / 10%);
@@ -453,21 +452,23 @@ $input-focus-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
       position: absolute;
       inset: 0;
       border-radius: inherit;
+      pointer-events: none;
     }
 
-    // Backdrop blur layer (separate from filter to avoid stacking context conflict)
+    // Blur + background layer
     &::before {
+      background: rgb(255 255 255 / 20%);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
       z-index: -1;
     }
 
-    // Outline shine + distortion filter on top
+    // Outline shine
     &::after {
-      filter: url(#glass-distortion);
       box-shadow:
         inset 2px 2px 1px 0 rgb(255 255 255 / 50%),
         inset -1px -1px 1px 1px rgb(255 255 255 / 30%);
+      z-index: -1;
     }
   }
 
