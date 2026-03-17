@@ -498,6 +498,7 @@ export default {
             this.clearAnimatedContentStyles(element)
           })
           this.updatePopper()
+          this.bringToFront()
         })
         return
       }
@@ -513,8 +514,13 @@ export default {
         this.updatePopper()
 
         // Let Popper compute final placement first, then run animation.
+        // Re-apply bringToFront in rAF to ensure this popper ends up above
+        // any siblings whose bringToFront ran during $nextTick (e.g. when
+        // appendToBody triggers a parent re-render and sibling poppers
+        // recalculate their z-index).
         this.animationFrame1 = requestAnimationFrame(() => {
           this.animationFrame2 = requestAnimationFrame(() => {
+            this.bringToFront()
             this.animateIn()
           })
         })
