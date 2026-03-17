@@ -557,15 +557,9 @@ export default {
       }
 
       if (this.appendedToBody) {
-        this.appendedToBody = false
-        const popperContainer = this.popper?.parentElement ?? null
-        if (
-          popperContainer &&
-          popperContainer !== document.body &&
-          document.body.contains(popperContainer)
-        ) {
-          popperContainer.remove()
-        }
+        // Keep the container in body — removing it causes Vue to re-insert it
+        // inside the original parent on next render, which puts it inside any
+        // stacking context (overflow, transform) that the parent may have.
       }
     },
 
