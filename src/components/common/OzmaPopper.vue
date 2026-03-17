@@ -350,6 +350,8 @@ export default {
       element.style.willChange = ''
       element.style.opacity = ''
       element.style.visibility = ''
+      element.style.transform = ''
+      element.style.transformOrigin = ''
     },
 
     clearAnimatedContentStyles(element) {
@@ -375,15 +377,14 @@ export default {
     prepareOpenAnimationState(containerElement, contentElements) {
       this.clearAnimatedStyles(containerElement)
       containerElement.style.transition = 'none'
-      containerElement.style.willChange = 'opacity'
+      containerElement.style.willChange = 'opacity, transform'
+      containerElement.style.transformOrigin = 'top center'
       containerElement.style.visibility = 'hidden'
       containerElement.style.opacity = '0'
+      containerElement.style.transform = 'translateY(6px) scale(0.985)'
 
       contentElements.forEach((contentElement) => {
         this.clearAnimatedContentStyles(contentElement)
-        contentElement.style.transition = 'none'
-        contentElement.style.willChange = 'opacity'
-        contentElement.style.opacity = '0'
       })
     },
 
@@ -399,14 +400,9 @@ export default {
       this.animationFrame1 = requestAnimationFrame(() => {
         this.animationFrame2 = requestAnimationFrame(() => {
           containerElement.style.transition =
-            `opacity ${SHOW_ANIMATION_DURATION_MS}ms cubic-bezier(0.16, 1, 0.3, 1)`
+            `opacity ${SHOW_ANIMATION_DURATION_MS}ms cubic-bezier(0.16, 1, 0.3, 1), transform ${CONTENT_SHOW_ANIMATION_DURATION_MS}ms cubic-bezier(0.16, 1, 0.3, 1)`
           containerElement.style.opacity = '1'
-
-          contentElements.forEach((contentElement) => {
-            contentElement.style.transition =
-              `opacity ${CONTENT_SHOW_ANIMATION_DURATION_MS}ms cubic-bezier(0.16, 1, 0.3, 1)`
-            contentElement.style.opacity = '1'
-          })
+          containerElement.style.transform = 'translateY(0) scale(1)'
 
           this.transitionTimer = setTimeout(() => {
             this.clearAnimatedStyles(containerElement)
@@ -434,24 +430,21 @@ export default {
 
       contentElements.forEach((contentElement) => {
         this.clearAnimatedContentStyles(contentElement)
-        contentElement.style.transition = 'none'
-        contentElement.style.willChange = 'opacity'
-        contentElement.style.opacity = '1'
       })
+      containerElement.style.transition = 'none'
+      containerElement.style.willChange = 'opacity, transform'
+      containerElement.style.transformOrigin = 'top center'
+      containerElement.style.opacity = '1'
+      containerElement.style.transform = 'translateY(0) scale(1)'
       // Force style flush before starting transition.
       void containerElement.offsetWidth
 
       this.animationFrame1 = requestAnimationFrame(() => {
         this.animationFrame2 = requestAnimationFrame(() => {
           containerElement.style.transition =
-            `opacity ${HIDE_ANIMATION_DURATION_MS}ms cubic-bezier(0.4, 0, 1, 1)`
+            `opacity ${HIDE_ANIMATION_DURATION_MS}ms cubic-bezier(0.4, 0, 1, 1), transform ${CONTENT_HIDE_ANIMATION_DURATION_MS}ms cubic-bezier(0.4, 0, 1, 1)`
           containerElement.style.opacity = '0'
-
-          contentElements.forEach((contentElement) => {
-            contentElement.style.transition =
-              `opacity ${CONTENT_HIDE_ANIMATION_DURATION_MS}ms cubic-bezier(0.4, 0, 1, 1)`
-            contentElement.style.opacity = '0'
-          })
+          containerElement.style.transform = 'translateY(4px) scale(0.99)'
 
           this.transitionTimer = setTimeout(() => {
             this.clearAnimatedStyles(containerElement)
