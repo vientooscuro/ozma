@@ -650,6 +650,7 @@ export default class MultiSelect extends Vue {
       this.hoveredOptionIndex = null
       this.$emit('popup-opened')
       await nextRender()
+      ;(this.$refs.popup as InputPopup | undefined)?.updatePopper()
       ;(
         this.$refs['infiniteLoading'] as InfiniteLoading | undefined
       )?.stateChanger.reset()
