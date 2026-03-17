@@ -436,20 +436,43 @@ $input-focus-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
   z-index: 200000 !important;
 
   .tooltip-inner {
-    border-radius: 10px;
+    position: relative;
+    isolation: isolate;
+    border-radius: 12px;
     padding: 6px 12px;
     font-size: inherit;
     max-width: 320px;
-    background: var(--panel-bg, rgba(30, 30, 30, 0.75));
+    background: rgb(255 255 255 / 20%);
     color: var(--ink, #fff);
-    backdrop-filter: blur(22px) saturate(135%);
-    -webkit-backdrop-filter: blur(22px) saturate(135%);
-    border: 1px solid var(--panel-border, rgba(255, 255, 255, 0.15));
-    box-shadow: var(--shadow, 0 4px 24px rgba(0, 0, 0, 0.18));
+    text-shadow: 0 1px 3px rgb(0 0 0 / 20%);
+    box-shadow: 0 6px 6px rgb(0 0 0 / 20%), 0 0 20px rgb(0 0 0 / 10%);
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+    }
+
+    // Glass distortion
+    &::before {
+      backdrop-filter: blur(12px) saturate(150%);
+      -webkit-backdrop-filter: blur(12px) saturate(150%);
+      filter: url(#glass-distortion);
+      z-index: -1;
+    }
+
+    // Outline shine
+    &::after {
+      box-shadow:
+        inset 2px 2px 1px 0 rgb(255 255 255 / 50%),
+        inset -1px -1px 1px 1px rgb(255 255 255 / 30%);
+    }
   }
 
   .arrow::before {
-    border-color: transparent;
+    border-color: transparent !important;
   }
 }
 
