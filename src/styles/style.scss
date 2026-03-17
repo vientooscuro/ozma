@@ -455,16 +455,16 @@ $input-focus-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
       border-radius: inherit;
     }
 
-    // Glass distortion
+    // Backdrop blur layer (separate from filter to avoid stacking context conflict)
     &::before {
-      backdrop-filter: blur(12px) saturate(150%);
-      -webkit-backdrop-filter: blur(12px) saturate(150%);
-      filter: url(#glass-distortion);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
       z-index: -1;
     }
 
-    // Outline shine
+    // Outline shine + distortion filter on top
     &::after {
+      filter: url(#glass-distortion);
       box-shadow:
         inset 2px 2px 1px 0 rgb(255 255 255 / 50%),
         inset -1px -1px 1px 1px rgb(255 255 255 / 30%);
