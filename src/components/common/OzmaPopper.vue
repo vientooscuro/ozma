@@ -382,10 +382,8 @@ export default {
       contentElements.forEach((contentElement) => {
         this.clearAnimatedContentStyles(contentElement)
         contentElement.style.transition = 'none'
-        contentElement.style.willChange = 'opacity, transform'
-        contentElement.style.transformOrigin = 'top center'
+        contentElement.style.willChange = 'opacity'
         contentElement.style.opacity = '0'
-        contentElement.style.transform = 'translateY(6px) scale(0.985)'
       })
     },
 
@@ -406,9 +404,8 @@ export default {
 
           contentElements.forEach((contentElement) => {
             contentElement.style.transition =
-              `transform ${CONTENT_SHOW_ANIMATION_DURATION_MS}ms cubic-bezier(0.16, 1, 0.3, 1), opacity ${CONTENT_SHOW_ANIMATION_DURATION_MS}ms cubic-bezier(0.16, 1, 0.3, 1)`
+              `opacity ${CONTENT_SHOW_ANIMATION_DURATION_MS}ms cubic-bezier(0.16, 1, 0.3, 1)`
             contentElement.style.opacity = '1'
-            contentElement.style.transform = 'translateY(0) scale(1)'
           })
 
           this.transitionTimer = setTimeout(() => {
@@ -438,10 +435,8 @@ export default {
       contentElements.forEach((contentElement) => {
         this.clearAnimatedContentStyles(contentElement)
         contentElement.style.transition = 'none'
-        contentElement.style.willChange = 'opacity, transform'
-        contentElement.style.transformOrigin = 'top center'
+        contentElement.style.willChange = 'opacity'
         contentElement.style.opacity = '1'
-        contentElement.style.transform = 'translateY(0) scale(1)'
       })
       // Force style flush before starting transition.
       void containerElement.offsetWidth
@@ -454,9 +449,8 @@ export default {
 
           contentElements.forEach((contentElement) => {
             contentElement.style.transition =
-              `transform ${CONTENT_HIDE_ANIMATION_DURATION_MS}ms cubic-bezier(0.4, 0, 1, 1), opacity ${CONTENT_HIDE_ANIMATION_DURATION_MS}ms cubic-bezier(0.4, 0, 1, 1)`
+              `opacity ${CONTENT_HIDE_ANIMATION_DURATION_MS}ms cubic-bezier(0.4, 0, 1, 1)`
             contentElement.style.opacity = '0'
-            contentElement.style.transform = 'translateY(4px) scale(0.99)'
           })
 
           this.transitionTimer = setTimeout(() => {
