@@ -498,7 +498,6 @@ export default {
             this.clearAnimatedContentStyles(element)
           })
           this.updatePopper()
-          this.bringToFront()
         })
         return
       }
@@ -513,14 +512,8 @@ export default {
         this.prepareOpenAnimationState(containerElement, contentElements)
         this.updatePopper()
 
-        // Let Popper compute final placement first, then run animation.
-        // Re-apply bringToFront in rAF to ensure this popper ends up above
-        // any siblings whose bringToFront ran during $nextTick (e.g. when
-        // appendToBody triggers a parent re-render and sibling poppers
-        // recalculate their z-index).
         this.animationFrame1 = requestAnimationFrame(() => {
           this.animationFrame2 = requestAnimationFrame(() => {
-            this.bringToFront()
             this.animateIn()
           })
         })
@@ -575,8 +568,6 @@ export default {
           return
         }
 
-        this.bringToFront()
-
         if (this.visibleArrow) {
           this.appendArrow(this.popper)
         }
@@ -607,7 +598,10 @@ export default {
 
         this.popperOptions.onCreate = () => {
           this.$emit('created', this)
-          this.$nextTick(() => this.updatePopper())
+          this.$nextTick(() => {
+            this.updatePopper()
+            this.bringToFront()
+          })
         }
 
         this.popperJS = new Popper(this.referenceElm, this.popper, this.popperOptions)
