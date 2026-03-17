@@ -432,6 +432,27 @@ $input-focus-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
   }
 }
 
+.tooltip {
+  z-index: 200000 !important;
+
+  .tooltip-inner {
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-size: inherit;
+    max-width: 320px;
+    background: var(--panel-bg, rgba(30, 30, 30, 0.75));
+    color: var(--ink, #fff);
+    backdrop-filter: blur(22px) saturate(135%);
+    -webkit-backdrop-filter: blur(22px) saturate(135%);
+    border: 1px solid var(--panel-border, rgba(255, 255, 255, 0.15));
+    box-shadow: var(--shadow, 0 4px 24px rgba(0, 0, 0, 0.18));
+  }
+
+  .arrow::before {
+    border-color: transparent;
+  }
+}
+
 .table-th,
 .table-th .column-capture {
   text-transform: none;
