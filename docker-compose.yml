@@ -50,6 +50,9 @@ services:
       context: .
       dockerfile: docker/Dockerfile.ozmadb
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "ozma.gogol.school:host-gateway"
     environment:
       DB_HOST: postgres
       DB_USER: ozmadb
