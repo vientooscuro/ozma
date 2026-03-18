@@ -1743,6 +1743,9 @@ export default class UserViewTable extends mixins<
   }
 
   private applyStoredColumnLayout() {
+    // Don't reset layout while settings are still loading — we'd lose saved widths.
+    if (this.settingsPending !== null) return
+
     const raw = this.settings.settings[this.tableLayoutSettingName]
     const parsed = tableLayoutSchema.safeParse(safeJsonParse(raw))
     if (!parsed.success) {
