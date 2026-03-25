@@ -1189,6 +1189,10 @@ export default class UserView extends Vue {
   background-color: var(--userview-background-color);
   height: 100%;
   overflow-y: auto;
+
+  &:has(.contains-only-one-iframe) {
+    overflow: hidden;
+  }
 }
 
 .overlay-content {
