@@ -1017,6 +1017,10 @@ export default class UserViewForm extends mixins<
       margin-bottom: 0 !important;
     }
 
+    ::v-deep .border-label {
+      display: none;
+    }
+
     ::v-deep .container-fluid,
     ::v-deep .form_container,
     ::v-deep .form-entry,
