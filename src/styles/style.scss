@@ -584,6 +584,11 @@ $input-focus-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
   }
 }
 
+/* Default ink for non-glass ozma themes (tooltips render outside #app). */
+html {
+  --ink: var(--foregroundColor, #1f1f1f);
+}
+
 /* Full gelfand.dev visual language applied to ozma glass themes. */
 html[data-theme-style='light-glass'],
 html[data-theme-style='dark-glass'] {
