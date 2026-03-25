@@ -593,6 +593,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <style lang="scss" scoped>
 #app {
   --MainTextColor: var(--foregroundColor, var(--OldMainTextColor)) !important;
+  --ink: var(--MainTextColor);
   --MainTextColorLight: var(
     --foregroundDarkerColor,
     var(--OldMainTextColorLight)

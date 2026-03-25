@@ -472,7 +472,7 @@ $input-focus-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
     font-size: inherit;
     max-width: 320px;
     background: transparent;
-    color: var(--ink, #fff);
+    color: var(--ink, var(--MainTextColor, #1f1f1f));
     text-shadow: 0 1px 3px rgb(0 0 0 / 20%);
     box-shadow: 0 6px 6px rgb(0 0 0 / 20%), 0 0 20px rgb(0 0 0 / 10%);
 
