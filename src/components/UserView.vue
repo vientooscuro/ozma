@@ -1096,6 +1096,11 @@ export default class UserView extends Vue {
     this.$emit('update:is-loading', newValue === 'loading')
   }
 
+  @Watch('isFormWithOnlyIframe', { immediate: true })
+  updateIframeOnly(newValue: boolean) {
+    this.$emit('update:iframe-only', newValue)
+  }
+
   // FIXME: Do not changed when modal is open — only default values
   // for title and description.
 

@@ -104,7 +104,7 @@
 
       <AlertBanner />
 
-      <div class="userview-div">
+      <div :class="['userview-div', { 'userview-div--iframe-only': iframeOnly }]">
         <UserView
           ref="userViewRef"
           is-root
@@ -123,6 +123,7 @@
           @update:description="description = $event"
           @update:url="url = $event"
           @update:is-loading="uvLoading = $event"
+          @update:iframe-only="iframeOnly = $event"
           @update:current-page="replacePage({ key: null, page: $event })"
           @update:argument-editor-props="argumentEditorProps = $event"
           @update:sort-editor-props="sortEditorProps = $event"
@@ -342,6 +343,7 @@ export default class TopLevelUserView extends Vue {
   private enableFilter = false
   private styleNode!: HTMLStyleElement
   private userViewStyle: string | null = null
+  private iframeOnly = false
   private finalSettingsStyle: string | null = null
   private title: UserString | null = null
   private description: UserString | null = null
@@ -659,7 +661,7 @@ export default class TopLevelUserView extends Vue {
   flex: 1;
   min-height: 0;
   overflow: auto;
-  &:has(.iframe-only-wrapper) {
+  &--iframe-only {
     overflow: hidden;
     height: 100%;
   }
