@@ -1006,6 +1006,8 @@ export default class UserViewForm extends mixins<
     ::v-deep .first_level_grid_block > .row > [class*="col-"],
     ::v-deep .element-block,
     ::v-deep .element-block > span,
+    ::v-deep .input_container,
+    ::v-deep .input-slot,
     ::v-deep .iframe-container {
       height: 100%;
       margin-bottom: 0 !important;
