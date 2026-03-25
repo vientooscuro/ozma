@@ -26,6 +26,11 @@
   },
   "dependencies": {
     "@chenfengyuan/vue-qrcode": "^1.0.2",
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/manrope": "^5.2.8",
+    "@fontsource/material-icons": "^5.2.7",
+    "@fontsource/space-grotesk": "^5.2.10",
     "@ozma-io/ozmadb-js": "^0.0.9",
     "@toast-ui/editor": "^3.2.2",
     "@toast-ui/vue-editor": "^3.2.3",
