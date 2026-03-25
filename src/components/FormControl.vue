@@ -847,8 +847,12 @@ ORDER BY priority DESC
   }
 
   get customHeight() {
-    const heightAttr = Number(this.attributes['control_height'])
-    return Number.isNaN(heightAttr) ? null : heightAttr
+    const heightAttr = this.attributes['control_height']
+    if (heightAttr === undefined || heightAttr === null) return null
+    const str = String(heightAttr)
+    if (str.endsWith('%')) return str
+    const num = Number(str)
+    return Number.isNaN(num) ? null : num
   }
 
   get textType() {
@@ -857,7 +861,11 @@ ORDER BY priority DESC
 
   private controlStyle(defaultHeight?: string): Record<string, unknown> {
     const height =
-      this.customHeight !== null ? `${this.customHeight}px` : defaultHeight
+      this.customHeight !== null
+        ? typeof this.customHeight === 'string'
+          ? this.customHeight
+          : `${this.customHeight}px`
+        : defaultHeight
     return { height }
   }
 
