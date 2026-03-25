@@ -84,7 +84,7 @@
 -->
 
 <template>
-  <div class="userview-wrapper">
+  <div :class="['userview-wrapper', { 'iframe-only-wrapper': isFormWithOnlyIframe }]">
     <b-modal
       :id="$id('business_mode_edit_view')"
       lazy
@@ -479,6 +479,16 @@ export default class UserView extends Vue {
     return this.state.state === 'show'
       ? JSON.stringify(this.state.uv.args.source)
       : 'none'
+  }
+
+  get isFormWithOnlyIframe(): boolean {
+    if (this.state.state !== 'show') return false
+    const uv = this.state.uv
+    return (
+      this.state.componentName === 'Form' &&
+      uv.columnAttributes.length === 1 &&
+      uv.columnAttributes[0]['control'] === 'iframe'
+    )
   }
 
   get showImportInitialInstance() {
@@ -1190,7 +1200,7 @@ export default class UserView extends Vue {
   height: 100%;
   overflow-y: auto;
 
-  &:has(.contains-only-one-iframe) {
+  &.iframe-only-wrapper {
     overflow: hidden;
 
     .b-overlay-wrap,

@@ -659,6 +659,10 @@ export default class TopLevelUserView extends Vue {
   flex: 1;
   min-height: 0;
   overflow: auto;
+  &:has(.iframe-only-wrapper) {
+    overflow: hidden;
+    height: 100%;
+  }
 }
 
 .userview-upper-div {
