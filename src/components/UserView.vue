@@ -484,11 +484,13 @@ export default class UserView extends Vue {
   get isFormWithOnlyIframe(): boolean {
     if (this.state.state !== 'show') return false
     const uv = this.state.uv
-    return (
-      this.state.componentName === 'Form' &&
-      uv.columnAttributes.length === 1 &&
-      uv.columnAttributes[0]['control'] === 'iframe'
-    )
+    if (
+      this.state.componentName !== 'Form' ||
+      uv.columnAttributes.length !== 1 ||
+      uv.columnAttributes[0]['control'] !== 'iframe'
+    ) return false
+    const height = uv.columnAttributes[0]['control_height']
+    return height !== undefined && String(height).endsWith('%')
   }
 
   get showImportInitialInstance() {
