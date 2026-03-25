@@ -1192,6 +1192,11 @@ export default class UserView extends Vue {
 
   &:has(.contains-only-one-iframe) {
     overflow: hidden;
+
+    .b-overlay-wrap,
+    .userview-overlay {
+      height: 100%;
+    }
   }
 }
 

@@ -1000,9 +1000,23 @@ export default class UserViewForm extends mixins<
     min-height: 0;
     overflow: hidden;
 
-    ::v-deep .first_level_grid_block {
+    ::v-deep .first_level_grid_block,
+    ::v-deep .first_level_grid_block > .row,
+    ::v-deep .first_level_grid_block > .row > .col,
+    ::v-deep .first_level_grid_block > .row > [class*="col-"],
+    ::v-deep .element-block,
+    ::v-deep .element-block > span,
+    ::v-deep .iframe-container {
       height: 100%;
       margin-bottom: 0 !important;
+    }
+
+    ::v-deep .container-fluid,
+    ::v-deep .form_container,
+    ::v-deep .form-entry,
+    ::v-deep .form_container > .row,
+    ::v-deep .form_container > .row > [class*="col-"] {
+      height: 100%;
     }
   }
 }
