@@ -996,8 +996,11 @@ export default class UserViewForm extends mixins<
 
   &.contains-only-one-iframe {
     padding: 0 !important;
+    height: 100%;
+    overflow: hidden;
 
     ::v-deep .first_level_grid_block {
+      height: 100%;
       margin-bottom: 0 !important;
     }
   }
