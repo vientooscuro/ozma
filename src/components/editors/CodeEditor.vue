@@ -171,6 +171,16 @@ const OZMA_SQL_LANGUAGE_ALIASES = new Set([
   'pgsql',
   'ozma-sql',
 ])
+const NON_SQL_LANGUAGES = new Set([
+  'json',
+  'javascript',
+  'typescript',
+  'html',
+  'css',
+  'xml',
+  'yaml',
+  'markdown',
+])
 
 const installCustomSqlTokenizer = () => {
   const languages = monaco.languages.getLanguages()
@@ -363,9 +373,19 @@ export default class CodeEditor extends Vue {
 
   private get monacoLanguage(): string {
     const normalizedLanguage = String(this.language || '').trim().toLowerCase()
-    return OZMA_SQL_LANGUAGE_ALIASES.has(normalizedLanguage)
-      ? OZMA_SQL_LANGUAGE_ID
-      : this.language
+    if (NON_SQL_LANGUAGES.has(normalizedLanguage)) {
+      return normalizedLanguage
+    }
+    // Most codeeditor usages in Ozma are FunQL-like. Force the custom SQL/FunQL
+    // tokenizer for unknown/custom language ids so keywords/attributes are
+    // colored consistently across forms.
+    if (
+      normalizedLanguage.length === 0 ||
+      OZMA_SQL_LANGUAGE_ALIASES.has(normalizedLanguage)
+    ) {
+      return OZMA_SQL_LANGUAGE_ID
+    }
+    return OZMA_SQL_LANGUAGE_ID
   }
 
   private get isDarkTheme(): boolean {
