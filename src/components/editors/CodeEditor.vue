@@ -168,18 +168,21 @@ const OZMA_SQL_LANGUAGE_ALIASES = new Set([
   'sql',
   'oc',
   'funql',
+  'pgsql',
   'ozma-sql',
 ])
 
 const installCustomSqlTokenizer = () => {
   const languages = monaco.languages.getLanguages()
-  if (!languages.some((lang) => lang.id === OZMA_SQL_LANGUAGE_ID)) {
-    monaco.languages.register({ id: OZMA_SQL_LANGUAGE_ID })
+  for (const languageId of OZMA_SQL_LANGUAGE_ALIASES) {
+    if (!languages.some((lang) => lang.id === languageId)) {
+      monaco.languages.register({ id: languageId })
+    }
+    monaco.languages.setMonarchTokensProvider(
+      languageId,
+      customSqlMonarch as monaco.languages.IMonarchLanguage,
+    )
   }
-  monaco.languages.setMonarchTokensProvider(
-    OZMA_SQL_LANGUAGE_ID,
-    customSqlMonarch as monaco.languages.IMonarchLanguage,
-  )
 }
 
 installCustomSqlTokenizer()
@@ -359,7 +362,7 @@ export default class CodeEditor extends Vue {
   editor: monaco.editor.IStandaloneCodeEditor | null = null
 
   private get monacoLanguage(): string {
-    const normalizedLanguage = String(this.language || '').toLowerCase()
+    const normalizedLanguage = String(this.language || '').trim().toLowerCase()
     return OZMA_SQL_LANGUAGE_ALIASES.has(normalizedLanguage)
       ? OZMA_SQL_LANGUAGE_ID
       : this.language
@@ -464,6 +467,7 @@ export default class CodeEditor extends Vue {
   }
 
   private mounted() {
+    monaco.editor.setTheme(this.monacoTheme)
     const editor = monaco.editor.create(this.$el as HTMLElement, {
       ...this.options,
       value: this.content,
@@ -496,9 +500,7 @@ export default class CodeEditor extends Vue {
     if (editor === null) return
     const model = editor.getModel()
     if (model === null) return
-    if (model.getLanguageId() !== this.monacoLanguage) {
-      monaco.editor.setModelLanguage(model, this.monacoLanguage)
-    }
+    monaco.editor.setModelLanguage(model, this.monacoLanguage)
   }
 
   @Watch('autofocus')
