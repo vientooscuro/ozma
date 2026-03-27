@@ -103,7 +103,7 @@ const funqlSqlKeywords = [
   'any', 'some', 'nulls', 'first', 'last', 'true', 'false',
 ]
 
-monaco.languages.setMonarchTokensProvider('sql', {
+const customSqlMonarch = {
   defaultToken: '',
   ignoreCase: true,
   keywords: funqlSqlKeywords,
@@ -149,7 +149,15 @@ monaco.languages.setMonarchTokensProvider('sql', {
       [/./, 'comment'],
     ],
   },
-})
+}
+
+const installCustomSqlTokenizer = () => {
+  monaco.languages.setMonarchTokensProvider('sql', customSqlMonarch)
+}
+
+// Ensure our FunQL-friendly SQL tokenizer is active even if Monaco loads sql later.
+monaco.languages.onLanguage('sql', installCustomSqlTokenizer)
+installCustomSqlTokenizer()
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ;(monaco.editor.defineTheme as any)('ozma-dark', {
