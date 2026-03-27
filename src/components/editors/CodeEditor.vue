@@ -152,6 +152,12 @@ const customSqlMonarch = {
 }
 
 const OZMA_SQL_LANGUAGE_ID = 'ozma-sql'
+const OZMA_SQL_LANGUAGE_ALIASES = new Set([
+  'sql',
+  'oc',
+  'funql',
+  'ozma-sql',
+])
 
 const installCustomSqlTokenizer = () => {
   const languages = monaco.languages.getLanguages()
@@ -337,7 +343,8 @@ export default class CodeEditor extends Vue {
   editor: monaco.editor.IStandaloneCodeEditor | null = null
 
   private get monacoLanguage(): string {
-    return this.language.toLowerCase() === 'sql'
+    const normalizedLanguage = String(this.language || '').toLowerCase()
+    return OZMA_SQL_LANGUAGE_ALIASES.has(normalizedLanguage)
       ? OZMA_SQL_LANGUAGE_ID
       : this.language
   }
@@ -421,6 +428,11 @@ export default class CodeEditor extends Vue {
     }
   }
 
+  @Watch('language')
+  private onLanguageChange() {
+    this.syncModelLanguage()
+  }
+
   @Watch('currentThemeRef')
   private onThemeChange() {
     if (this.editor !== null) {
@@ -440,6 +452,7 @@ export default class CodeEditor extends Vue {
       ...this.options,
       value: this.content,
     })
+    this.syncModelLanguage(editor)
     editor.onDidFocusEditorWidget(() => {
       this.$root.$emit('form-input-focused')
       this.$emit('focus')
@@ -458,6 +471,17 @@ export default class CodeEditor extends Vue {
       // FIXME: With the next line autofocus work for the first table cell open
       //        with codeeditor. But close the edit cell for a second time.
       // editor.focus();
+    }
+  }
+
+  private syncModelLanguage(
+    editor: monaco.editor.IStandaloneCodeEditor | null = this.editor,
+  ) {
+    if (editor === null) return
+    const model = editor.getModel()
+    if (model === null) return
+    if (model.getLanguageId() !== this.monacoLanguage) {
+      monaco.editor.setModelLanguage(model, this.monacoLanguage)
     }
   }
 
