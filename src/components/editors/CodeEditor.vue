@@ -151,15 +151,19 @@ const customSqlMonarch = {
   },
 }
 
+const OZMA_SQL_LANGUAGE_ID = 'ozma-sql'
+
 const installCustomSqlTokenizer = () => {
+  const languages = monaco.languages.getLanguages()
+  if (!languages.some((lang) => lang.id === OZMA_SQL_LANGUAGE_ID)) {
+    monaco.languages.register({ id: OZMA_SQL_LANGUAGE_ID })
+  }
   monaco.languages.setMonarchTokensProvider(
-    'sql',
+    OZMA_SQL_LANGUAGE_ID,
     customSqlMonarch as monaco.languages.IMonarchLanguage,
   )
 }
 
-// Ensure our FunQL-friendly SQL tokenizer is active even if Monaco loads sql later.
-monaco.languages.onLanguage('sql', installCustomSqlTokenizer)
 installCustomSqlTokenizer()
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -332,6 +336,12 @@ export default class CodeEditor extends Vue {
 
   editor: monaco.editor.IStandaloneCodeEditor | null = null
 
+  private get monacoLanguage(): string {
+    return this.language.toLowerCase() === 'sql'
+      ? OZMA_SQL_LANGUAGE_ID
+      : this.language
+  }
+
   private get isDarkTheme(): boolean {
     // Depend on currentThemeRef to make this reactive to theme changes
     void this.currentThemeRef
@@ -372,7 +382,7 @@ export default class CodeEditor extends Vue {
     const fontSize = 12
 
     const options: monaco.editor.IStandaloneEditorConstructionOptions = {
-      language: this.language,
+      language: this.monacoLanguage,
       readOnly: this.readOnly,
       automaticLayout: true,
       fontFamily:
