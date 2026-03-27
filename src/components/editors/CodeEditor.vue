@@ -115,16 +115,15 @@ const funqlSqlKeywords = [
   'any', 'some', 'nulls', 'first', 'last', 'true', 'false',
 ]
 
+const keywordPattern = new RegExp(
+  `\\b(?:${funqlSqlKeywords.join('|')})\\b`,
+  'i',
+)
+const typeKeywordPattern = /\b(?:int|integer|bigint|smallint|numeric|decimal|float|real|double|text|varchar|char|boolean|bool|date|datetime|time|timestamp|interval|json|jsonb|uuid|bytea|array)\b/i
+
 const customSqlMonarch = {
   defaultToken: '',
   ignoreCase: true,
-  keywords: funqlSqlKeywords,
-  typeKeywords: [
-    'int', 'integer', 'bigint', 'smallint', 'numeric', 'decimal', 'float',
-    'real', 'double', 'text', 'varchar', 'char', 'boolean', 'bool', 'date',
-    'datetime', 'time', 'timestamp', 'interval', 'json', 'jsonb', 'uuid',
-    'bytea', 'array',
-  ],
   operators: [
     '=', '>', '<', '!', '~', '?', ':', '::', '->', '->>', '=>', '<=', '>=',
     '!=', '<>', '||', ':=', '@@', '@>', '<@',
@@ -140,13 +139,9 @@ const customSqlMonarch = {
       [/@@?[a-zA-Z_]\w*/, 'attribute'],
       [/\$\$?[a-zA-Z_]\w*/, 'variable'],
       [/\b\d+(\.\d+)?\b/, 'number'],
-      [/[a-zA-Z_]\w*/, {
-        cases: {
-          '@keywords': 'keyword',
-          '@typeKeywords': 'type',
-          '@default': 'identifier',
-        },
-      }],
+      [keywordPattern, 'keyword'],
+      [typeKeywordPattern, 'type'],
+      [/[a-zA-Z_]\w*/, 'identifier'],
       [/[-+*/%<>=!|&:@?~]+/, {
         cases: {
           '@operators': 'operator',
