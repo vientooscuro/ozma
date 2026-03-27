@@ -168,14 +168,23 @@ const SQL_FUNQL_ALIASES_SET = new Set<string>(SQL_FUNQL_ALIASES)
 
 const installCustomSqlTokenizer = () => {
   const languages = monaco.languages.getLanguages()
-  for (const languageId of SQL_FUNQL_ALIASES) {
-    if (!languages.some((lang) => lang.id === languageId)) {
-      monaco.languages.register({ id: languageId })
-    }
+  const applyCustomTokenizer = (languageId: string) => {
     monaco.languages.setMonarchTokensProvider(
       languageId,
       customSqlMonarch as monaco.languages.IMonarchLanguage,
     )
+  }
+  for (const languageId of SQL_FUNQL_ALIASES) {
+    if (!languages.some((lang) => lang.id === languageId)) {
+      monaco.languages.register({ id: languageId })
+    }
+    applyCustomTokenizer(languageId)
+    monaco.languages.onLanguage(languageId, () => {
+      // Monaco can install its default SQL tokenizer lazily; re-apply ours
+      // right after language activation to keep FunQL colors stable.
+      applyCustomTokenizer(languageId)
+      setTimeout(() => applyCustomTokenizer(languageId), 0)
+    })
   }
 }
 
