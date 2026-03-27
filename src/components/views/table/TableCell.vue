@@ -344,17 +344,17 @@ export default class TableCell extends Vue {
       style['height'] = `${this.height}px`
     }
 
-    if (this.verticalPadding !== undefined) {
+    if (this.verticalPadding != null) {
       style['--td-vertical-padding'] = `${this.verticalPadding}px`
     }
 
-    if (this.minHeight !== undefined) {
+    if (this.minHeight != null) {
       const padding = this.verticalPadding ?? 16
       const contentMinHeight = Math.max(0, this.minHeight - padding * 2)
       style['--td-content-min-height'] = `${contentMinHeight}px`
     }
 
-    if (this.verticalAlignment !== undefined) {
+    if (this.verticalAlignment != null) {
       style['vertical-align'] = this.verticalAlignment === 'center' ? 'middle' : this.verticalAlignment
     }
 
