@@ -17,7 +17,9 @@ const tokenRules = (
   comment: string,
   type: string,
   operator: string,
+  attribute: string,
   variable: string,
+  identifier: string,
 ): monaco.editor.ITokenThemeRule[] => [
   { token: 'keyword', foreground: keyword, fontStyle: 'bold' },
   { token: 'keyword.sql', foreground: keyword, fontStyle: 'bold' },
@@ -31,21 +33,29 @@ const tokenRules = (
   { token: 'predefined', foreground: type },
   { token: 'operator', foreground: operator },
   { token: 'operator.sql', foreground: operator },
+  { token: 'attribute', foreground: attribute },
+  { token: 'attribute.sql', foreground: attribute },
   { token: 'variable', foreground: variable },
   { token: 'variable.sql', foreground: variable },
+  { token: 'identifier', foreground: identifier },
+  { token: 'identifier.sql', foreground: identifier },
+  { token: 'delimiter', foreground: operator },
+  { token: 'delimiter.sql', foreground: operator },
 ]
 
 monaco.editor.defineTheme('ozma-light', {
   base: 'vs',
   inherit: true,
   rules: tokenRules(
-    '3d6fd6', // keyword: medium blue (softer than pure blue)
+    '2f7a6f', // keyword: muted green
     'b5365a', // string: muted rose-red
     '6f8f2e', // number: olive green
     '7c8c7a', // comment: muted sage, italic
     '286f7a', // type: dark teal
     '5a5a5a', // operator: dark grey
+    '3d6fd6', // attribute: medium blue
     '3d6fd6', // variable: medium blue
+    '2e2e2e', // identifier: editor foreground
   ),
   colors: {
     'editor.background': '#ffffff',
@@ -66,11 +76,13 @@ monaco.editor.defineTheme('ozma-light-glass', {
   rules: tokenRules(
     '0f766e', // keyword: glass accent teal
     'b45309', // string: warm amber-brown
-    '2563eb', // number: clean blue
+    '4f46e5', // number: indigo
     '7c6f60', // comment: warm neutral
     '0b5e5a', // type: deep teal
-    '525252', // operator: neutral dark gray
-    '2563eb', // variable: clean blue
+    '6f6a62', // operator: muted glass text
+    '2563eb', // attribute: clean blue
+    '1d4ed8', // variable: saturated blue
+    '3f3b35', // identifier: glass text-soft
   ),
   colors: {
     'editor.background': '#fffdf8',
@@ -125,7 +137,7 @@ const customSqlMonarch = {
       [/"([^"\\]|\\.)*"/, 'string'],
       [/[{}()[\]]/, '@brackets'],
       [/[;,.]/, 'delimiter'],
-      [/@@?[a-zA-Z_]\w*/, 'variable'],
+      [/@@?[a-zA-Z_]\w*/, 'attribute'],
       [/\$\$?[a-zA-Z_]\w*/, 'variable'],
       [/\b\d+(\.\d+)?\b/, 'number'],
       [/[a-zA-Z_]\w*/, {
@@ -216,6 +228,8 @@ installCustomSqlTokenizer()
     { token: 'identifier', foreground: 'CDD3DE' },
     { token: 'identifier.quote', foreground: 'CDD3DE' },
     { token: 'identifier.quote.sql', foreground: 'CDD3DE' },
+    { token: 'attribute', foreground: '8ECEFF' },
+    { token: 'attribute.sql', foreground: '8ECEFF' },
     { token: 'variable', foreground: '8ECEFF' },
     { token: 'constant', foreground: 'B8AEFF' },
     { token: 'string.escape', foreground: 'B8AEFF' },
@@ -293,6 +307,8 @@ installCustomSqlTokenizer()
     { token: 'identifier', foreground: 'D4DEE6' },
     { token: 'identifier.quote', foreground: 'D4DEE6' },
     { token: 'identifier.quote.sql', foreground: 'D4DEE6' },
+    { token: 'attribute', foreground: '8AD8FF' },
+    { token: 'attribute.sql', foreground: '8AD8FF' },
     { token: 'variable', foreground: '8AD8FF' },
     { token: 'constant', foreground: '9DE7E1' },
     { token: 'string.escape', foreground: '9DE7E1' },
