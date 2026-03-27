@@ -2,7 +2,7 @@
   "id": "ozma",
   "realm": "ozma",
   "enabled": true,
-  "sslRequired": "external",
+  "sslRequired": "none",
   "registrationAllowed": true,
   "registrationEmailAsUsername": true,
   "rememberMe": true,

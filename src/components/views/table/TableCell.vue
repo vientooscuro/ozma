@@ -189,6 +189,9 @@ export default class TableCell extends Vue {
   @Prop({ type: Boolean, required: true }) showAddChild!: boolean
   @Prop({ type: Boolean, default: false }) notExisting!: boolean
   @Prop({ type: Number }) height!: number | undefined
+  @Prop({ type: Number }) verticalPadding!: number | undefined
+  @Prop({ type: Number }) minHeight!: number | undefined
+  @Prop({ type: String }) verticalAlignment!: string | undefined
 
   get valueType(): ValueType {
     return this.uv.info.columns[this.columnIndex].valueType
@@ -339,6 +342,20 @@ export default class TableCell extends Vue {
 
     if (this.height) {
       style['height'] = `${this.height}px`
+    }
+
+    if (this.verticalPadding !== undefined) {
+      style['--td-vertical-padding'] = `${this.verticalPadding}px`
+    }
+
+    if (this.minHeight !== undefined) {
+      const padding = this.verticalPadding ?? 16
+      const contentMinHeight = Math.max(0, this.minHeight - padding * 2)
+      style['--td-content-min-height'] = `${contentMinHeight}px`
+    }
+
+    if (this.verticalAlignment !== undefined) {
+      style['vertical-align'] = this.verticalAlignment === 'center' ? 'middle' : this.verticalAlignment
     }
 
     if (this.fixedLeft !== undefined) {
@@ -597,7 +614,7 @@ export default class TableCell extends Vue {
 
 .table-td {
   position: relative;
-  padding: 1rem 0.5rem;
+  padding: var(--td-vertical-padding, 1rem) 0.5rem;
   touch-action: manipulation;
   font-size: 0.875rem;
   user-select: none;
@@ -651,7 +668,7 @@ export default class TableCell extends Vue {
 
 .td-content {
   height: inherit;
-  min-height: 2rem;
+  min-height: var(--td-content-min-height, 2rem);
   max-height: 14rem;
   overflow: hidden;
   text-overflow: ellipsis;
