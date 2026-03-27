@@ -17,6 +17,7 @@ const tokenRules = (
   comment: string,
   type: string,
   operator: string,
+  variable: string,
 ): monaco.editor.ITokenThemeRule[] => [
   { token: 'keyword', foreground: keyword, fontStyle: 'bold' },
   { token: 'keyword.sql', foreground: keyword, fontStyle: 'bold' },
@@ -30,6 +31,8 @@ const tokenRules = (
   { token: 'predefined', foreground: type },
   { token: 'operator', foreground: operator },
   { token: 'operator.sql', foreground: operator },
+  { token: 'variable', foreground: variable },
+  { token: 'variable.sql', foreground: variable },
 ]
 
 monaco.editor.defineTheme('ozma-light', {
@@ -42,6 +45,7 @@ monaco.editor.defineTheme('ozma-light', {
     '7c8c7a', // comment: muted sage, italic
     '286f7a', // type: dark teal
     '5a5a5a', // operator: dark grey
+    '3d6fd6', // variable: medium blue
   ),
   colors: {
     'editor.background': '#ffffff',
@@ -66,6 +70,7 @@ monaco.editor.defineTheme('ozma-light-glass', {
     '7c6f60', // comment: warm neutral
     '0b5e5a', // type: deep teal
     '525252', // operator: neutral dark gray
+    '2563eb', // variable: clean blue
   ),
   colors: {
     'editor.background': '#fffdf8',
@@ -80,6 +85,69 @@ monaco.editor.defineTheme('ozma-light-glass', {
     'editor.findMatchHighlightBackground': '#f6b94133',
     'editorIndentGuide.background1': '#c4b6a34d',
     'editorIndentGuide.activeBackground1': '#c4b6a380',
+  },
+})
+
+const funqlSqlKeywords = [
+  'select', 'from', 'where', 'join', 'left', 'right', 'inner', 'outer',
+  'full', 'cross', 'on', 'as', 'and', 'or', 'not', 'in', 'is', 'null',
+  'case', 'when', 'then', 'else', 'end', 'group', 'order', 'by', 'asc',
+  'desc', 'limit', 'offset', 'union', 'intersect', 'except', 'all',
+  'distinct', 'for', 'insert', 'into', 'update', 'delete', 'values', 'with',
+  'recursive', 'materialized', 'partition', 'over', 'filter', 'having',
+  'between', 'exists', 'like', 'ilike', 'similar', 'only', 'lateral',
+  'domain', 'interval', 'superuser', 'role', 'inherited', 'oftype', 'mapping',
+  'reference', 'enum', 'internal', 'default', 'returns', 'returning',
+  'create', 'alter', 'drop', 'replace', 'table', 'view', 'function', 'begin',
+  'declare', 'language', 'set', 'show', 'grant', 'revoke', 'using', 'array',
+  'any', 'some', 'nulls', 'first', 'last', 'true', 'false',
+]
+
+monaco.languages.setMonarchTokensProvider('sql', {
+  defaultToken: '',
+  ignoreCase: true,
+  keywords: funqlSqlKeywords,
+  typeKeywords: [
+    'int', 'integer', 'bigint', 'smallint', 'numeric', 'decimal', 'float',
+    'real', 'double', 'text', 'varchar', 'char', 'boolean', 'bool', 'date',
+    'datetime', 'time', 'timestamp', 'interval', 'json', 'jsonb', 'uuid',
+    'bytea', 'array',
+  ],
+  operators: [
+    '=', '>', '<', '!', '~', '?', ':', '::', '->', '->>', '=>', '<=', '>=',
+    '!=', '<>', '||', ':=', '@@', '@>', '<@',
+  ],
+  tokenizer: {
+    root: [
+      [/--.*$/, 'comment'],
+      [/\/\*/, 'comment', '@comment'],
+      [/'([^'\\]|\\.)*'/, 'string'],
+      [/"([^"\\]|\\.)*"/, 'string'],
+      [/[{}()[\]]/, '@brackets'],
+      [/[;,.]/, 'delimiter'],
+      [/@@?[a-zA-Z_]\w*/, 'variable'],
+      [/\$\$?[a-zA-Z_]\w*/, 'variable'],
+      [/\b\d+(\.\d+)?\b/, 'number'],
+      [/[a-zA-Z_]\w*/, {
+        cases: {
+          '@keywords': 'keyword',
+          '@typeKeywords': 'type',
+          '@default': 'identifier',
+        },
+      }],
+      [/[-+*/%<>=!|&:@?~]+/, {
+        cases: {
+          '@operators': 'operator',
+          '@default': 'operator',
+        },
+      }],
+      [/\s+/, 'white'],
+    ],
+    comment: [
+      [/[^/*]+/, 'comment'],
+      [/\*\//, 'comment', '@pop'],
+      [/./, 'comment'],
+    ],
   },
 })
 
