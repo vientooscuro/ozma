@@ -163,29 +163,19 @@ const customSqlMonarch = {
   },
 }
 
+const OZMA_FUNQL_LANGUAGE_ID = 'ozma-funql'
 const SQL_FUNQL_ALIASES = ['sql', 'oc', 'funql', 'pgsql'] as const
 const SQL_FUNQL_ALIASES_SET = new Set<string>(SQL_FUNQL_ALIASES)
 
 const installCustomSqlTokenizer = () => {
   const languages = monaco.languages.getLanguages()
-  const applyCustomTokenizer = (languageId: string) => {
-    monaco.languages.setMonarchTokensProvider(
-      languageId,
-      customSqlMonarch as monaco.languages.IMonarchLanguage,
-    )
+  if (!languages.some((lang) => lang.id === OZMA_FUNQL_LANGUAGE_ID)) {
+    monaco.languages.register({ id: OZMA_FUNQL_LANGUAGE_ID })
   }
-  for (const languageId of SQL_FUNQL_ALIASES) {
-    if (!languages.some((lang) => lang.id === languageId)) {
-      monaco.languages.register({ id: languageId })
-    }
-    applyCustomTokenizer(languageId)
-    monaco.languages.onLanguage(languageId, () => {
-      // Monaco can install its default SQL tokenizer lazily; re-apply ours
-      // right after language activation to keep FunQL colors stable.
-      applyCustomTokenizer(languageId)
-      setTimeout(() => applyCustomTokenizer(languageId), 0)
-    })
-  }
+  monaco.languages.setMonarchTokensProvider(
+    OZMA_FUNQL_LANGUAGE_ID,
+    customSqlMonarch as monaco.languages.IMonarchLanguage,
+  )
 }
 
 installCustomSqlTokenizer()
@@ -367,7 +357,7 @@ export default class CodeEditor extends Vue {
   private get monacoLanguage(): string {
     const normalizedLanguage = String(this.language || '').trim().toLowerCase()
     if (SQL_FUNQL_ALIASES_SET.has(normalizedLanguage)) {
-      return normalizedLanguage
+      return OZMA_FUNQL_LANGUAGE_ID
     }
     return this.language
   }
