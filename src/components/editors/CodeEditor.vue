@@ -17,6 +17,9 @@ const tokenRules = (
   comment: string,
   type: string,
   operator: string,
+  attribute: string,
+  variable: string,
+  identifier: string,
 ): monaco.editor.ITokenThemeRule[] => [
   { token: 'keyword', foreground: keyword, fontStyle: 'bold' },
   { token: 'keyword.sql', foreground: keyword, fontStyle: 'bold' },
@@ -30,18 +33,205 @@ const tokenRules = (
   { token: 'predefined', foreground: type },
   { token: 'operator', foreground: operator },
   { token: 'operator.sql', foreground: operator },
+  { token: 'attribute', foreground: attribute },
+  { token: 'attribute.sql', foreground: attribute },
+  { token: 'variable', foreground: variable },
+  { token: 'variable.sql', foreground: variable },
+  { token: 'identifier', foreground: identifier },
+  { token: 'identifier.sql', foreground: identifier },
+  { token: 'delimiter', foreground: operator },
+  { token: 'delimiter.sql', foreground: operator },
 ]
+
+const sqlKeywords = [
+  'select',
+  'from',
+  'where',
+  'join',
+  'left',
+  'right',
+  'inner',
+  'outer',
+  'full',
+  'cross',
+  'on',
+  'as',
+  'and',
+  'or',
+  'not',
+  'in',
+  'is',
+  'null',
+  'case',
+  'when',
+  'then',
+  'else',
+  'end',
+  'group',
+  'order',
+  'by',
+  'asc',
+  'desc',
+  'limit',
+  'offset',
+  'union',
+  'intersect',
+  'except',
+  'all',
+  'distinct',
+  'for',
+  'insert',
+  'into',
+  'update',
+  'delete',
+  'values',
+  'with',
+  'recursive',
+  'materialized',
+  'partition',
+  'over',
+  'filter',
+  'having',
+  'between',
+  'exists',
+  'like',
+  'ilike',
+  'similar',
+  'only',
+  'lateral',
+  'domain',
+  'interval',
+  'superuser',
+  'role',
+  'inherited',
+  'oftype',
+  'mapping',
+  'reference',
+  'enum',
+  'internal',
+  'default',
+  'returns',
+  'returning',
+  'create',
+  'alter',
+  'drop',
+  'replace',
+  'table',
+  'view',
+  'function',
+  'begin',
+  'declare',
+  'language',
+  'set',
+  'show',
+  'grant',
+  'revoke',
+  'using',
+  'array',
+  'any',
+  'some',
+  'nulls',
+  'first',
+  'last',
+  'true',
+  'false',
+] as const
+
+const keywordRegex = new RegExp(`\\b(?:${sqlKeywords.join('|')})\\b`, 'i')
+const typeRegex =
+  /\b(?:int|integer|bigint|smallint|numeric|decimal|float|real|double|text|varchar|char|boolean|bool|date|datetime|time|timestamp|interval|json|jsonb|uuid|bytea|array)\b/i
+
+const ozmaFunqlMonarch: monaco.languages.IMonarchLanguage = {
+  defaultToken: '',
+  ignoreCase: true,
+  operators: [
+    '=',
+    '>',
+    '<',
+    '!',
+    '~',
+    '?',
+    ':',
+    '::',
+    '->',
+    '->>',
+    '=>',
+    '<=',
+    '>=',
+    '!=',
+    '<>',
+    '||',
+    ':=',
+    '@@',
+    '@>',
+    '<@',
+  ],
+  tokenizer: {
+    root: [
+      [/--.*$/, 'comment'],
+      [/\/\*/, 'comment', '@comment'],
+      [/'([^'\\]|\\.)*'/, 'string'],
+      [/"([^"\\]|\\.)*"/, 'string'],
+      [/\.\s*@@?[a-zA-Z_]\w*/, 'attribute'],
+      [/@@?[a-zA-Z_]\w*/, 'attribute'],
+      [/\$\$?[a-zA-Z_]\w*/, 'variable'],
+      [/[{}()[\]]/, '@brackets'],
+      [/[;,.]/, 'delimiter'],
+      [/\b\d+(\.\d+)?\b/, 'number'],
+      [keywordRegex, 'keyword'],
+      [typeRegex, 'type'],
+      [/[a-zA-Z_]\w*/, 'identifier'],
+      [
+        /[-+*/%<>=!|&:@?~]+/,
+        {
+          cases: {
+            '@operators': 'operator',
+            '@default': 'operator',
+          },
+        },
+      ],
+      [/\s+/, 'white'],
+    ],
+    comment: [
+      [/[^/*]+/, 'comment'],
+      [/\*\//, 'comment', '@pop'],
+      [/./, 'comment'],
+    ],
+  },
+}
+
+const ozmaFunqlLanguageId = 'ozma-funql'
+const ozmaSqlAliases = ['sql', 'oc', 'funql', 'pgsql']
+const ozmaSqlAliasesSet = new Set(ozmaSqlAliases)
+
+const setupOzmaFunqlLanguage = (): void => {
+  const isRegistered = monaco.languages
+    .getLanguages()
+    .some((lang) => lang.id === ozmaFunqlLanguageId)
+  if (!isRegistered) {
+    monaco.languages.register({ id: ozmaFunqlLanguageId })
+  }
+  monaco.languages.setMonarchTokensProvider(
+    ozmaFunqlLanguageId,
+    ozmaFunqlMonarch,
+  )
+}
+
+setupOzmaFunqlLanguage()
 
 monaco.editor.defineTheme('ozma-light', {
   base: 'vs',
   inherit: true,
   rules: tokenRules(
-    '3d6fd6', // keyword: medium blue (softer than pure blue)
-    'b5365a', // string: muted rose-red
-    '6f8f2e', // number: olive green
-    '7c8c7a', // comment: muted sage, italic
-    '286f7a', // type: dark teal
-    '5a5a5a', // operator: dark grey
+    '7c3aed', // keyword
+    '0f766e', // string
+    'c2410c', // number
+    '9ca3af', // comment
+    '1d4ed8', // type
+    '0369a1', // operator
+    '2563eb', // @attr / .@attr
+    'be185d', // $arg / $$arg
+    '2e2e2e', // identifiers
   ),
   colors: {
     'editor.background': '#ffffff',
@@ -60,12 +250,15 @@ monaco.editor.defineTheme('ozma-light-glass', {
   base: 'vs',
   inherit: true,
   rules: tokenRules(
-    '0f766e', // keyword: glass accent teal
-    'b45309', // string: warm amber-brown
-    '2563eb', // number: clean blue
-    '7c6f60', // comment: warm neutral
-    '0b5e5a', // type: deep teal
-    '525252', // operator: neutral dark gray
+    '0f766e', // keyword
+    'b45309', // string
+    '2563eb', // number
+    '7c6f60', // comment
+    '0b5e5a', // type
+    '6f6a62', // operator
+    '2563eb', // @attr / .@attr
+    '1d4ed8', // $arg / $$arg
+    '3f3b35', // identifiers
   ),
   colors: {
     'editor.background': '#fffdf8',
@@ -108,41 +301,41 @@ monaco.editor.defineTheme('ozma-light-glass', {
     'event': '#B8AEFF',
     'macro': '#7ADBD6',
     'label': '#CDD3DE',
-    // JSON
     'property.declaration': '#7ADBD6',
   },
   rules: [
-    { token: 'keyword', foreground: '7ADBD6', fontStyle: 'bold' },
-    { token: 'keyword.sql', foreground: '7ADBD6', fontStyle: 'bold' },
-    { token: 'string', foreground: 'E8A0E0' },
-    { token: 'string.sql', foreground: 'E8A0E0' },
-    { token: 'number', foreground: 'F0CE96' },
-    { token: 'number.sql', foreground: 'F0CE96' },
-    { token: 'comment', foreground: '555E6E', fontStyle: 'italic' },
-    { token: 'comment.sql', foreground: '555E6E', fontStyle: 'italic' },
-    { token: 'type', foreground: 'F2B896' },
-    { token: 'predefined', foreground: '8ECEFF' },
-    { token: 'operator', foreground: 'CDD3DE' },
-    { token: 'operator.sql', foreground: '7ADBD6' },
+    { token: 'keyword', foreground: 'CBA6F7', fontStyle: 'bold' },
+    { token: 'keyword.sql', foreground: 'CBA6F7', fontStyle: 'bold' },
+    { token: 'string', foreground: 'A6E3A1' },
+    { token: 'string.sql', foreground: 'A6E3A1' },
+    { token: 'number', foreground: 'FAB387' },
+    { token: 'number.sql', foreground: 'FAB387' },
+    { token: 'comment', foreground: '6C7086', fontStyle: 'italic' },
+    { token: 'comment.sql', foreground: '6C7086', fontStyle: 'italic' },
+    { token: 'type', foreground: '89B4FA' },
+    { token: 'predefined', foreground: '89B4FA' },
+    { token: 'operator', foreground: '89DCEB' },
+    { token: 'operator.sql', foreground: '89DCEB' },
     { token: 'identifier', foreground: 'CDD3DE' },
     { token: 'identifier.quote', foreground: 'CDD3DE' },
     { token: 'identifier.quote.sql', foreground: 'CDD3DE' },
-    { token: 'variable', foreground: '8ECEFF' },
+    { token: 'attribute', foreground: '8ECEFF' },
+    { token: 'attribute.sql', foreground: '8ECEFF' },
+    { token: 'variable', foreground: 'F38BA8' },
     { token: 'constant', foreground: 'B8AEFF' },
     { token: 'string.escape', foreground: 'B8AEFF' },
     { token: 'string.escape.sql', foreground: 'B8AEFF' },
-    { token: 'number.float', foreground: 'F0CE96' },
-    { token: 'number.hex', foreground: 'F0CE96' },
-    { token: 'comment.block', foreground: '555E6E', fontStyle: 'italic' },
-    { token: 'comment.block.sql', foreground: '555E6E', fontStyle: 'italic' },
+    { token: 'number.float', foreground: 'FAB387' },
+    { token: 'number.hex', foreground: 'FAB387' },
+    { token: 'comment.block', foreground: '6C7086', fontStyle: 'italic' },
+    { token: 'comment.block.sql', foreground: '6C7086', fontStyle: 'italic' },
     { token: 'delimiter', foreground: 'CDD3DE80' },
     { token: 'delimiter.sql', foreground: 'CDD3DE80' },
     { token: 'delimiter.parenthesis', foreground: 'CDD3DECC' },
     { token: 'delimiter.parenthesis.sql', foreground: 'CDD3DECC' },
-    // JSON
-    { token: 'key.json', foreground: '7ADBD6' },
-    { token: 'string.value.json', foreground: 'E8A0E0' },
-    { token: 'number.json', foreground: 'F0CE96' },
+    { token: 'key.json', foreground: '89DCEB' },
+    { token: 'string.value.json', foreground: 'A6E3A1' },
+    { token: 'number.json', foreground: 'FAB387' },
     { token: 'keyword.json', foreground: 'B8AEFF' },
   ],
   colors: {
@@ -189,36 +382,38 @@ monaco.editor.defineTheme('ozma-light-glass', {
     'property.declaration': '#59d6cf',
   },
   rules: [
-    { token: 'keyword', foreground: '59D6CF', fontStyle: 'bold' },
-    { token: 'keyword.sql', foreground: '59D6CF', fontStyle: 'bold' },
-    { token: 'string', foreground: 'F6B941' },
-    { token: 'string.sql', foreground: 'F6B941' },
-    { token: 'number', foreground: '8AD8FF' },
-    { token: 'number.sql', foreground: '8AD8FF' },
-    { token: 'comment', foreground: '7E94A6', fontStyle: 'italic' },
-    { token: 'comment.sql', foreground: '7E94A6', fontStyle: 'italic' },
-    { token: 'type', foreground: 'F6B941' },
-    { token: 'predefined', foreground: '8AD8FF' },
-    { token: 'operator', foreground: 'D4DEE6' },
-    { token: 'operator.sql', foreground: '59D6CF' },
+    { token: 'keyword', foreground: 'C9A0FF', fontStyle: 'bold' },
+    { token: 'keyword.sql', foreground: 'C9A0FF', fontStyle: 'bold' },
+    { token: 'string', foreground: '44AA99' },
+    { token: 'string.sql', foreground: '44AA99' },
+    { token: 'number', foreground: 'DD9900' },
+    { token: 'number.sql', foreground: 'DD9900' },
+    { token: 'comment', foreground: '666A73', fontStyle: 'italic' },
+    { token: 'comment.sql', foreground: '666A73', fontStyle: 'italic' },
+    { token: 'type', foreground: '59D6CF' },
+    { token: 'predefined', foreground: '59D6CF' },
+    { token: 'operator', foreground: '49AAEE' },
+    { token: 'operator.sql', foreground: '49AAEE' },
     { token: 'identifier', foreground: 'D4DEE6' },
     { token: 'identifier.quote', foreground: 'D4DEE6' },
     { token: 'identifier.quote.sql', foreground: 'D4DEE6' },
-    { token: 'variable', foreground: '8AD8FF' },
+    { token: 'attribute', foreground: '6D77FF' },
+    { token: 'attribute.sql', foreground: '6D77FF' },
+    { token: 'variable', foreground: 'FF4FA2' },
     { token: 'constant', foreground: '9DE7E1' },
     { token: 'string.escape', foreground: '9DE7E1' },
     { token: 'string.escape.sql', foreground: '9DE7E1' },
     { token: 'number.float', foreground: '8AD8FF' },
     { token: 'number.hex', foreground: '8AD8FF' },
-    { token: 'comment.block', foreground: '7E94A6', fontStyle: 'italic' },
-    { token: 'comment.block.sql', foreground: '7E94A6', fontStyle: 'italic' },
+    { token: 'comment.block', foreground: '666A73', fontStyle: 'italic' },
+    { token: 'comment.block.sql', foreground: '666A73', fontStyle: 'italic' },
     { token: 'delimiter', foreground: 'D4DEE680' },
     { token: 'delimiter.sql', foreground: 'D4DEE680' },
     { token: 'delimiter.parenthesis', foreground: 'D4DEE6CC' },
     { token: 'delimiter.parenthesis.sql', foreground: 'D4DEE6CC' },
     { token: 'key.json', foreground: '59D6CF' },
-    { token: 'string.value.json', foreground: 'F6B941' },
-    { token: 'number.json', foreground: '8AD8FF' },
+    { token: 'string.value.json', foreground: '44AA99' },
+    { token: 'number.json', foreground: 'DD9900' },
     { token: 'keyword.json', foreground: '9DE7E1' },
   ],
   colors: {
@@ -252,6 +447,11 @@ export default class CodeEditor extends Vue {
   @Prop({ default: false }) isModal!: boolean
 
   editor: monaco.editor.IStandaloneCodeEditor | null = null
+
+  private get monacoLanguage(): string {
+    const language = String(this.language || '').trim().toLowerCase()
+    return ozmaSqlAliasesSet.has(language) ? ozmaFunqlLanguageId : this.language
+  }
 
   private get isDarkTheme(): boolean {
     // Depend on currentThemeRef to make this reactive to theme changes
@@ -293,7 +493,7 @@ export default class CodeEditor extends Vue {
     const fontSize = 12
 
     const options: monaco.editor.IStandaloneEditorConstructionOptions = {
-      language: this.language,
+      language: this.monacoLanguage,
       readOnly: this.readOnly,
       automaticLayout: true,
       fontFamily:
@@ -332,6 +532,11 @@ export default class CodeEditor extends Vue {
     }
   }
 
+  @Watch('language')
+  private onLanguageChange() {
+    this.syncModelLanguage()
+  }
+
   @Watch('currentThemeRef')
   private onThemeChange() {
     if (this.editor !== null) {
@@ -347,10 +552,12 @@ export default class CodeEditor extends Vue {
   }
 
   private mounted() {
+    monaco.editor.setTheme(this.monacoTheme)
     const editor = monaco.editor.create(this.$el as HTMLElement, {
       ...this.options,
       value: this.content,
     })
+    this.syncModelLanguage(editor)
     editor.onDidFocusEditorWidget(() => {
       this.$root.$emit('form-input-focused')
       this.$emit('focus')
@@ -358,7 +565,7 @@ export default class CodeEditor extends Vue {
     editor.onDidBlurEditorWidget(() => {
       this.$emit('blur')
     })
-    editor.onDidChangeModelContent((event) => {
+    editor.onDidChangeModelContent(() => {
       const content = editor.getValue()
       if (content !== this.content) {
         this.$emit('update:content', content)
@@ -370,6 +577,16 @@ export default class CodeEditor extends Vue {
       //        with codeeditor. But close the edit cell for a second time.
       // editor.focus();
     }
+  }
+
+  private syncModelLanguage(
+    editor: monaco.editor.IStandaloneCodeEditor | null = this.editor,
+  ) {
+    if (editor === null) return
+    const model = editor.getModel()
+    if (model === null) return
+    if (model.getLanguageId() === this.monacoLanguage) return
+    monaco.editor.setModelLanguage(model, this.monacoLanguage)
   }
 
   @Watch('autofocus')
