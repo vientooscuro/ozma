@@ -152,7 +152,10 @@ const customSqlMonarch = {
 }
 
 const installCustomSqlTokenizer = () => {
-  monaco.languages.setMonarchTokensProvider('sql', customSqlMonarch)
+  monaco.languages.setMonarchTokensProvider(
+    'sql',
+    customSqlMonarch as monaco.languages.IMonarchLanguage,
+  )
 }
 
 // Ensure our FunQL-friendly SQL tokenizer is active even if Monaco loads sql later.
