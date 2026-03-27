@@ -137,13 +137,38 @@ const sqlKeywords = [
   'false',
 ] as const
 
-const keywordRegex = new RegExp(`\\b(?:${sqlKeywords.join('|')})\\b`, 'i')
-const typeRegex =
-  /\b(?:int|integer|bigint|smallint|numeric|decimal|float|real|double|text|varchar|char|boolean|bool|date|datetime|time|timestamp|interval|json|jsonb|uuid|bytea|array)\b/i
+const sqlTypeKeywords = [
+  'int',
+  'integer',
+  'bigint',
+  'smallint',
+  'numeric',
+  'decimal',
+  'float',
+  'real',
+  'double',
+  'text',
+  'varchar',
+  'char',
+  'boolean',
+  'bool',
+  'date',
+  'datetime',
+  'time',
+  'timestamp',
+  'interval',
+  'json',
+  'jsonb',
+  'uuid',
+  'bytea',
+  'array',
+] as const
 
 const ozmaFunqlMonarch: monaco.languages.IMonarchLanguage = {
   defaultToken: '',
   ignoreCase: true,
+  keywords: sqlKeywords,
+  typeKeywords: sqlTypeKeywords,
   operators: [
     '=',
     '>',
@@ -178,9 +203,16 @@ const ozmaFunqlMonarch: monaco.languages.IMonarchLanguage = {
       [/[{}()[\]]/, '@brackets'],
       [/[;,.]/, 'delimiter'],
       [/\b\d+(\.\d+)?\b/, 'number'],
-      [keywordRegex, 'keyword'],
-      [typeRegex, 'type'],
-      [/[a-zA-Z_]\w*/, 'identifier'],
+      [
+        /[a-zA-Z_]\w*/,
+        {
+          cases: {
+            '@keywords': 'keyword',
+            '@typeKeywords': 'type',
+            '@default': 'identifier',
+          },
+        },
+      ],
       [
         /[-+*/%<>=!|&:@?~]+/,
         {
