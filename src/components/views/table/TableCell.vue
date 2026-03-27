@@ -614,7 +614,10 @@ export default class TableCell extends Vue {
 
 .table-td {
   position: relative;
-  padding: var(--td-vertical-padding, 1rem) 0.5rem;
+  padding-top: var(--td-vertical-padding, 1rem);
+  padding-bottom: var(--td-vertical-padding, 1rem);
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   touch-action: manipulation;
   font-size: 0.875rem;
   user-select: none;
