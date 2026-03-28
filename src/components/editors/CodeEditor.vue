@@ -166,6 +166,7 @@ const sqlTypeKeywords = [
 
 const ozmaFunqlMonarch: monaco.languages.IMonarchLanguage = {
   defaultToken: '',
+  tokenPostfix: '.sql',
   ignoreCase: true,
   keywords: sqlKeywords,
   typeKeywords: sqlTypeKeywords,
