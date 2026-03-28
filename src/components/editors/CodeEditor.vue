@@ -273,7 +273,7 @@ monaco.editor.defineTheme('ozma-light', {
     '9ca3af', // comment
     '7a3fc2', // type
     '6b7280', // operator
-    'a14f00', // @attr / .@attr
+    '3f6fd3', // @attr / .@attr
     '9a2a6c', // $arg / $$arg
     '2e2e2e', // identifiers
   ),
@@ -300,7 +300,7 @@ monaco.editor.defineTheme('ozma-light-glass', {
     '7c6f60', // comment
     '7b4db1', // type
     '6f6a62', // operator
-    '9a5b00', // @attr / .@attr
+    '3f6fd3', // @attr / .@attr
     '8e2d62', // $arg / $$arg
     '3f3b35', // identifiers
   ),
@@ -881,7 +881,7 @@ export default class CodeEditor extends Vue {
   color: #7a3fc2 !important;
 }
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-attribute {
-  color: #a14f00 !important;
+  color: #3f6fd3 !important;
 }
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-variable {
   color: #9a2a6c !important;
@@ -905,7 +905,7 @@ export default class CodeEditor extends Vue {
   color: #7b4db1 !important;
 }
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-attribute {
-  color: #9a5b00 !important;
+  color: #3f6fd3 !important;
 }
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-variable {
   color: #8e2d62 !important;
