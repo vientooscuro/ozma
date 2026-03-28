@@ -491,6 +491,7 @@ export default class CodeEditor extends Vue {
   @Prop({ default: false }) isModal!: boolean
 
   editor: monaco.editor.IStandaloneCodeEditor | null = null
+  private semanticDecorationIds: string[] = []
 
   private get monacoLanguage(): string {
     const language = String(this.language || '').trim().toLowerCase()
@@ -587,6 +588,7 @@ export default class CodeEditor extends Vue {
     this.applyTokenThemeClass()
     if (this.editor !== null) {
       monaco.editor.setTheme(this.monacoTheme)
+      this.applySemanticDecorations()
     }
   }
 
@@ -594,6 +596,7 @@ export default class CodeEditor extends Vue {
   private updateContent(content: string) {
     if (this.editor !== null && this.editor.getValue() !== content) {
       this.editor.setValue(content)
+      this.applySemanticDecorations()
     }
   }
 
@@ -612,6 +615,7 @@ export default class CodeEditor extends Vue {
       this.syncModelLanguage(editor)
       this.applyTokenThemeClass()
       monaco.editor.setTheme(this.monacoTheme)
+      this.applySemanticDecorations()
     })
     editor.onDidFocusEditorWidget(() => {
       this.$root.$emit('form-input-focused')
@@ -625,6 +629,7 @@ export default class CodeEditor extends Vue {
       if (content !== this.content) {
         this.$emit('update:content', content)
       }
+      this.applySemanticDecorations()
     })
     this.editor = editor
     if (this.autofocus) {
@@ -658,6 +663,128 @@ export default class CodeEditor extends Vue {
     root.classList.add(`ozma-theme-${this.monacoTheme}`)
   }
 
+  private static collectMatches(
+    source: string,
+    pattern: RegExp,
+    kind: string,
+    protectedRanges: Array<{ start: number; end: number }>,
+    occupiedRanges: Array<{ start: number; end: number }>,
+  ): Array<{ start: number; end: number; kind: string }> {
+    const matches: Array<{ start: number; end: number; kind: string }> = []
+    pattern.lastIndex = 0
+    let match: RegExpExecArray | null = null
+    while ((match = pattern.exec(source)) !== null) {
+      const start = match.index
+      const end = start + match[0].length
+      if (start === end) continue
+      if (
+        protectedRanges.some((range) => start < range.end && end > range.start)
+      ) {
+        continue
+      }
+      if (occupiedRanges.some((range) => start < range.end && end > range.start)) {
+        continue
+      }
+      matches.push({ start, end, kind })
+      occupiedRanges.push({ start, end })
+    }
+    return matches
+  }
+
+  private applySemanticDecorations() {
+    if (this.editor === null) return
+    const model = this.editor.getModel()
+    if (model === null) return
+    if (model.getLanguageId() !== ozmaFunqlLanguageId) {
+      this.semanticDecorationIds = this.editor.deltaDecorations(
+        this.semanticDecorationIds,
+        [],
+      )
+      return
+    }
+
+    const decorations: monaco.editor.IModelDeltaDecoration[] = []
+    const lineCount = model.getLineCount()
+
+    for (let lineNumber = 1; lineNumber <= lineCount; lineNumber += 1) {
+      const line = model.getLineContent(lineNumber)
+      const protectedRanges: Array<{ start: number; end: number }> = []
+      const occupiedRanges: Array<{ start: number; end: number }> = []
+
+      const lineCommentStart = line.indexOf('--')
+      if (lineCommentStart >= 0) {
+        protectedRanges.push({ start: lineCommentStart, end: line.length })
+      }
+
+      const stringRegex = /'([^'\\]|\\.)*'/g
+      let stringMatch: RegExpExecArray | null = null
+      while ((stringMatch = stringRegex.exec(line)) !== null) {
+        protectedRanges.push({
+          start: stringMatch.index,
+          end: stringMatch.index + stringMatch[0].length,
+        })
+      }
+
+      const tokenRanges = [
+        ...CodeEditor.collectMatches(
+          line,
+          /\b(?:int|integer|bigint|smallint|numeric|decimal|float|real|double|text|varchar|char|boolean|bool|date|datetime|time|timestamp|interval|json|jsonb|uuid|bytea|array)\b/gi,
+          'type',
+          protectedRanges,
+          occupiedRanges,
+        ),
+        ...CodeEditor.collectMatches(
+          line,
+          /\b(?:select|from|where|join|left|right|inner|outer|full|cross|on|as|and|or|not|in|is|null|case|when|then|else|end|group|order|by|asc|desc|limit|offset|union|intersect|except|all|distinct|for|insert|into|update|delete|values|with|recursive|materialized|partition|over|filter|having|between|exists|like|ilike|similar|only|lateral|domain|interval|superuser|role|inherited|oftype|mapping|reference|enum|internal|default|returns|returning|create|alter|drop|replace|table|view|function|begin|declare|language|set|show|grant|revoke|using|array|any|some|nulls|first|last|true|false)\b/gi,
+          'keyword',
+          protectedRanges,
+          occupiedRanges,
+        ),
+        ...CodeEditor.collectMatches(
+          line,
+          /(?:\b[a-zA-Z_]\w*\.)?@@?[a-zA-Z_]\w*|@@?[a-zA-Z_]\w*/g,
+          'attribute',
+          protectedRanges,
+          occupiedRanges,
+        ),
+        ...CodeEditor.collectMatches(
+          line,
+          /\$\$?[a-zA-Z_]\w*/g,
+          'variable',
+          protectedRanges,
+          occupiedRanges,
+        ),
+      ]
+
+      const identifierMatches = CodeEditor.collectMatches(
+        line,
+        /\b[a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*\b/g,
+        'identifier',
+        protectedRanges,
+        occupiedRanges,
+      )
+
+      for (const range of [...identifierMatches, ...tokenRanges]) {
+        decorations.push({
+          range: new monaco.Range(
+            lineNumber,
+            range.start + 1,
+            lineNumber,
+            range.end + 1,
+          ),
+          options: {
+            inlineClassName: `ozma-token-${range.kind}`,
+          },
+        })
+      }
+    }
+
+    this.semanticDecorationIds = this.editor.deltaDecorations(
+      this.semanticDecorationIds,
+      decorations,
+    )
+  }
+
   @Watch('autofocus')
   private onAutofocus(autofocus: boolean) {
     if (autofocus && this.editor) {
@@ -666,6 +793,12 @@ export default class CodeEditor extends Vue {
   }
 
   private beforeDestroy() {
+    if (this.editor !== null) {
+      this.semanticDecorationIds = this.editor.deltaDecorations(
+        this.semanticDecorationIds,
+        [],
+      )
+    }
     const model = this.editor?.getModel()
     this.editor?.dispose()
     model?.dispose()
@@ -686,6 +819,74 @@ export default class CodeEditor extends Vue {
 
 .monaco-editor_modal {
   height: 350px;
+}
+
+.code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-identifier {
+  color: #2e2e2e !important;
+}
+.code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-keyword {
+  color: #7c3aed !important;
+  font-weight: 600;
+}
+.code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-type {
+  color: #1d4ed8 !important;
+}
+.code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-attribute {
+  color: #2563eb !important;
+}
+.code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-variable {
+  color: #be185d !important;
+}
+
+.code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-identifier {
+  color: #3f3b35 !important;
+}
+.code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-keyword {
+  color: #0f766e !important;
+  font-weight: 600;
+}
+.code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-type {
+  color: #0b5e5a !important;
+}
+.code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-attribute {
+  color: #2563eb !important;
+}
+.code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-variable {
+  color: #1d4ed8 !important;
+}
+
+.code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-identifier {
+  color: #cdd3de !important;
+}
+.code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-keyword {
+  color: #cba6f7 !important;
+  font-weight: 600;
+}
+.code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-type {
+  color: #89b4fa !important;
+}
+.code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-attribute {
+  color: #8eceff !important;
+}
+.code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-variable {
+  color: #f38ba8 !important;
+}
+
+.code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-identifier {
+  color: #d4dee6 !important;
+}
+.code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-keyword {
+  color: #c9a0ff !important;
+  font-weight: 600;
+}
+.code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-type {
+  color: #59d6cf !important;
+}
+.code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-attribute {
+  color: #6d77ff !important;
+}
+.code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-variable {
+  color: #ff4fa2 !important;
 }
 
 </style>
