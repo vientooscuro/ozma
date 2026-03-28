@@ -663,4 +663,44 @@ export default class CodeEditor extends Vue {
 .monaco-editor_modal {
   height: 350px;
 }
+
+html[data-theme-style='light'] .code-editor ::v-deep .mtk4 {
+  color: #2e2e2e !important;
+}
+html[data-theme-style='light'] .code-editor ::v-deep .mtk13 {
+  color: #0369a1 !important;
+}
+html[data-theme-style='light'] .code-editor ::v-deep .mtk28 {
+  color: #0f766e !important;
+}
+
+html[data-theme-style='light-glass'] .code-editor ::v-deep .mtk4 {
+  color: #3f3b35 !important;
+}
+html[data-theme-style='light-glass'] .code-editor ::v-deep .mtk13 {
+  color: #6f6a62 !important;
+}
+html[data-theme-style='light-glass'] .code-editor ::v-deep .mtk28 {
+  color: #b45309 !important;
+}
+
+html[data-theme-style='dark'] .code-editor ::v-deep .mtk4 {
+  color: #cdd3de !important;
+}
+html[data-theme-style='dark'] .code-editor ::v-deep .mtk13 {
+  color: #89dceb !important;
+}
+html[data-theme-style='dark'] .code-editor ::v-deep .mtk28 {
+  color: #a6e3a1 !important;
+}
+
+html[data-theme-style='dark-glass'] .code-editor ::v-deep .mtk4 {
+  color: #d4dee6 !important;
+}
+html[data-theme-style='dark-glass'] .code-editor ::v-deep .mtk13 {
+  color: #49aaee !important;
+}
+html[data-theme-style='dark-glass'] .code-editor ::v-deep .mtk28 {
+  color: #44aa99 !important;
+}
 </style>
