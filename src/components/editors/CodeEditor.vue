@@ -672,8 +672,10 @@ export default class CodeEditor extends Vue {
   ): Array<{ start: number; end: number; kind: string }> {
     const matches: Array<{ start: number; end: number; kind: string }> = []
     pattern.lastIndex = 0
-    let match: RegExpExecArray | null = null
-    while ((match = pattern.exec(source)) !== null) {
+    // no-cond-assign: keep regex matching loop explicit for lint compatibility
+    while (true) {
+      const match = pattern.exec(source)
+      if (match === null) break
       const start = match.index
       const end = start + match[0].length
       if (start === end) continue
@@ -701,8 +703,10 @@ export default class CodeEditor extends Vue {
   ): Array<{ start: number; end: number; kind: string }> {
     const matches: Array<{ start: number; end: number; kind: string }> = []
     pattern.lastIndex = 0
-    let match: RegExpExecArray | null = null
-    while ((match = pattern.exec(source)) !== null) {
+    // no-cond-assign: keep regex matching loop explicit for lint compatibility
+    while (true) {
+      const match = pattern.exec(source)
+      if (match === null) break
       const captured = match[captureGroupIndex]
       if (!captured) continue
       const fullStart = match.index
@@ -751,8 +755,9 @@ export default class CodeEditor extends Vue {
       }
 
       const stringRegex = /'([^'\\]|\\.)*'/g
-      let stringMatch: RegExpExecArray | null = null
-      while ((stringMatch = stringRegex.exec(line)) !== null) {
+      while (true) {
+        const stringMatch = stringRegex.exec(line)
+        if (stringMatch === null) break
         protectedRanges.push({
           start: stringMatch.index,
           end: stringMatch.index + stringMatch[0].length,

@@ -9,6 +9,7 @@ RUN corepack enable
 RUN --mount=type=cache,target=/root/.yarn yarn install --immutable
 
 COPY . .
+RUN --mount=type=cache,target=/root/.yarn yarn install --immutable
 RUN yarn build
 
 FROM caddy
