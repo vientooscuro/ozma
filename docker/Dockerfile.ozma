@@ -4,9 +4,8 @@ WORKDIR /app
 
 COPY . .
 RUN corepack enable
-RUN rm -f .pnp.cjs .pnp.loader.mjs .yarn/install-state.gz
-RUN --mount=type=cache,target=/root/.yarn yarn install --immutable
-RUN yarn build
+RUN --mount=type=cache,target=/root/.yarn YARN_NODE_LINKER=node-modules yarn install --immutable
+RUN YARN_NODE_LINKER=node-modules yarn build
 
 FROM caddy
 
