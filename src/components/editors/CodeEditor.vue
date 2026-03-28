@@ -164,12 +164,26 @@ const sqlTypeKeywords = [
   'array',
 ] as const
 
+const regexAlternation = (words: readonly string[]): string =>
+  words
+    .slice()
+    .sort((a, b) => b.length - a.length)
+    .map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .join('|')
+
+const sqlKeywordsRegex = new RegExp(
+  `\\b(?:${regexAlternation(sqlKeywords)})\\b`,
+  'i',
+)
+const sqlTypeKeywordsRegex = new RegExp(
+  `\\b(?:${regexAlternation(sqlTypeKeywords)})\\b`,
+  'i',
+)
+
 const ozmaFunqlMonarch: monaco.languages.IMonarchLanguage = {
   defaultToken: 'identifier',
   tokenPostfix: '.sql',
   ignoreCase: true,
-  keywords: sqlKeywords,
-  typeKeywords: sqlTypeKeywords,
   operators: [
     '=',
     '>',
@@ -204,16 +218,9 @@ const ozmaFunqlMonarch: monaco.languages.IMonarchLanguage = {
       [/[{}()[\]]/, '@brackets'],
       [/[;,.]/, 'delimiter'],
       [/\d+(\.\d+)?/, 'number'],
-      [
-        /[a-zA-Z_]\w*/,
-        {
-          cases: {
-            '@typeKeywords': 'type',
-            '@keywords': 'keyword',
-            '@default': 'identifier',
-          },
-        },
-      ],
+      [sqlTypeKeywordsRegex, 'type'],
+      [sqlKeywordsRegex, 'keyword'],
+      [/[a-zA-Z_]\w*/, 'identifier'],
       [
         /[-+*/%<>=!|&:@?~]+/,
         {
@@ -577,6 +584,7 @@ export default class CodeEditor extends Vue {
 
   @Watch('currentThemeRef')
   private onThemeChange() {
+    this.applyTokenThemeClass()
     if (this.editor !== null) {
       monaco.editor.setTheme(this.monacoTheme)
     }
@@ -591,6 +599,7 @@ export default class CodeEditor extends Vue {
 
   private mounted() {
     setupOzmaFunqlLanguage()
+    this.applyTokenThemeClass()
     monaco.editor.setTheme(this.monacoTheme)
     const model = monaco.editor.createModel(this.content, this.monacoLanguage)
     const editor = monaco.editor.create(this.$el as HTMLElement, {
@@ -601,6 +610,7 @@ export default class CodeEditor extends Vue {
     this.$nextTick(() => {
       setupOzmaFunqlLanguage()
       this.syncModelLanguage(editor)
+      this.applyTokenThemeClass()
       monaco.editor.setTheme(this.monacoTheme)
     })
     editor.onDidFocusEditorWidget(() => {
@@ -634,6 +644,20 @@ export default class CodeEditor extends Vue {
     monaco.editor.setModelLanguage(model, this.monacoLanguage)
   }
 
+  private applyTokenThemeClass() {
+    const root = this.$el as HTMLElement
+    if (!root) return
+    for (const themeName of [
+      'ozma-light',
+      'ozma-light-glass',
+      'ozma-dark',
+      'ozma-dark-glass',
+    ]) {
+      root.classList.remove(`ozma-theme-${themeName}`)
+    }
+    root.classList.add(`ozma-theme-${this.monacoTheme}`)
+  }
+
   @Watch('autofocus')
   private onAutofocus(autofocus: boolean) {
     if (autofocus && this.editor) {
@@ -664,43 +688,4 @@ export default class CodeEditor extends Vue {
   height: 350px;
 }
 
-html[data-theme-style='light'] .code-editor ::v-deep .mtk4 {
-  color: #2e2e2e !important;
-}
-html[data-theme-style='light'] .code-editor ::v-deep .mtk13 {
-  color: #0369a1 !important;
-}
-html[data-theme-style='light'] .code-editor ::v-deep .mtk28 {
-  color: #0f766e !important;
-}
-
-html[data-theme-style='light-glass'] .code-editor ::v-deep .mtk4 {
-  color: #3f3b35 !important;
-}
-html[data-theme-style='light-glass'] .code-editor ::v-deep .mtk13 {
-  color: #6f6a62 !important;
-}
-html[data-theme-style='light-glass'] .code-editor ::v-deep .mtk28 {
-  color: #b45309 !important;
-}
-
-html[data-theme-style='dark'] .code-editor ::v-deep .mtk4 {
-  color: #cdd3de !important;
-}
-html[data-theme-style='dark'] .code-editor ::v-deep .mtk13 {
-  color: #89dceb !important;
-}
-html[data-theme-style='dark'] .code-editor ::v-deep .mtk28 {
-  color: #a6e3a1 !important;
-}
-
-html[data-theme-style='dark-glass'] .code-editor ::v-deep .mtk4 {
-  color: #d4dee6 !important;
-}
-html[data-theme-style='dark-glass'] .code-editor ::v-deep .mtk13 {
-  color: #49aaee !important;
-}
-html[data-theme-style='dark-glass'] .code-editor ::v-deep .mtk28 {
-  color: #44aa99 !important;
-}
 </style>
