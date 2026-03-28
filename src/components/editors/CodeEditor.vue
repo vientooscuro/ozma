@@ -164,6 +164,12 @@ const sqlTypeKeywords = [
   'array',
 ] as const
 
+const buildWordRegex = (words: readonly string[]): RegExp =>
+  new RegExp(`\\b(?:${words.join('|')})\\b`, 'i')
+
+const sqlKeywordsRegex = buildWordRegex(sqlKeywords)
+const sqlTypeKeywordsRegex = buildWordRegex(sqlTypeKeywords)
+
 const ozmaFunqlMonarch: monaco.languages.IMonarchLanguage = {
   defaultToken: '',
   tokenPostfix: '.sql',
@@ -204,15 +210,11 @@ const ozmaFunqlMonarch: monaco.languages.IMonarchLanguage = {
       [/[{}()[\]]/, '@brackets'],
       [/[;,.]/, 'delimiter'],
       [/\b\d+(\.\d+)?\b/, 'number'],
+      [sqlTypeKeywordsRegex, 'type'],
+      [sqlKeywordsRegex, 'keyword'],
       [
         /[a-zA-Z_]\w*/,
-        {
-          cases: {
-            '@keywords': 'keyword',
-            '@typeKeywords': 'type',
-            '@default': 'identifier',
-          },
-        },
+        'identifier',
       ],
       [
         /[-+*/%<>=!|&:@?~]+/,
