@@ -691,6 +691,40 @@ export default class CodeEditor extends Vue {
     return matches
   }
 
+  private static collectCaptureMatches(
+    source: string,
+    pattern: RegExp,
+    captureGroupIndex: number,
+    kind: string,
+    protectedRanges: Array<{ start: number; end: number }>,
+    occupiedRanges: Array<{ start: number; end: number }>,
+  ): Array<{ start: number; end: number; kind: string }> {
+    const matches: Array<{ start: number; end: number; kind: string }> = []
+    pattern.lastIndex = 0
+    let match: RegExpExecArray | null = null
+    while ((match = pattern.exec(source)) !== null) {
+      const captured = match[captureGroupIndex]
+      if (!captured) continue
+      const fullStart = match.index
+      const fullText = match[0]
+      const capturedOffset = fullText.indexOf(captured)
+      if (capturedOffset < 0) continue
+      const start = fullStart + capturedOffset
+      const end = start + captured.length
+      if (
+        protectedRanges.some((range) => start < range.end && end > range.start)
+      ) {
+        continue
+      }
+      if (occupiedRanges.some((range) => start < range.end && end > range.start)) {
+        continue
+      }
+      matches.push({ start, end, kind })
+      occupiedRanges.push({ start, end })
+    }
+    return matches
+  }
+
   private applySemanticDecorations() {
     if (this.editor === null) return
     const model = this.editor.getModel()
@@ -758,6 +792,14 @@ export default class CodeEditor extends Vue {
           line,
           /\$\$?[a-zA-Z_]\w*/g,
           'variable',
+          protectedRanges,
+          occupiedRanges,
+        ),
+        ...CodeEditor.collectCaptureMatches(
+          line,
+          /=>\s*([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*)/g,
+          1,
+          'relation-target',
           protectedRanges,
           occupiedRanges,
         ),
@@ -832,7 +874,7 @@ export default class CodeEditor extends Vue {
   color: #2e2e2e !important;
 }
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-keyword {
-  color: #7c3aed !important;
+  color: #0b6e6a !important;
   font-weight: 600;
 }
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-type {
@@ -846,6 +888,10 @@ export default class CodeEditor extends Vue {
 }
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-number {
   color: #b65300 !important;
+}
+.code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-relation-target {
+  color: #3366cc !important;
+  font-weight: 600;
 }
 
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-identifier {
@@ -867,6 +913,12 @@ export default class CodeEditor extends Vue {
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-number {
   color: #b45309 !important;
 }
+.code-editor.ozma-theme-ozma-light-glass
+  ::v-deep
+  .ozma-token-relation-target {
+  color: #3569c8 !important;
+  font-weight: 600;
+}
 
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-identifier {
   color: #cdd3de !important;
@@ -887,6 +939,10 @@ export default class CodeEditor extends Vue {
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-number {
   color: #f5a97f !important;
 }
+.code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-relation-target {
+  color: #8ab4ff !important;
+  font-weight: 600;
+}
 
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-identifier {
   color: #d4dee6 !important;
@@ -906,6 +962,12 @@ export default class CodeEditor extends Vue {
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-number {
   color: #e39b2e !important;
+}
+.code-editor.ozma-theme-ozma-dark-glass
+  ::v-deep
+  .ozma-token-relation-target {
+  color: #8bc2ff !important;
+  font-weight: 600;
 }
 
 </style>
