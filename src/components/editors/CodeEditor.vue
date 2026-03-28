@@ -811,6 +811,14 @@ export default class CodeEditor extends Vue {
           protectedRanges,
           occupiedRanges,
         ),
+        ...CodeEditor.collectCaptureMatches(
+          line,
+          /\b[a-zA-Z_]\w*\.([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*)/g,
+          1,
+          'dotted-tail',
+          protectedRanges,
+          occupiedRanges,
+        ),
       ]
 
       const identifierMatches = CodeEditor.collectMatches(
@@ -879,7 +887,7 @@ export default class CodeEditor extends Vue {
 }
 
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-identifier {
-  color: #2e2e2e !important;
+  color: #5f5a2a !important;
 }
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-keyword {
   color: #0b6e6a !important;
@@ -898,16 +906,18 @@ export default class CodeEditor extends Vue {
   color: #b65300 !important;
 }
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-relation-target {
-  color: #3366cc !important;
-  font-weight: 600;
+  color: #5f5a2a !important;
 }
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-namespace {
   color: #7a3fc2 !important;
   font-weight: 600;
 }
+.code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-dotted-tail {
+  color: #5f5a2a !important;
+}
 
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-identifier {
-  color: #3f3b35 !important;
+  color: #666031 !important;
 }
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-keyword {
   color: #0f766e !important;
@@ -928,16 +938,18 @@ export default class CodeEditor extends Vue {
 .code-editor.ozma-theme-ozma-light-glass
   ::v-deep
   .ozma-token-relation-target {
-  color: #3569c8 !important;
-  font-weight: 600;
+  color: #666031 !important;
 }
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-namespace {
   color: #7b4db1 !important;
   font-weight: 600;
 }
+.code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-dotted-tail {
+  color: #666031 !important;
+}
 
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-identifier {
-  color: #cdd3de !important;
+  color: #d4cd8b !important;
 }
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-keyword {
   color: #7adbd6 !important;
@@ -956,16 +968,18 @@ export default class CodeEditor extends Vue {
   color: #f5a97f !important;
 }
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-relation-target {
-  color: #8ab4ff !important;
-  font-weight: 600;
+  color: #d4cd8b !important;
 }
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-namespace {
   color: #c6a0f6 !important;
   font-weight: 600;
 }
+.code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-dotted-tail {
+  color: #d4cd8b !important;
+}
 
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-identifier {
-  color: #d4dee6 !important;
+  color: #e0d69a !important;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-keyword {
   color: #c9a0ff !important;
@@ -986,12 +1000,14 @@ export default class CodeEditor extends Vue {
 .code-editor.ozma-theme-ozma-dark-glass
   ::v-deep
   .ozma-token-relation-target {
-  color: #8bc2ff !important;
-  font-weight: 600;
+  color: #e0d69a !important;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-namespace {
   color: #c9a0ff !important;
   font-weight: 600;
+}
+.code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-dotted-tail {
+  color: #e0d69a !important;
 }
 
 </style>
