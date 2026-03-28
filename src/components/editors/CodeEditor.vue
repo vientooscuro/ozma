@@ -803,6 +803,14 @@ export default class CodeEditor extends Vue {
           protectedRanges,
           occupiedRanges,
         ),
+        ...CodeEditor.collectCaptureMatches(
+          line,
+          /\b([a-zA-Z_]\w*)\.[a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*/g,
+          1,
+          'namespace',
+          protectedRanges,
+          occupiedRanges,
+        ),
       ]
 
       const identifierMatches = CodeEditor.collectMatches(
@@ -893,6 +901,10 @@ export default class CodeEditor extends Vue {
   color: #3366cc !important;
   font-weight: 600;
 }
+.code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-namespace {
+  color: #7a3fc2 !important;
+  font-weight: 600;
+}
 
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-identifier {
   color: #3f3b35 !important;
@@ -919,6 +931,10 @@ export default class CodeEditor extends Vue {
   color: #3569c8 !important;
   font-weight: 600;
 }
+.code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-namespace {
+  color: #7b4db1 !important;
+  font-weight: 600;
+}
 
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-identifier {
   color: #cdd3de !important;
@@ -941,6 +957,10 @@ export default class CodeEditor extends Vue {
 }
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-relation-target {
   color: #8ab4ff !important;
+  font-weight: 600;
+}
+.code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-namespace {
+  color: #c6a0f6 !important;
   font-weight: 600;
 }
 
@@ -967,6 +987,10 @@ export default class CodeEditor extends Vue {
   ::v-deep
   .ozma-token-relation-target {
   color: #8bc2ff !important;
+  font-weight: 600;
+}
+.code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-namespace {
+  color: #c9a0ff !important;
   font-weight: 600;
 }
 
