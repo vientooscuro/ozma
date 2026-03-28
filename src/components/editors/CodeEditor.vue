@@ -267,14 +267,14 @@ monaco.editor.defineTheme('ozma-light', {
   base: 'vs',
   inherit: true,
   rules: tokenRules(
-    '7c3aed', // keyword
+    '0b6e6a', // keyword
     '0f766e', // string
-    'c2410c', // number
+    'b65300', // number
     '9ca3af', // comment
-    '1d4ed8', // type
-    '0369a1', // operator
-    '2563eb', // @attr / .@attr
-    'be185d', // $arg / $$arg
+    '7a3fc2', // type
+    '6b7280', // operator
+    'a14f00', // @attr / .@attr
+    '9a2a6c', // $arg / $$arg
     '2e2e2e', // identifiers
   ),
   colors: {
@@ -296,12 +296,12 @@ monaco.editor.defineTheme('ozma-light-glass', {
   rules: tokenRules(
     '0f766e', // keyword
     'b45309', // string
-    '2563eb', // number
+    'b45309', // number
     '7c6f60', // comment
-    '0b5e5a', // type
+    '7b4db1', // type
     '6f6a62', // operator
-    '2563eb', // @attr / .@attr
-    '1d4ed8', // $arg / $$arg
+    '9a5b00', // @attr / .@attr
+    '8e2d62', // $arg / $$arg
     '3f3b35', // identifiers
   ),
   colors: {
@@ -352,20 +352,20 @@ monaco.editor.defineTheme('ozma-light-glass', {
     { token: 'keyword.sql', foreground: 'CBA6F7', fontStyle: 'bold' },
     { token: 'string', foreground: 'A6E3A1' },
     { token: 'string.sql', foreground: 'A6E3A1' },
-    { token: 'number', foreground: 'FAB387' },
-    { token: 'number.sql', foreground: 'FAB387' },
+    { token: 'number', foreground: 'F5A97F' },
+    { token: 'number.sql', foreground: 'F5A97F' },
     { token: 'comment', foreground: '6C7086', fontStyle: 'italic' },
     { token: 'comment.sql', foreground: '6C7086', fontStyle: 'italic' },
-    { token: 'type', foreground: '89B4FA' },
-    { token: 'predefined', foreground: '89B4FA' },
-    { token: 'operator', foreground: '89DCEB' },
-    { token: 'operator.sql', foreground: '89DCEB' },
+    { token: 'type', foreground: 'C6A0F6' },
+    { token: 'predefined', foreground: 'C6A0F6' },
+    { token: 'operator', foreground: '9AA3B2' },
+    { token: 'operator.sql', foreground: '9AA3B2' },
     { token: 'identifier', foreground: 'CDD3DE' },
     { token: 'identifier.quote', foreground: 'CDD3DE' },
     { token: 'identifier.quote.sql', foreground: 'CDD3DE' },
-    { token: 'attribute', foreground: '8ECEFF' },
-    { token: 'attribute.sql', foreground: '8ECEFF' },
-    { token: 'variable', foreground: 'F38BA8' },
+    { token: 'attribute', foreground: 'F2B896' },
+    { token: 'attribute.sql', foreground: 'F2B896' },
+    { token: 'variable', foreground: 'FF7AB2' },
     { token: 'constant', foreground: 'B8AEFF' },
     { token: 'string.escape', foreground: 'B8AEFF' },
     { token: 'string.escape.sql', foreground: 'B8AEFF' },
@@ -430,20 +430,20 @@ monaco.editor.defineTheme('ozma-light-glass', {
     { token: 'keyword.sql', foreground: 'C9A0FF', fontStyle: 'bold' },
     { token: 'string', foreground: '44AA99' },
     { token: 'string.sql', foreground: '44AA99' },
-    { token: 'number', foreground: 'DD9900' },
-    { token: 'number.sql', foreground: 'DD9900' },
+    { token: 'number', foreground: 'E39B2E' },
+    { token: 'number.sql', foreground: 'E39B2E' },
     { token: 'comment', foreground: '666A73', fontStyle: 'italic' },
     { token: 'comment.sql', foreground: '666A73', fontStyle: 'italic' },
     { token: 'type', foreground: '59D6CF' },
     { token: 'predefined', foreground: '59D6CF' },
-    { token: 'operator', foreground: '49AAEE' },
-    { token: 'operator.sql', foreground: '49AAEE' },
+    { token: 'operator', foreground: '8FA2B8' },
+    { token: 'operator.sql', foreground: '8FA2B8' },
     { token: 'identifier', foreground: 'D4DEE6' },
     { token: 'identifier.quote', foreground: 'D4DEE6' },
     { token: 'identifier.quote.sql', foreground: 'D4DEE6' },
-    { token: 'attribute', foreground: '6D77FF' },
-    { token: 'attribute.sql', foreground: '6D77FF' },
-    { token: 'variable', foreground: 'FF4FA2' },
+    { token: 'attribute', foreground: 'F6B941' },
+    { token: 'attribute.sql', foreground: 'F6B941' },
+    { token: 'variable', foreground: 'FF6FAE' },
     { token: 'constant', foreground: '9DE7E1' },
     { token: 'string.escape', foreground: '9DE7E1' },
     { token: 'string.escape.sql', foreground: '9DE7E1' },
@@ -728,6 +728,13 @@ export default class CodeEditor extends Vue {
       const tokenRanges = [
         ...CodeEditor.collectMatches(
           line,
+          /\b\d+(?:\.\d+)?\b/g,
+          'number',
+          protectedRanges,
+          occupiedRanges,
+        ),
+        ...CodeEditor.collectMatches(
+          line,
           /\b(?:int|integer|bigint|smallint|numeric|decimal|float|real|double|text|varchar|char|boolean|bool|date|datetime|time|timestamp|interval|json|jsonb|uuid|bytea|array)\b/gi,
           'type',
           protectedRanges,
@@ -829,13 +836,16 @@ export default class CodeEditor extends Vue {
   font-weight: 600;
 }
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-type {
-  color: #1d4ed8 !important;
+  color: #7a3fc2 !important;
 }
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-attribute {
-  color: #2563eb !important;
+  color: #a14f00 !important;
 }
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-variable {
-  color: #be185d !important;
+  color: #9a2a6c !important;
+}
+.code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-number {
+  color: #b65300 !important;
 }
 
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-identifier {
@@ -846,30 +856,36 @@ export default class CodeEditor extends Vue {
   font-weight: 600;
 }
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-type {
-  color: #0b5e5a !important;
+  color: #7b4db1 !important;
 }
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-attribute {
-  color: #2563eb !important;
+  color: #9a5b00 !important;
 }
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-variable {
-  color: #1d4ed8 !important;
+  color: #8e2d62 !important;
+}
+.code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-number {
+  color: #b45309 !important;
 }
 
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-identifier {
   color: #cdd3de !important;
 }
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-keyword {
-  color: #cba6f7 !important;
+  color: #7adbd6 !important;
   font-weight: 600;
 }
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-type {
-  color: #89b4fa !important;
+  color: #c6a0f6 !important;
 }
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-attribute {
-  color: #8eceff !important;
+  color: #f2b896 !important;
 }
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-variable {
-  color: #f38ba8 !important;
+  color: #ff7ab2 !important;
+}
+.code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-number {
+  color: #f5a97f !important;
 }
 
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-identifier {
@@ -883,10 +899,13 @@ export default class CodeEditor extends Vue {
   color: #59d6cf !important;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-attribute {
-  color: #6d77ff !important;
+  color: #f6b941 !important;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-variable {
-  color: #ff4fa2 !important;
+  color: #ff6fae !important;
+}
+.code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-number {
+  color: #e39b2e !important;
 }
 
 </style>
