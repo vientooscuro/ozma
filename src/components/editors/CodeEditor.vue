@@ -592,9 +592,10 @@ export default class CodeEditor extends Vue {
   private mounted() {
     setupOzmaFunqlLanguage()
     monaco.editor.setTheme(this.monacoTheme)
+    const model = monaco.editor.createModel(this.content, this.monacoLanguage)
     const editor = monaco.editor.create(this.$el as HTMLElement, {
       ...this.options,
-      value: this.content,
+      model,
     })
     this.syncModelLanguage(editor)
     this.$nextTick(() => {
@@ -641,7 +642,9 @@ export default class CodeEditor extends Vue {
   }
 
   private beforeDestroy() {
-    this.editor!.dispose()
+    const model = this.editor?.getModel()
+    this.editor?.dispose()
+    model?.dispose()
   }
 }
 </script>
