@@ -236,6 +236,7 @@ const ozmaFunqlMonarch: monaco.languages.IMonarchLanguage = {
 const ozmaFunqlLanguageId = 'ozma-funql'
 const ozmaSqlAliases = ['sql', 'oc', 'funql', 'pgsql']
 const ozmaSqlAliasesSet = new Set(ozmaSqlAliases)
+let ozmaFunqlProviderInitialized = false
 
 const setupOzmaFunqlLanguage = (): void => {
   const isRegistered = monaco.languages
@@ -244,10 +245,13 @@ const setupOzmaFunqlLanguage = (): void => {
   if (!isRegistered) {
     monaco.languages.register({ id: ozmaFunqlLanguageId })
   }
-  monaco.languages.setMonarchTokensProvider(
-    ozmaFunqlLanguageId,
-    ozmaFunqlMonarch,
-  )
+  if (!ozmaFunqlProviderInitialized) {
+    monaco.languages.setMonarchTokensProvider(
+      ozmaFunqlLanguageId,
+      ozmaFunqlMonarch,
+    )
+    ozmaFunqlProviderInitialized = true
+  }
 }
 
 setupOzmaFunqlLanguage()
@@ -567,6 +571,7 @@ export default class CodeEditor extends Vue {
 
   @Watch('language')
   private onLanguageChange() {
+    setupOzmaFunqlLanguage()
     this.syncModelLanguage()
   }
 
@@ -585,12 +590,18 @@ export default class CodeEditor extends Vue {
   }
 
   private mounted() {
+    setupOzmaFunqlLanguage()
     monaco.editor.setTheme(this.monacoTheme)
     const editor = monaco.editor.create(this.$el as HTMLElement, {
       ...this.options,
       value: this.content,
     })
     this.syncModelLanguage(editor)
+    this.$nextTick(() => {
+      setupOzmaFunqlLanguage()
+      this.syncModelLanguage(editor)
+      monaco.editor.setTheme(this.monacoTheme)
+    })
     editor.onDidFocusEditorWidget(() => {
       this.$root.$emit('form-input-focused')
       this.$emit('focus')
