@@ -810,6 +810,14 @@ export default class CodeEditor extends Vue {
         ),
         ...CodeEditor.collectCaptureMatches(
           line,
+          /(?:^|[^\w$@.])([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*)\s*(?=\()/g,
+          1,
+          'function',
+          protectedRanges,
+          occupiedRanges,
+        ),
+        ...CodeEditor.collectCaptureMatches(
+          line,
           /=>\s*([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*)/g,
           1,
           'relation-target',
@@ -918,6 +926,10 @@ export default class CodeEditor extends Vue {
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-property {
   color: #2b6f66 !important;
 }
+.code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-function {
+  color: #8a4f1f !important;
+  font-weight: 600;
+}
 .code-editor.ozma-theme-ozma-light ::v-deep .ozma-token-number {
   color: #b65300 !important;
 }
@@ -950,6 +962,10 @@ export default class CodeEditor extends Vue {
 }
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-property {
   color: #2a6f66 !important;
+}
+.code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-function {
+  color: #905522 !important;
+  font-weight: 600;
 }
 .code-editor.ozma-theme-ozma-light-glass ::v-deep .ozma-token-number {
   color: #b45309 !important;
@@ -986,6 +1002,10 @@ export default class CodeEditor extends Vue {
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-property {
   color: #69c4bc !important;
 }
+.code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-function {
+  color: #93d29c !important;
+  font-weight: 600;
+}
 .code-editor.ozma-theme-ozma-dark ::v-deep .ozma-token-number {
   color: #f5a97f !important;
 }
@@ -1018,6 +1038,10 @@ export default class CodeEditor extends Vue {
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-property {
   color: #5fc7bc !important;
+}
+.code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-function {
+  color: #9adca3 !important;
+  font-weight: 600;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-number {
   color: #e39b2e !important;
