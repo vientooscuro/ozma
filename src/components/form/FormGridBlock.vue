@@ -158,7 +158,8 @@ export default class FormGridBlock extends Vue {
 }
 
 .form_sub_block {
-  border: 1px solid var(--sub-block-color, var(--default-borderColor));
+  border: 1px solid var(--default-borderColor);
+  background: var(--sub-block-color, var(--backgroundColor)) !important;
   border-radius: 1.5rem;
   background: var(--backgroundColor);
   padding: 1.5rem;
