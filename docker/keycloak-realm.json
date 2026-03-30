@@ -46,6 +46,23 @@
       "optionalClientScopes": []
     },
     {
+      "id": "ozmadb",
+      "clientId": "ozmadb",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "cKIu9citwiEBBJjZkMaKVoinzxGOb37h",
+      "redirectUris": ["{EXTERNAL_ORIGIN}/*"],
+      "webOrigins": ["{EXTERNAL_ORIGIN}"],
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "publicClient": false,
+      "protocol": "openid-connect",
+      "defaultClientScopes": ["roles", "basic", "email"],
+      "optionalClientScopes": []
+    },
+    {
       "id": "ozma-report-generator",
       "clientId": "ozma-report-generator",
       "enabled": true,

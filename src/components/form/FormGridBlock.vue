@@ -11,6 +11,7 @@
       :class="[
         {
           first_level_grid_block: firstLevel,
+          'has-sub-blocks': firstLevel && blockContent.type === 'section_with_sub_blocks',
           'has-no-content': hasNoContent,
           'only-nested-userview': singleUserViewSection,
         },
@@ -30,6 +31,43 @@
           <slot :element="slotProps.element" />
         </FormGridBlock>
       </b-row>
+      <template v-else-if="blockContent.type === 'section_with_sub_blocks'">
+        <template v-for="(subBlock, subBlockI) in blockContent.subBlocks">
+          <!-- Sub-block with card: rendered as a glass card -->
+          <div
+            v-if="subBlock.hasCard"
+            :key="subBlockI"
+            class="form_sub_block"
+          >
+            <div v-if="subBlock.title" class="form_sub_block__title">
+              {{ subBlock.title }}
+            </div>
+            <b-row>
+              <FormGridBlock
+                v-for="(item, itemI) in subBlock.content"
+                :key="itemI"
+                v-slot="slotProps"
+                :block-content="item"
+              >
+                <slot :element="slotProps.element" />
+              </FormGridBlock>
+            </b-row>
+          </div>
+          <!-- Elements without sub-block: rendered with standard background -->
+          <div v-else :key="'inline-' + subBlockI" class="form_inline_block">
+            <b-row>
+              <FormGridBlock
+                v-for="(item, itemI) in subBlock.content"
+                :key="itemI"
+                v-slot="slotProps"
+                :block-content="item"
+              >
+                <slot :element="slotProps.element" />
+              </FormGridBlock>
+            </b-row>
+          </div>
+        </template>
+      </template>
     </div>
   </b-col>
 </template>
@@ -93,6 +131,55 @@ export default class FormGridBlock extends Vue {
       overflow: hidden;
     }
   }
+
+  &.has-sub-blocks {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+}
+
+.form_inline_block {
+  border-radius: 0.75rem;
+  background: var(--backgroundColor);
+  padding: 1.25rem;
+  margin-bottom: 0.75rem;
+
+  @include mobile {
+    padding: 1.25rem 0.75rem 0.75rem 0.75rem;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form_sub_block {
+  border: 1px solid var(--default-borderColor);
+  border-radius: 1.5rem;
+  background: var(--backgroundColor);
+  padding: 1.5rem;
+  margin-bottom: 0.75rem;
+
+  @include mobile {
+    padding: 1rem 0.75rem 0.75rem 0.75rem;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form_sub_block__title {
+  margin-bottom: 1.25rem;
+  padding-bottom: 0;
+  color: var(--default-foregroundDarkerColor);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .has-no-content {

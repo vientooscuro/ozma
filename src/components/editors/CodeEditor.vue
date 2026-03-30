@@ -294,7 +294,7 @@ monaco.editor.defineTheme('ozma-light-glass', {
   base: 'vs',
   inherit: true,
   rules: tokenRules(
-    '0f766e', // keyword
+    '0f766e', // keyword (teal)
     'b45309', // string
     'b45309', // number
     '7c6f60', // comment
@@ -309,8 +309,8 @@ monaco.editor.defineTheme('ozma-light-glass', {
     'editor.foreground': '#1f1f1f',
     'editorLineNumber.foreground': '#9f9689',
     'editorLineNumber.activeForeground': '#5f5850',
-    'editor.selectionBackground': '#59d6cf33',
-    'editor.inactiveSelectionBackground': '#59d6cf20',
+    'editor.selectionBackground': '#14b8a633',
+    'editor.inactiveSelectionBackground': '#14b8a620',
     'editor.lineHighlightBackground': '#f4efe4cc',
     'editorCursor.foreground': '#0f766e',
     'editor.findMatchBackground': '#f6b94166',
@@ -462,7 +462,7 @@ monaco.editor.defineTheme('ozma-light-glass', {
   ],
   colors: {
     'editor.background': '#0b1623',
-    'editor.foreground': '#e7ecef',
+    'editor.foreground': '#e2e8f0',
     'editorLineNumber.foreground': '#95a7b666',
     'editorLineNumber.activeForeground': '#d4dee6b3',
     'editor.selectionBackground': '#59d6cf3d',

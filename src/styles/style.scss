@@ -589,7 +589,13 @@ html {
   --ink: var(--foregroundColor, #1f1f1f);
 }
 
-/* Full gelfand.dev visual language applied to ozma glass themes. */
+/* ═══════════════════════════════════════════════════════════════
+ * LIQUID GLASS THEMES (light-glass + dark-glass)
+ * Deep glass morphism, Inter font, teal-cyan accent,
+ * spaced table rows, animated blobs, frosted panels.
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ── Light-glass variables ─────────────────────────────────── */
 html[data-theme-style='light-glass'],
 html[data-theme-style='dark-glass'] {
   --bg: #f6f4ef;
@@ -616,31 +622,89 @@ html[data-theme-style='dark-glass'] {
   --shadow: 0 14px 40px rgb(28 23 15 / 8%);
   --overlay-bg: rgb(10 14 20 / 35%);
   --table-horizontal-borderColor: rgb(196 182 163 / 16%);
+
+  /* Liquid glass tokens */
+  --glass-bg: rgb(255 255 255 / 35%);
+  --glass-border: rgb(255 255 255 / 55%);
+  --glass-edge-light: rgb(255 255 255 / 65%);
+  --glass-edge-dark: rgb(255 255 255 / 20%);
+  --glass-blur: 40px;
+  --glass-shadow: 0 4px 24px rgb(0 0 0 / 8%), 0 0 12px rgb(0 0 0 / 4%);
+
+  /* Table tokens */
+  --table-row-bg: rgb(255 255 255 / 40%);
+  --table-row-hover: rgb(15 118 110 / 8%);
+  --table-header-bg: rgb(246 244 239 / 85%);
+  --table-header-ink: #6f6a62;
+
+  /* Input tokens */
+  --input-bg: rgb(255 255 255 / 50%);
+
+  /* Section tokens */
+  --section-bg: rgb(255 255 255 / 30%);
+  --section-border: rgb(196 182 163 / 20%);
+
+  /* Sub-block tokens (light) */
+  --sub-block-bg: rgb(255 255 255 / 45%);
+  --sub-block-border: rgb(196 182 163 / 25%);
+
+  /* Radius tokens */
+  --radius-panel: 1.5rem;
+  --radius-section: 1.5rem;
+  --radius-input: 0.75rem;
 }
 
+/* ── Dark-glass variables (overrides shared block) ─────────── */
 html[data-theme-style='dark-glass'] {
-  --bg: #070e17;
-  --card: #0b1623;
-  --ink: #e7ecef;
-  --muted: #95a7b6;
+  --bg: #020617;
+  --card: rgb(15 23 42 / 65%);
+  --ink: #e2e8f0;
+  --muted: #94a3b8;
   --accent: #59d6cf;
   --accent-2: #f6b941;
-  --line: rgb(140 176 200 / 14%);
-  --control-line: rgb(140 176 200 / 10%);
-  --surface: rgb(17 32 46 / 42%);
-  --surface-strong: rgb(17 32 46 / 56%);
-  --panel-bg: rgb(10 20 33 / 28%);
-  --panel-border: rgb(169 209 232 / 16%);
-  --text-soft: #d4dee6;
+  --line: rgb(255 255 255 / 8%);
+  --control-line: rgb(255 255 255 / 10%);
+  --surface: rgb(255 255 255 / 3%);
+  --surface-strong: rgb(255 255 255 / 5%);
+  --panel-bg: rgb(15 23 42 / 65%);
+  --panel-border: rgb(255 255 255 / 8%);
+  --text-soft: #cbd5e1;
   --glow-1: #0b2633;
   --glow-2: #050a18;
-  --shape-1: #071427;
-  --shape-2: #0b5e5a;
-  --contact-hover-border: rgb(169 209 232 / 18%);
-  --contact-hover-shadow: 0 34px 90px rgb(0 0 0 / 55%);
-  --shadow: 0 18px 50px rgb(0 0 0 / 28%);
+  --glow-3: transparent;
+  --shape-1: rgb(30 27 75 / 100%);
+  --shape-2: rgb(49 46 129 / 100%);
+  --contact-hover-bg: rgb(30 41 59 / 80%);
+  --contact-hover-border: rgb(89 214 207 / 30%);
+  --contact-hover-shadow: 0 34px 90px rgb(0 0 0 / 45%);
+  --shadow: 0 25px 50px -12px rgb(0 0 0 / 50%);
   --overlay-bg: rgb(2 8 17 / 58%);
-  --table-horizontal-borderColor: rgb(140 176 200 / 10%);
+  --table-horizontal-borderColor: rgb(255 255 255 / 6%);
+
+  /* Liquid glass tokens (dark) */
+  --glass-bg: rgb(15 23 42 / 65%);
+  --glass-border: rgb(255 255 255 / 8%);
+  --glass-edge-light: rgb(255 255 255 / 10%);
+  --glass-edge-dark: rgb(255 255 255 / 3%);
+  --glass-blur: 40px;
+  --glass-shadow: 0 25px 50px -12px rgb(0 0 0 / 50%);
+
+  /* Table tokens (dark) — matches mockup: rgba(255,255,255,0.02) */
+  --table-row-bg: rgb(255 255 255 / 2%);
+  --table-row-hover: rgb(59 130 246 / 10%);
+  --table-header-bg: rgb(15 23 42 / 80%);
+  --table-header-ink: #64748b;
+
+  /* Input tokens (dark) */
+  --input-bg: rgb(0 0 0 / 30%);
+
+  /* Section tokens (dark) */
+  --section-bg: rgb(255 255 255 / 3%);
+  --section-border: rgb(255 255 255 / 5%);
+
+  /* Sub-block tokens (dark) — lighter than main glass panels */
+  --sub-block-bg: rgb(255 255 255 / 3%);
+  --sub-block-border: rgb(255 255 255 / 6%);
 }
 
 #app[data-theme-style='light-glass'],
@@ -660,17 +724,16 @@ html[data-theme-style='dark-glass'] {
   position: relative;
   isolation: isolate;
   background:
-    radial-gradient(circle at 0% 0%, var(--glow-1) 0%, transparent 35%),
-    radial-gradient(circle at 90% 20%, var(--glow-2) 0%, transparent 35%),
+    radial-gradient(circle at 0% 0%, var(--glow-1) 0%, transparent 38%),
+    radial-gradient(circle at 90% 20%, var(--glow-2) 0%, transparent 38%),
     radial-gradient(circle at 92% 88%, var(--glow-3) 0%, transparent 42%),
     var(--bg);
   color: var(--ink);
   font-family:
-    Manrope,
+    Inter,
     -apple-system,
     BlinkMacSystemFont,
     'SF Pro Text',
-    'SF Pro Display',
     'Segoe UI',
     Roboto,
     'Helvetica Neue',
@@ -689,8 +752,7 @@ html[data-theme-style='dark-glass'] {
 #app[data-theme-style='light-glass'] .button-caption,
 #app[data-theme-style='dark-glass'] .button-caption {
   font-family:
-    'Space Grotesk',
-    Manrope,
+    Inter,
     -apple-system,
     BlinkMacSystemFont,
     'Segoe UI',
@@ -706,28 +768,50 @@ html[data-theme-style='dark-glass'] {
   content: '';
   position: fixed;
   z-index: -1;
-  opacity: 0.55;
+  opacity: 0.45;
   border-radius: 999px;
-  filter: blur(80px);
+  filter: blur(100px);
   pointer-events: none;
+  will-change: transform;
 }
 
 #app[data-theme-style='light-glass']::before,
 #app[data-theme-style='dark-glass']::before {
-  top: -80px;
-  left: -60px;
-  width: 320px;
-  height: 320px;
+  top: -10%;
+  left: -5%;
+  width: 500px;
+  height: 500px;
   background: var(--shape-1);
+  animation: blob-drift-1 25s ease-in-out infinite alternate;
 }
 
 #app[data-theme-style='light-glass']::after,
 #app[data-theme-style='dark-glass']::after {
-  top: 20%;
-  right: -80px;
-  width: 280px;
-  height: 280px;
+  bottom: -10%;
+  right: -5%;
+  width: 420px;
+  height: 420px;
   background: var(--shape-2);
+  animation: blob-drift-2 25s ease-in-out infinite alternate;
+}
+
+@keyframes blob-drift-1 {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(50px, 100px) scale(1.1); }
+}
+
+@keyframes blob-drift-2 {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(-40px, -80px) scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #app[data-theme-style='light-glass']::before,
+  #app[data-theme-style='dark-glass']::before,
+  #app[data-theme-style='light-glass']::after,
+  #app[data-theme-style='dark-glass']::after {
+    animation: none;
+  }
 }
 
 @keyframes glass-rise {
@@ -742,25 +826,39 @@ html[data-theme-style='dark-glass'] {
   }
 }
 
-#app[data-theme-style='light-glass'] .header-panel,
-#app[data-theme-style='dark-glass'] .header-panel,
-#app[data-theme-style='light-glass'] .menu_category_block,
-#app[data-theme-style='dark-glass'] .menu_category_block,
+/* Glass styling only for: root-wrapper (outermost), menu blocks, modals */
 #app[data-theme-style='light-glass'] .root-wrapper,
 #app[data-theme-style='dark-glass'] .root-wrapper,
-#app[data-theme-style='light-glass'] .table-wrapper.root,
-#app[data-theme-style='dark-glass'] .table-wrapper.root,
+#app[data-theme-style='light-glass'] .menu_category_block,
+#app[data-theme-style='dark-glass'] .menu_category_block,
 html[data-theme-style='light-glass'] .vm--modal,
 html[data-theme-style='dark-glass'] .vm--modal,
 html[data-theme-style='light-glass'] .modal-content,
 html[data-theme-style='dark-glass'] .modal-content {
-  border: 1px solid var(--panel-border);
-  border-radius: 20px;
-  background: var(--panel-bg);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(22px) saturate(135%);
-  -webkit-backdrop-filter: blur(22px) saturate(135%);
+  border: 1px solid var(--glass-border, var(--panel-border));
+  border-radius: var(--radius-panel, 1.5rem);
+  background: var(--glass-bg, var(--panel-bg));
+  box-shadow:
+    var(--glass-shadow, var(--shadow)),
+    inset 2px 2px 2px 0 var(--glass-edge-light),
+    inset -2px -2px 2px 0 var(--glass-edge-dark);
+  backdrop-filter: blur(var(--glass-blur, 40px)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--glass-blur, 40px)) saturate(140%);
   animation: glass-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* header-panel and table-wrapper inside glass panels: transparent */
+#app[data-theme-style='light-glass'] .header-panel,
+#app[data-theme-style='dark-glass'] .header-panel,
+#app[data-theme-style='light-glass'] .table-wrapper.root,
+#app[data-theme-style='dark-glass'] .table-wrapper.root {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  animation: none;
 }
 
 html[data-theme-style='light-glass'] .glass-confirm-dialog,
@@ -774,9 +872,9 @@ html[data-theme-style='dark-glass'] .glass-confirm-content {
 }
 
 html[data-theme-style='light-glass'] .glass-confirm-content {
-  border-color: rgb(210 194 143 / 55%);
+  border-color: rgb(15 118 110 / 35%);
   background:
-    linear-gradient(180deg, rgb(248 241 216 / 98%) 0%, rgb(244 236 211 / 96%) 100%),
+    linear-gradient(180deg, rgb(240 253 250 / 95%) 0%, rgb(204 251 241 / 92%) 100%),
     var(--panel-bg);
 }
 
@@ -871,12 +969,15 @@ html[data-theme-style='dark-glass'] .glass-confirm-footer .btn-outline-secondary
 html[data-theme-style='light-glass'] .popper,
 html[data-theme-style='dark-glass'] .popper {
   z-index: 100050 !important;
-  border: 1px solid var(--panel-border);
-  border-radius: 20px;
-  background: var(--panel-bg);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(22px) saturate(135%);
-  -webkit-backdrop-filter: blur(22px) saturate(135%);
+  border: 1px solid var(--glass-border, var(--panel-border));
+  border-radius: var(--radius-section, 1rem);
+  background: var(--glass-bg, var(--panel-bg));
+  box-shadow:
+    var(--glass-shadow, var(--shadow)),
+    inset 1px 1px 1px 0 var(--glass-edge-light),
+    inset -1px -1px 1px 0 var(--glass-edge-dark);
+  backdrop-filter: blur(var(--glass-blur, 40px)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--glass-blur, 40px)) saturate(140%);
   animation: none !important;
 }
 
@@ -911,25 +1012,29 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 
 #app[data-theme-style='light-glass'] .header-panel.is-root,
 #app[data-theme-style='dark-glass'] .header-panel.is-root {
-  margin: 0.55rem 0.55rem 0;
+  margin: 0;
   box-sizing: border-box;
-  width: calc(100% - 1.1rem);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--surface);
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 #app[data-theme-style='light-glass'] .userview-upper-div > .userview-div,
 #app[data-theme-style='dark-glass'] .userview-upper-div > .userview-div {
-  margin: 0.5rem 0.55rem 0;
+  margin: 0;
   box-sizing: border-box;
-  width: calc(100% - 1.1rem);
+  width: 100%;
 }
 
 #app[data-theme-style='light-glass'] .header-panel,
 #app[data-theme-style='dark-glass'] .header-panel {
   border-bottom-color: var(--line);
-  background: var(--surface);
+  background: transparent;
 }
 
 #app[data-theme-style='light-glass'] .profile-button-wrapper,
@@ -965,40 +1070,21 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 
 #app[data-theme-style='light-glass'] .table-wrapper.root,
 #app[data-theme-style='dark-glass'] .table-wrapper.root {
-  border-color: var(--panel-border);
-  padding-left: 0;
-  padding-right: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 0;
+  padding: 0 1rem;
 }
 
 #app[data-theme-style='light-glass'] .root-wrapper,
 #app[data-theme-style='dark-glass'] .root-wrapper {
-  padding: 0.5rem;
+  padding: 1.5rem;
 }
 
-#app[data-theme-style='light-glass'] .custom-table,
-#app[data-theme-style='dark-glass'] .custom-table {
-  background: transparent;
-}
-
-#app[data-theme-style='light-glass'] .table-th,
-#app[data-theme-style='dark-glass'] .table-th,
-#app[data-theme-style='light-glass'] .table-footer-row .table-footer-cell,
-#app[data-theme-style='dark-glass'] .table-footer-row .table-footer-cell {
-  border-color: var(--line);
-  background: var(--surface);
-}
-
-#app[data-theme-style='light-glass'] th,
-#app[data-theme-style='dark-glass'] th,
-#app[data-theme-style='light-glass'] th.fixed-cell,
-#app[data-theme-style='dark-glass'] th.fixed-cell,
-#app[data-theme-style='light-glass'] .table-th,
-#app[data-theme-style='dark-glass'] .table-th {
-  background: var(--surface);
-  backdrop-filter: blur(6px) saturate(130%);
-  -webkit-backdrop-filter: blur(6px) saturate(130%);
-}
-
+/* ── Form controls & inputs ── */
 #app[data-theme-style='light-glass'] .list-group-item,
 #app[data-theme-style='dark-glass'] .list-group-item,
 #app[data-theme-style='light-glass'] .form-control,
@@ -1008,22 +1094,27 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 #app[data-theme-style='light-glass'] .custom-select,
 #app[data-theme-style='dark-glass'] .custom-select {
   border-color: var(--control-line, var(--line)) !important;
-  background: var(--surface) !important;
+  border-radius: var(--radius-input, 0.5rem);
+  background: var(--input-bg, var(--surface)) !important;
   color: var(--ink) !important;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
   backdrop-filter: blur(12px) saturate(130%);
   -webkit-backdrop-filter: blur(12px) saturate(130%);
 }
 
 #app[data-theme-style='light-glass'] .form-control:focus,
 #app[data-theme-style='dark-glass'] .form-control:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 0.12rem rgb(15 118 110 / 10%);
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px rgb(89 214 207 / 20%);
+  background: var(--input-bg) !important;
 }
 
 #app[data-theme-style='light-glass'] .select-container,
 #app[data-theme-style='dark-glass'] .select-container {
   border-color: var(--control-line, var(--line));
-  background: var(--surface);
+  border-radius: var(--radius-input, 0.5rem);
+  background: var(--input-bg, var(--surface));
   overflow: hidden;
 }
 
@@ -1032,7 +1123,7 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 #app[data-theme-style='light-glass'] .select-container:focus,
 #app[data-theme-style='dark-glass'] .select-container:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 0.12rem rgb(15 118 110 / 10%);
+  box-shadow: 0 0 0 2px rgb(89 214 207 / 20%);
 }
 
 #app[data-theme-style='light-glass'] .select-container .input-group-append,
@@ -1048,14 +1139,23 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
   border: none !important;
   border-left: 1px solid var(--control-line, var(--line)) !important;
   border-radius: 0 !important;
-  border-top-right-radius: 0.5rem !important;
-  border-bottom-right-radius: 0.5rem !important;
+  border-top-right-radius: var(--radius-input, 0.5rem) !important;
+  border-bottom-right-radius: var(--radius-input, 0.5rem) !important;
   background: var(--surface-strong);
   box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
+/* ── Form section labels ── */
+#app[data-theme-style='light-glass'] .border-label,
+#app[data-theme-style='dark-glass'] .border-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.01em;
+}
+
+/* ── Buttons ── */
 #app[data-theme-style='light-glass'] .btn,
 #app[data-theme-style='dark-glass'] .btn,
 #app[data-theme-style='light-glass'] .material-button,
@@ -1065,12 +1165,15 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 #app[data-theme-style='light-glass'] .save-cluster-button,
 #app[data-theme-style='dark-glass'] .save-cluster-button {
   border: 1px solid var(--control-line, var(--line));
+  border-radius: var(--radius-input, 0.5rem);
   background: var(--surface);
+  color: var(--ink);
+  font-size: 0.875rem;
   transition:
-    transform 0.5s ease,
-    box-shadow 0.5s ease,
-    background 0.5s ease,
-    border-color 0.5s ease;
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
   backdrop-filter: blur(12px) saturate(130%);
   -webkit-backdrop-filter: blur(12px) saturate(130%);
 }
@@ -1129,30 +1232,567 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 #app[data-theme-style='dark-glass']
   .menu_category_block.menuEntry-variant.menuEntry-local-variant
   .menu-entry:focus-visible:not(.disabled) {
-  background: rgb(169 209 232 / 10%);
+  background: rgb(89 214 207 / 10%);
 }
 
+#app[data-theme-style='light-glass']
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant
+  .menu-entry:hover:not(.disabled),
+#app[data-theme-style='light-glass']
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant
+  .menu-entry:focus-visible:not(.disabled) {
+  background: rgb(15 118 110 / 6%);
+}
+
+/* ── Badges / status chips ── */
 #app[data-theme-style='light-glass'] .badge,
 #app[data-theme-style='dark-glass'] .badge {
   border: 1px solid var(--line);
+  border-radius: 999px;
   background: var(--surface-strong);
   color: var(--text-soft);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 0.15em 0.6em;
 }
 
+#app[data-theme-style='dark-glass'] .badge-primary,
+#app[data-theme-style='light-glass'] .badge-primary {
+  background: rgb(59 130 246 / 15%) !important;
+  border-color: rgb(59 130 246 / 35%);
+  color: #60a5fa;
+}
+
+#app[data-theme-style='dark-glass'] .badge-success,
+#app[data-theme-style='light-glass'] .badge-success {
+  background: rgb(34 197 94 / 15%) !important;
+  border-color: rgb(34 197 94 / 35%);
+  color: #4ade80;
+}
+
+#app[data-theme-style='dark-glass'] .badge-warning,
+#app[data-theme-style='light-glass'] .badge-warning {
+  background: rgb(234 179 8 / 15%) !important;
+  border-color: rgb(234 179 8 / 35%);
+  color: #facc15;
+}
+
+#app[data-theme-style='dark-glass'] .badge-danger,
+#app[data-theme-style='light-glass'] .badge-danger {
+  background: rgb(239 68 68 / 15%) !important;
+  border-color: rgb(239 68 68 / 35%);
+  color: #f87171;
+}
+
+#app[data-theme-style='dark-glass'] .badge-info,
+#app[data-theme-style='light-glass'] .badge-info {
+  background: rgb(139 92 246 / 15%) !important;
+  border-color: rgb(139 92 246 / 35%);
+  color: #a78bfa;
+}
+
+#app[data-theme-style='dark-glass'] .badge-secondary,
+#app[data-theme-style='light-glass'] .badge-secondary {
+  background: rgb(100 116 139 / 15%) !important;
+  border-color: rgb(100 116 139 / 35%);
+  color: #94a3b8;
+}
+
+/* ── Save button ── */
 #app[data-theme-style='light-glass'] .save-button,
 #app[data-theme-style='dark-glass'] .save-button,
 #app[data-theme-style='light-glass'] .saving-indicator,
 #app[data-theme-style='dark-glass'] .saving-indicator {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--card);
+  border-color: var(--accent) !important;
+  border-radius: var(--radius-input, 0.5rem);
+  background: var(--accent) !important;
+  color: #fff !important;
+  font-weight: 500;
+  box-shadow: 0 4px 14px rgb(89 214 207 / 30%);
 }
 
+/* ── Checkbox override ── */
+#app[data-theme-style='dark-glass'] .checkbox .checkbox-rect {
+  stroke: rgb(255 255 255 / 20%);
+  fill: rgb(0 0 0 / 20%);
+  rx: 4;
+  ry: 4;
+}
+
+#app[data-theme-style='dark-glass'] .checkbox .checkbox-rect.checked,
+#app[data-theme-style='dark-glass'] .checkbox .checkbox-background.checked {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+
+#app[data-theme-style='light-glass'] .checkbox .checkbox-rect {
+  stroke: rgb(15 23 42 / 15%);
+  fill: rgb(255 255 255 / 50%);
+  rx: 4;
+  ry: 4;
+}
+
+#app[data-theme-style='light-glass'] .checkbox .checkbox-rect.checked,
+#app[data-theme-style='light-glass'] .checkbox .checkbox-background.checked {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+
+/* ── Scrollbar ── */
+#app[data-theme-style='dark-glass'] ::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+#app[data-theme-style='dark-glass'] ::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 10%);
+  border-radius: 10px;
+}
+
+#app[data-theme-style='dark-glass'] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#app[data-theme-style='light-glass'] ::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+#app[data-theme-style='light-glass'] ::-webkit-scrollbar-thumb {
+  background: rgb(15 23 42 / 10%);
+  border-radius: 10px;
+}
+
+#app[data-theme-style='light-glass'] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ── Overlay ── */
 html[data-theme-style='light-glass'] .vm--overlay,
 html[data-theme-style='dark-glass'] .vm--overlay {
   background: var(--overlay-bg) !important;
-  backdrop-filter: blur(10px) saturate(130%);
-  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * AGGRESSIVE DEEP OVERRIDES — force glass look on all components
+ * These use !important to win over inline variant styles.
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ── Force variant-level CSS vars for dark-glass ── */
+#app[data-theme-style='dark-glass'] {
+  --table-backgroundColor: transparent !important;
+  --table-foregroundColor: var(--ink) !important;
+  --table-borderColor: var(--line) !important;
+  --table-backgroundDarker1Color: var(--surface) !important;
+  --table-backgroundDarker2Color: var(--surface-strong) !important;
+  --cell-backgroundColor: transparent !important;
+  --cell-foregroundColor: var(--ink) !important;
+  --userview-background-color: transparent !important;
+}
+
+#app[data-theme-style='light-glass'] {
+  --table-backgroundColor: transparent !important;
+  --table-foregroundColor: var(--ink) !important;
+  --table-borderColor: var(--line) !important;
+  --table-backgroundDarker1Color: var(--surface) !important;
+  --table-backgroundDarker2Color: var(--surface-strong) !important;
+  --cell-backgroundColor: transparent !important;
+  --cell-foregroundColor: var(--ink) !important;
+  --userview-background-color: transparent !important;
+}
+
+/* ── Force transparent backgrounds on main containers ── */
+#app[data-theme-style='dark-glass'] .main-div,
+#app[data-theme-style='dark-glass'] .userview-upper-div,
+#app[data-theme-style='dark-glass'] .userview-div {
+  background: transparent !important;
+}
+
+#app[data-theme-style='light-glass'] .main-div,
+#app[data-theme-style='light-glass'] .userview-upper-div,
+#app[data-theme-style='light-glass'] .userview-div {
+  background: transparent !important;
+}
+
+
+/* ── Root wrapper: THE ONE glass panel ── */
+#app[data-theme-style='dark-glass'] .root-wrapper,
+#app[data-theme-style='light-glass'] .root-wrapper {
+  background: var(--glass-bg) !important;
+  background-color: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-panel) !important;
+  box-shadow: var(--glass-shadow),
+    inset 2px 2px 2px 0 var(--glass-edge-light),
+    inset -2px -2px 2px 0 var(--glass-edge-dark) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%) !important;
+  padding: 1.5rem !important;
+  overflow: hidden !important;
+}
+
+/* ── Header panel INSIDE glass panel: transparent, no own glass ── */
+#app[data-theme-style='dark-glass'] .header-panel,
+#app[data-theme-style='light-glass'] .header-panel {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: var(--ink) !important;
+  padding: 1rem 1.5rem !important;
+}
+
+/* Root header panel — spacious like mockup */
+#app[data-theme-style='dark-glass'] .header-panel.is-root,
+#app[data-theme-style='light-glass'] .header-panel.is-root {
+  margin: 0 !important;
+  width: 100% !important;
+  border: none !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 1rem 2rem !important;
+}
+
+/* Root header title — larger and bolder */
+#app[data-theme-style='dark-glass'] .header-panel.is-root .userview-title,
+#app[data-theme-style='light-glass'] .header-panel.is-root .userview-title {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Arial, sans-serif !important;
+}
+
+/* Nested header panels — section dividers */
+#app[data-theme-style='dark-glass'] .header-panel:not(.is-root),
+#app[data-theme-style='light-glass'] .header-panel:not(.is-root) {
+  border-bottom: 1px solid var(--line) !important;
+  padding: 0.75rem 0.5rem !important;
+}
+
+#app[data-theme-style='dark-glass'] .header-panel:not(.is-root) .userview-title,
+#app[data-theme-style='light-glass'] .header-panel:not(.is-root) .userview-title {
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: var(--muted) !important;
+  padding-left: 0.25rem !important;
+}
+
+/* ── Force all text colors ── */
+#app[data-theme-style='dark-glass'] .userview-title,
+#app[data-theme-style='dark-glass'] .header-panel .userview-title,
+#app[data-theme-style='dark-glass'] h1,
+#app[data-theme-style='dark-glass'] h2,
+#app[data-theme-style='dark-glass'] h3 {
+  color: var(--ink) !important;
+}
+
+#app[data-theme-style='dark-glass'] .table-td,
+#app[data-theme-style='dark-glass'] .table-td * {
+  color: var(--ink);
+}
+
+/* ── Form controls aggressive ── */
+#app[data-theme-style='dark-glass'] .form-control,
+#app[data-theme-style='dark-glass'] .custom-select,
+#app[data-theme-style='dark-glass'] .input-group-text,
+#app[data-theme-style='dark-glass'] textarea.form-control {
+  background: var(--input-bg) !important;
+  background-color: var(--input-bg) !important;
+  color: var(--ink) !important;
+  border-color: var(--control-line) !important;
+  border-radius: var(--radius-input) !important;
+}
+
+#app[data-theme-style='light-glass'] .form-control,
+#app[data-theme-style='light-glass'] .custom-select,
+#app[data-theme-style='light-glass'] .input-group-text,
+#app[data-theme-style='light-glass'] textarea.form-control {
+  background: var(--input-bg) !important;
+  background-color: var(--input-bg) !important;
+  color: var(--ink) !important;
+  border-color: var(--control-line) !important;
+  border-radius: var(--radius-input) !important;
+}
+
+/* ── Buttons aggressive ── */
+#app[data-theme-style='dark-glass'] .btn,
+#app[data-theme-style='dark-glass'] .material-button,
+#app[data-theme-style='dark-glass'] .save-cluster-button {
+  background: var(--surface) !important;
+  background-color: var(--surface) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--control-line) !important;
+  border-radius: var(--radius-input) !important;
+  backdrop-filter: blur(12px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(130%) !important;
+}
+
+#app[data-theme-style='light-glass'] .btn,
+#app[data-theme-style='light-glass'] .material-button,
+#app[data-theme-style='light-glass'] .save-cluster-button {
+  background: var(--surface) !important;
+  background-color: var(--surface) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--control-line) !important;
+  border-radius: var(--radius-input) !important;
+  backdrop-filter: blur(12px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(130%) !important;
+}
+
+/* ── Menu blocks glass ── */
+#app[data-theme-style='dark-glass'] .menu_category_block,
+#app[data-theme-style='light-glass'] .menu_category_block {
+  background: var(--glass-bg) !important;
+  background-color: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-panel) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%) !important;
+}
+
+/* ── Pagination ── */
+#app[data-theme-style='dark-glass'] .pagination .page-item .page-link,
+#app[data-theme-style='light-glass'] .pagination .page-item .page-link {
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+
+#app[data-theme-style='dark-glass'] .pagination .page-item.active .page-link,
+#app[data-theme-style='light-glass'] .pagination .page-item.active .page-link {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+}
+
+/* ── List group items ── */
+#app[data-theme-style='dark-glass'] .list-group-item,
+#app[data-theme-style='light-glass'] .list-group-item {
+  background: var(--surface) !important;
+  background-color: var(--surface) !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+
+/* ── Dropdown menus ── */
+#app[data-theme-style='dark-glass'] .dropdown-menu,
+#app[data-theme-style='light-glass'] .dropdown-menu {
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-section) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%) !important;
+  box-shadow: var(--glass-shadow) !important;
+}
+
+#app[data-theme-style='dark-glass'] .dropdown-item,
+#app[data-theme-style='light-glass'] .dropdown-item {
+  color: var(--ink) !important;
+}
+
+#app[data-theme-style='dark-glass'] .dropdown-item:hover,
+#app[data-theme-style='dark-glass'] .dropdown-item:focus,
+#app[data-theme-style='light-glass'] .dropdown-item:hover,
+#app[data-theme-style='light-glass'] .dropdown-item:focus {
+  background: var(--surface-strong) !important;
+  color: var(--ink) !important;
+}
+
+/* ── Card components ── */
+#app[data-theme-style='dark-glass'] .card,
+#app[data-theme-style='light-glass'] .card {
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-section) !important;
+}
+
+/* ── Nav tabs ── */
+#app[data-theme-style='dark-glass'] .nav-tabs,
+#app[data-theme-style='light-glass'] .nav-tabs {
+  border-bottom-color: var(--line) !important;
+}
+
+#app[data-theme-style='dark-glass'] .nav-tabs .nav-link,
+#app[data-theme-style='light-glass'] .nav-tabs .nav-link {
+  color: var(--muted) !important;
+  border-color: transparent !important;
+}
+
+#app[data-theme-style='dark-glass'] .nav-tabs .nav-link.active,
+#app[data-theme-style='light-glass'] .nav-tabs .nav-link.active {
+  color: var(--accent) !important;
+  background: transparent !important;
+  border-bottom-color: var(--accent) !important;
+}
+
+/* ── Tooltips via popper ── */
+html[data-theme-style='dark-glass'] .tooltip-inner {
+  background: var(--glass-bg) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-input) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+/* ── InputSlot / border-label ── */
+#app[data-theme-style='dark-glass'] .input-slot .border-label,
+#app[data-theme-style='light-glass'] .input-slot .border-label {
+  color: var(--muted) !important;
+  font-size: 0.75rem !important;
+}
+
+/* ── Save cluster ── */
+#app[data-theme-style='dark-glass'] .save-cluster,
+#app[data-theme-style='light-glass'] .save-cluster {
+  backdrop-filter: blur(20px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(130%) !important;
+}
+
+/* ── Form blocks with sub-blocks: transparent in glass themes ── */
+#app[data-theme-style='dark-glass'] .first_level_grid_block.has-sub-blocks,
+#app[data-theme-style='light-glass'] .first_level_grid_block.has-sub-blocks {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 0 !important;
+}
+
+/* ── Inline blocks (no sub-block): glass background ── */
+#app[data-theme-style='dark-glass'] .form_inline_block,
+#app[data-theme-style='light-glass'] .form_inline_block {
+  border: 1px solid var(--sub-block-border, var(--glass-border)) !important;
+  border-radius: 0.75rem !important;
+  background: var(--sub-block-bg, rgb(255 255 255 / 3%)) !important;
+  box-shadow: none !important;
+  padding: 1.25rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_inline_block:last-child,
+#app[data-theme-style='light-glass'] .form_inline_block:last-child {
+  margin-bottom: 0 !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_inline_block .border-label,
+#app[data-theme-style='light-glass'] .form_inline_block .border-label {
+  background-color: transparent !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_inline_block .form-control,
+#app[data-theme-style='dark-glass'] .form_inline_block .custom-select {
+  background: rgb(0 0 0 / 30%) !important;
+  border-color: rgb(255 255 255 / 10%) !important;
+  border-radius: var(--radius-input, 0.75rem) !important;
+}
+
+#app[data-theme-style='light-glass'] .form_inline_block .form-control,
+#app[data-theme-style='light-glass'] .form_inline_block .custom-select {
+  background: rgb(255 255 255 / 60%) !important;
+  border-color: rgb(196 182 163 / 20%) !important;
+  border-radius: var(--radius-input, 0.75rem) !important;
+}
+
+/* ── Form sub-blocks: glass card styling ── */
+#app[data-theme-style='dark-glass'] .form_sub_block,
+#app[data-theme-style='light-glass'] .form_sub_block {
+  border: 1px solid var(--sub-block-border, var(--glass-border)) !important;
+  border-radius: var(--radius-section, 1.5rem) !important;
+  background: var(--sub-block-bg, rgb(255 255 255 / 3%)) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 1.5rem !important;
+  margin-bottom: 0.75rem !important;
+  transition: background 0.3s ease !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_sub_block:last-child,
+#app[data-theme-style='light-glass'] .form_sub_block:last-child {
+  margin-bottom: 0 !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_sub_block__title,
+#app[data-theme-style='light-glass'] .form_sub_block__title {
+  color: var(--muted) !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 1.25rem !important;
+  padding-bottom: 0 !important;
+}
+
+/* ── border-label inside sub-blocks: use sub-block bg ── */
+#app[data-theme-style='dark-glass'] .form_sub_block .border-label,
+#app[data-theme-style='light-glass'] .form_sub_block .border-label {
+  background-color: transparent !important;
+}
+
+/* ── Inputs inside sub-blocks: contrast bg ── */
+#app[data-theme-style='dark-glass'] .form_sub_block .form-control,
+#app[data-theme-style='dark-glass'] .form_sub_block .custom-select {
+  background: rgb(0 0 0 / 30%) !important;
+  border-color: rgb(255 255 255 / 10%) !important;
+  border-radius: var(--radius-input, 0.75rem) !important;
+}
+
+#app[data-theme-style='light-glass'] .form_sub_block .form-control,
+#app[data-theme-style='light-glass'] .form_sub_block .custom-select {
+  background: rgb(255 255 255 / 60%) !important;
+  border-color: rgb(196 182 163 / 20%) !important;
+  border-radius: var(--radius-input, 0.75rem) !important;
+}
+
+/* ── Nested user-views inside sub-blocks: remove extra borders ── */
+#app[data-theme-style='dark-glass'] .form_sub_block .nested-userview,
+#app[data-theme-style='light-glass'] .form_sub_block .nested-userview {
+  border: none !important;
+  border-radius: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* ── Tables inside sub-blocks: glass-table styling ── */
+#app[data-theme-style='dark-glass'] .form_sub_block .table,
+#app[data-theme-style='light-glass'] .form_sub_block .table {
+  border-collapse: separate !important;
+  border-spacing: 0 6px !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_sub_block .table td {
+  background: rgb(255 255 255 / 2%) !important;
+  border: none !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_sub_block .table th {
+  font-size: 0.7rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  color: var(--muted) !important;
+  border: none !important;
+}
+
+/* ── Form view padding adjustment for sub-block layout ── */
+#app[data-theme-style='dark-glass'] .view-form,
+#app[data-theme-style='light-glass'] .view-form {
+  padding: 1.5rem !important;
 }
 
 @supports not (backdrop-filter: blur(1px)) {
@@ -1166,6 +1806,13 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   html[data-theme-style='dark-glass'] .popper,
   html[data-theme-style='light-glass'] .vm--modal,
   html[data-theme-style='dark-glass'] .vm--modal {
-    background: var(--card);
+    background: var(--card) !important;
+  }
+
+  #app[data-theme-style='dark-glass'] .form_sub_block,
+  #app[data-theme-style='light-glass'] .form_sub_block,
+  #app[data-theme-style='dark-glass'] .form_inline_block,
+  #app[data-theme-style='light-glass'] .form_inline_block {
+    background: var(--card) !important;
   }
 }
