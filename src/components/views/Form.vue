@@ -801,6 +801,19 @@ export default class UserViewForm extends mixins<
       return undefined
     }
 
+    // Parse sub_block_colors: { "0": { "0": "#e74c3c", "1": "#3498db" }, ... }
+    const subBlockColorsAttr = viewAttrs['sub_block_colors']
+    const getSubBlockColor = (blockIdx: number, subBlockIdx: number): string | undefined => {
+      if (subBlockColorsAttr && typeof subBlockColorsAttr === 'object') {
+        const blockColors = (subBlockColorsAttr as Record<string, any>)[String(blockIdx)]
+        if (blockColors && typeof blockColors === 'object') {
+          const color = (blockColors as Record<string, any>)[String(subBlockIdx)]
+          return typeof color === 'string' ? color : undefined
+        }
+      }
+      return undefined
+    }
+
     // Build final grid blocks
     const result: FormGridElement[] = collectors.map((collector, blockIdx) => {
       if (!collector.hasSubBlocks) {
@@ -832,6 +845,7 @@ export default class UserViewForm extends mixins<
             subBlocks.push({
               hasCard: currentKey >= 0,
               title: currentKey >= 0 ? currentTitle : undefined,
+              color: currentKey >= 0 ? getSubBlockColor(blockIdx, currentKey) : undefined,
               content: currentElements,
             })
           }
@@ -845,6 +859,7 @@ export default class UserViewForm extends mixins<
         subBlocks.push({
           hasCard: currentKey >= 0,
           title: currentKey >= 0 ? currentTitle : undefined,
+          color: currentKey >= 0 ? getSubBlockColor(blockIdx, currentKey) : undefined,
           content: currentElements,
         })
       }

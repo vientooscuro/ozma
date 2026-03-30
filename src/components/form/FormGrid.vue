@@ -40,6 +40,7 @@ export interface IGridSection<T> extends IGridBase {
 export interface IGridSubBlock<T> {
   title?: string
   hasCard: boolean
+  color?: string
   content: GridElement<T>[]
 }
 

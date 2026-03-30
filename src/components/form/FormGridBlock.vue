@@ -38,6 +38,7 @@
             v-if="subBlock.hasCard"
             :key="subBlockI"
             class="form_sub_block"
+            :style="subBlock.color ? { '--sub-block-color': subBlock.color } : {}"
           >
             <div v-if="subBlock.title" class="form_sub_block__title">
               {{ subBlock.title }}
@@ -157,7 +158,7 @@ export default class FormGridBlock extends Vue {
 }
 
 .form_sub_block {
-  border: 1px solid var(--default-borderColor);
+  border: 1px solid var(--sub-block-color, var(--default-borderColor));
   border-radius: 1.5rem;
   background: var(--backgroundColor);
   padding: 1.5rem;
