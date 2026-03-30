@@ -816,8 +816,8 @@ export default class UserViewForm extends mixins<
 
     // Build final grid blocks
     const result: FormGridElement[] = collectors.map((collector, blockIdx) => {
-      if (!collector.hasSubBlocks) {
-        // Legacy path: this block has no sub-blocks, return a plain section
+      if (!collector.hasSubBlocks || !this.formSubBlocksEnabled) {
+        // Legacy path: this block has no sub-blocks (or setting is off), return a plain section
         const content = collector.elements.map((e) => e.element)
         const singleUserViewSection =
           content.length === 1 && collector.elements[0]?.isUserView
@@ -1068,6 +1068,14 @@ export default class UserViewForm extends mixins<
   private get uiAnimationsEnabled(): boolean {
     return this.$store.state.settings.current.getEntry(
       'ui_animations_enabled',
+      Boolean,
+      true,
+    )
+  }
+
+  private get formSubBlocksEnabled(): boolean {
+    return this.$store.state.settings.current.getEntry(
+      'form_sub_blocks',
       Boolean,
       true,
     )
