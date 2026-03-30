@@ -644,10 +644,14 @@ html[data-theme-style='dark-glass'] {
   --section-bg: rgb(255 255 255 / 30%);
   --section-border: rgb(196 182 163 / 20%);
 
+  /* Sub-block tokens (light) */
+  --sub-block-bg: rgb(255 255 255 / 45%);
+  --sub-block-border: rgb(196 182 163 / 25%);
+
   /* Radius tokens */
   --radius-panel: 1.5rem;
-  --radius-section: 1rem;
-  --radius-input: 0.5rem;
+  --radius-section: 1.5rem;
+  --radius-input: 0.75rem;
 }
 
 /* ── Dark-glass variables (overrides shared block) ─────────── */
@@ -692,11 +696,15 @@ html[data-theme-style='dark-glass'] {
   --table-header-ink: #64748b;
 
   /* Input tokens (dark) */
-  --input-bg: rgb(0 0 0 / 20%);
+  --input-bg: rgb(0 0 0 / 30%);
 
   /* Section tokens (dark) */
   --section-bg: rgb(255 255 255 / 3%);
   --section-border: rgb(255 255 255 / 5%);
+
+  /* Sub-block tokens (dark) — lighter than main glass panels */
+  --sub-block-bg: rgb(255 255 255 / 3%);
+  --sub-block-border: rgb(255 255 255 / 6%);
 }
 
 #app[data-theme-style='light-glass'],
@@ -1452,7 +1460,33 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  padding: 1.25rem 1.5rem !important;
+  padding: 1rem 2rem !important;
+}
+
+/* Root header title — larger and bolder */
+#app[data-theme-style='dark-glass'] .header-panel.is-root .userview-title,
+#app[data-theme-style='light-glass'] .header-panel.is-root .userview-title {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Arial, sans-serif !important;
+}
+
+/* Nested header panels — section dividers */
+#app[data-theme-style='dark-glass'] .header-panel:not(.is-root),
+#app[data-theme-style='light-glass'] .header-panel:not(.is-root) {
+  border-bottom: 1px solid var(--line) !important;
+  padding: 0.75rem 0.5rem !important;
+}
+
+#app[data-theme-style='dark-glass'] .header-panel:not(.is-root) .userview-title,
+#app[data-theme-style='light-glass'] .header-panel:not(.is-root) .userview-title {
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: var(--muted) !important;
+  padding-left: 0.25rem !important;
 }
 
 /* ── Force all text colors ── */
@@ -1627,6 +1661,141 @@ html[data-theme-style='dark-glass'] .tooltip-inner {
   -webkit-backdrop-filter: blur(20px) saturate(130%) !important;
 }
 
+/* ── Form blocks with sub-blocks: transparent in glass themes ── */
+#app[data-theme-style='dark-glass'] .first_level_grid_block.has-sub-blocks,
+#app[data-theme-style='light-glass'] .first_level_grid_block.has-sub-blocks {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 0 !important;
+}
+
+/* ── Inline blocks (no sub-block): glass background ── */
+#app[data-theme-style='dark-glass'] .form_inline_block,
+#app[data-theme-style='light-glass'] .form_inline_block {
+  border: 1px solid var(--sub-block-border, var(--glass-border)) !important;
+  border-radius: 0.75rem !important;
+  background: var(--sub-block-bg, rgb(255 255 255 / 3%)) !important;
+  box-shadow: none !important;
+  padding: 1.25rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_inline_block:last-child,
+#app[data-theme-style='light-glass'] .form_inline_block:last-child {
+  margin-bottom: 0 !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_inline_block .border-label,
+#app[data-theme-style='light-glass'] .form_inline_block .border-label {
+  background-color: transparent !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_inline_block .form-control,
+#app[data-theme-style='dark-glass'] .form_inline_block .custom-select {
+  background: rgb(0 0 0 / 30%) !important;
+  border-color: rgb(255 255 255 / 10%) !important;
+  border-radius: var(--radius-input, 0.75rem) !important;
+}
+
+#app[data-theme-style='light-glass'] .form_inline_block .form-control,
+#app[data-theme-style='light-glass'] .form_inline_block .custom-select {
+  background: rgb(255 255 255 / 60%) !important;
+  border-color: rgb(196 182 163 / 20%) !important;
+  border-radius: var(--radius-input, 0.75rem) !important;
+}
+
+/* ── Form sub-blocks: glass card styling ── */
+#app[data-theme-style='dark-glass'] .form_sub_block,
+#app[data-theme-style='light-glass'] .form_sub_block {
+  border: 1px solid var(--sub-block-border, var(--glass-border)) !important;
+  border-radius: var(--radius-section, 1.5rem) !important;
+  background: var(--sub-block-bg, rgb(255 255 255 / 3%)) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 1.5rem !important;
+  margin-bottom: 0.75rem !important;
+  transition: background 0.3s ease !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_sub_block:last-child,
+#app[data-theme-style='light-glass'] .form_sub_block:last-child {
+  margin-bottom: 0 !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_sub_block__title,
+#app[data-theme-style='light-glass'] .form_sub_block__title {
+  color: var(--muted) !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 1.25rem !important;
+  padding-bottom: 0 !important;
+}
+
+/* ── border-label inside sub-blocks: use sub-block bg ── */
+#app[data-theme-style='dark-glass'] .form_sub_block .border-label,
+#app[data-theme-style='light-glass'] .form_sub_block .border-label {
+  background-color: transparent !important;
+}
+
+/* ── Inputs inside sub-blocks: contrast bg ── */
+#app[data-theme-style='dark-glass'] .form_sub_block .form-control,
+#app[data-theme-style='dark-glass'] .form_sub_block .custom-select {
+  background: rgb(0 0 0 / 30%) !important;
+  border-color: rgb(255 255 255 / 10%) !important;
+  border-radius: var(--radius-input, 0.75rem) !important;
+}
+
+#app[data-theme-style='light-glass'] .form_sub_block .form-control,
+#app[data-theme-style='light-glass'] .form_sub_block .custom-select {
+  background: rgb(255 255 255 / 60%) !important;
+  border-color: rgb(196 182 163 / 20%) !important;
+  border-radius: var(--radius-input, 0.75rem) !important;
+}
+
+/* ── Nested user-views inside sub-blocks: remove extra borders ── */
+#app[data-theme-style='dark-glass'] .form_sub_block .nested-userview,
+#app[data-theme-style='light-glass'] .form_sub_block .nested-userview {
+  border: none !important;
+  border-radius: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* ── Tables inside sub-blocks: glass-table styling ── */
+#app[data-theme-style='dark-glass'] .form_sub_block .table,
+#app[data-theme-style='light-glass'] .form_sub_block .table {
+  border-collapse: separate !important;
+  border-spacing: 0 6px !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_sub_block .table td {
+  background: rgb(255 255 255 / 2%) !important;
+  border: none !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_sub_block .table th {
+  font-size: 0.7rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  color: var(--muted) !important;
+  border: none !important;
+}
+
+/* ── Form view padding adjustment for sub-block layout ── */
+#app[data-theme-style='dark-glass'] .view-form,
+#app[data-theme-style='light-glass'] .view-form {
+  padding: 1.5rem !important;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
   #app[data-theme-style='light-glass'] .header-panel,
   #app[data-theme-style='dark-glass'] .header-panel,
   #app[data-theme-style='light-glass'] .menu_category_block,
@@ -1637,6 +1806,13 @@ html[data-theme-style='dark-glass'] .tooltip-inner {
   html[data-theme-style='dark-glass'] .popper,
   html[data-theme-style='light-glass'] .vm--modal,
   html[data-theme-style='dark-glass'] .vm--modal {
+    background: var(--card) !important;
+  }
+
+  #app[data-theme-style='dark-glass'] .form_sub_block,
+  #app[data-theme-style='light-glass'] .form_sub_block,
+  #app[data-theme-style='dark-glass'] .form_inline_block,
+  #app[data-theme-style='light-glass'] .form_inline_block {
     background: var(--card) !important;
   }
 }

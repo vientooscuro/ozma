@@ -21,6 +21,8 @@
 		reverse_proxy grafana:{$GRAFANA_PORT:3000}
 	}
 
+	import /etc/caddy/caddy.d/*.caddy
+
 	handle /static/* {
 		root /usr/share/caddy
 		# Hashed build assets can be cached aggressively.
