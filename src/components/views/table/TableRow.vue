@@ -205,6 +205,14 @@ td {
   height: 100%;
   .cell-wrapper {
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  ::v-deep .checkbox {
+    height: auto;
+    padding-top: 0;
+    justify-content: center;
   }
 }
 

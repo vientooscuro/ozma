@@ -1817,33 +1817,3 @@ html[data-theme-style='dark-glass'] .tooltip-inner {
   }
 }
 
-/* ── select-row-cell / add-entry-cell: no padding, cell-wrapper centers ── */
-#app[data-theme-style='dark-glass'] td.select-row-cell,
-#app[data-theme-style='light-glass'] td.select-row-cell,
-#app[data-theme-style='dark-glass'] td.add-entry-cell,
-#app[data-theme-style='light-glass'] td.add-entry-cell {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-#app[data-theme-style='dark-glass'] td.select-row-cell .cell-wrapper,
-#app[data-theme-style='light-glass'] td.select-row-cell .cell-wrapper {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-#app[data-theme-style='dark-glass'] td.add-entry-cell .icon-link,
-#app[data-theme-style='light-glass'] td.add-entry-cell .icon-link {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* .checkbox has padding-top: 1.25rem in scoped style — kill it in table rows */
-#app[data-theme-style='dark-glass'] td.select-row-cell .checkbox,
-#app[data-theme-style='light-glass'] td.select-row-cell .checkbox {
-  padding-top: 0 !important;
-  justify-content: center !important;
-  height: auto !important;
-}
