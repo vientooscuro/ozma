@@ -1661,6 +1661,13 @@ html[data-theme-style='dark-glass'] .tooltip-inner {
   -webkit-backdrop-filter: blur(20px) saturate(130%) !important;
 }
 
+/* ── Form blocks without sub-blocks: glass card styling ── */
+#app[data-theme-style='dark-glass'] .first_level_grid_block:not(.has-sub-blocks),
+#app[data-theme-style='light-glass'] .first_level_grid_block:not(.has-sub-blocks) {
+  background: var(--sub-block-bg) !important;
+  border: 1px solid var(--sub-block-border) !important;
+}
+
 /* ── Form blocks with sub-blocks: transparent in glass themes ── */
 #app[data-theme-style='dark-glass'] .first_level_grid_block.has-sub-blocks,
 #app[data-theme-style='light-glass'] .first_level_grid_block.has-sub-blocks {
