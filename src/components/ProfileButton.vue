@@ -20,6 +20,9 @@
             "ui_animations": "Animations",
             "ui_animations_on": "on",
             "ui_animations_off": "off",
+            "form_sub_blocks": "Form sections",
+            "form_sub_blocks_on": "on",
+            "form_sub_blocks_off": "off",
             "en": "English",
             "es": "Spanish (Español)",
             "ru": "Russian (Русский)",
@@ -45,6 +48,9 @@
             "ui_animations": "Анимации",
             "ui_animations_on": "вкл",
             "ui_animations_off": "выкл",
+            "form_sub_blocks": "Блоки формы",
+            "form_sub_blocks_on": "вкл",
+            "form_sub_blocks_off": "выкл",
             "en": "Английский (English)",
             "es": "Испанский (Español)",
             "ru": "Русский",
@@ -70,6 +76,9 @@
             "ui_animations": "Animaciones",
             "ui_animations_on": "activadas",
             "ui_animations_off": "desactivadas",
+            "form_sub_blocks": "Secciones de formulario",
+            "form_sub_blocks_on": "activadas",
+            "form_sub_blocks_off": "desactivadas",
             "en": "Inglés (English)",
             "es": "Español",
             "ru": "Ruso (Русский)",
@@ -268,6 +277,22 @@ export default class AppHeader extends Vue {
     return `${this.$t('ui_animations')}: ${stateText}`
   }
 
+  private get formSubBlocksEnabled(): boolean {
+    return this.currentSettings.getEntry('form_sub_blocks', Boolean, true)
+  }
+
+  private toggleFormSubBlocks() {
+    const value = this.formSubBlocksEnabled ? 'false' : 'true'
+    void this.writeUserSettings({ name: 'form_sub_blocks', value })
+  }
+
+  private get formSubBlocksCaption(): string {
+    const stateText = this.$t(
+      this.formSubBlocksEnabled ? 'form_sub_blocks_on' : 'form_sub_blocks_off',
+    ).toString()
+    return `${this.$t('form_sub_blocks')}: ${stateText}`
+  }
+
   private get buttons() {
     const buttons: Button[] = []
 
@@ -303,6 +328,13 @@ export default class AppHeader extends Vue {
       caption: this.uiAnimationsCaption,
       type: 'callback',
       callback: () => this.toggleUiAnimations(),
+      variant: defaultVariantAttribute,
+    })
+
+    buttons.push({
+      caption: this.formSubBlocksCaption,
+      type: 'callback',
+      callback: () => this.toggleFormSubBlocks(),
       variant: defaultVariantAttribute,
     })
 

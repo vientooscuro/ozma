@@ -37,8 +37,8 @@
           <div
             v-if="subBlock.hasCard"
             :key="subBlockI"
-            class="form_sub_block"
-            :style="subBlock.color ? { '--sub-block-color': subBlock.color } : {}"
+            :class="['form_sub_block', { 'form_sub_block--unstyled': !formSubBlocksEnabled }]"
+            :style="subBlock.color && formSubBlocksEnabled ? { '--sub-block-color': subBlock.color } : {}"
           >
             <div v-if="subBlock.title" class="form_sub_block__title">
               {{ subBlock.title }}
@@ -86,6 +86,14 @@ export default class FormGridBlock extends Vue {
   @Prop({ type: Boolean, default: false }) firstLevel!: boolean
   @Prop({ type: Boolean, default: false }) hasNoContent!: boolean
   @Prop({ type: Boolean, default: false }) singleUserViewSection!: boolean
+
+  get formSubBlocksEnabled(): boolean {
+    return this.$store.state.settings.current.getEntry(
+      'form_sub_blocks',
+      Boolean,
+      true,
+    )
+  }
 }
 </script>
 
@@ -159,11 +167,18 @@ export default class FormGridBlock extends Vue {
 
 .form_sub_block {
   border: 1px solid var(--default-borderColor);
-  background: var(--sub-block-color, var(--backgroundColor)) !important;
   border-radius: 1.5rem;
-  background: var(--backgroundColor);
+  background: var(--sub-block-color, var(--backgroundColor)) !important;
   padding: 1.5rem;
   margin-bottom: 0.75rem;
+
+  &.form_sub_block--unstyled {
+    border: none;
+    border-radius: 0;
+    background: transparent !important;
+    padding: 0;
+    margin-bottom: 0;
+  }
 
   @include mobile {
     padding: 1rem 0.75rem 0.75rem 0.75rem;
