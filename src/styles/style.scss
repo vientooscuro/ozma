@@ -764,8 +764,8 @@ html[data-theme-style='dark-glass'] .modal-content {
   border-radius: 20px;
   background: var(--panel-bg);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(22px) saturate(135%);
-  -webkit-backdrop-filter: blur(22px) saturate(135%);
+  backdrop-filter: blur(40px) saturate(140%);
+  -webkit-backdrop-filter: blur(40px) saturate(140%);
   animation: glass-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -881,8 +881,8 @@ html[data-theme-style='dark-glass'] .popper {
   border-radius: 20px;
   background: var(--panel-bg);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(22px) saturate(135%);
-  -webkit-backdrop-filter: blur(22px) saturate(135%);
+  backdrop-filter: blur(40px) saturate(140%);
+  -webkit-backdrop-filter: blur(40px) saturate(140%);
   animation: none !important;
 }
 
@@ -1016,8 +1016,6 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
   border-color: var(--control-line, var(--line)) !important;
   background: var(--surface) !important;
   color: var(--ink) !important;
-  backdrop-filter: blur(12px) saturate(130%);
-  -webkit-backdrop-filter: blur(12px) saturate(130%);
 }
 
 #app[data-theme-style='light-glass'] .form-control:focus,
@@ -1077,8 +1075,6 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
     box-shadow 0.5s ease,
     background 0.5s ease,
     border-color 0.5s ease;
-  backdrop-filter: blur(12px) saturate(130%);
-  -webkit-backdrop-filter: blur(12px) saturate(130%);
 }
 
 #app[data-theme-style='light-glass'] .btn:hover:not(:disabled),
