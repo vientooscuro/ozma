@@ -193,9 +193,7 @@ import {
 import {
   GridElement,
   IGridInput,
-  IGridSection,
   IGridSubBlock,
-  IGridSectionWithSubBlocks,
 } from '@/components/form/FormGrid.vue'
 import type { Button } from '@/components/buttons/buttons'
 import ButtonItem from '@/components/buttons/ButtonItem.vue'
@@ -825,7 +823,7 @@ export default class UserViewForm extends mixins<
       const subBlocks: IGridSubBlock<FormElement>[] = []
       let currentKey = -2 // sentinel: no active group
       let currentElements: IGridInput<FormElement>[] = []
-      let currentTitle: string | undefined = undefined
+      let currentTitle: string | undefined
 
       for (const entry of collector.elements) {
         const key = entry.subBlock ?? -1
