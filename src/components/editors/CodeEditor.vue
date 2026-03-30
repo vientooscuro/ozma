@@ -257,6 +257,12 @@ const setupOzmaFunqlLanguage = (): void => {
       ozmaFunqlLanguageId,
       ozmaFunqlMonarch,
     )
+    monaco.languages.setLanguageConfiguration(ozmaFunqlLanguageId, {
+      comments: {
+        lineComment: '--',
+        blockComment: ['/*', '*/'],
+      },
+    })
     ozmaFunqlProviderInitialized = true
   }
 }
