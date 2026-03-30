@@ -278,7 +278,7 @@ export default class AppHeader extends Vue {
   }
 
   private get formSubBlocksEnabled(): boolean {
-    return this.currentSettings.getEntry('form_sub_blocks', Boolean, true)
+    return this.currentSettings.getEntry('form_sub_blocks', Boolean, false)
   }
 
   private toggleFormSubBlocks() {

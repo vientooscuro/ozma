@@ -1077,7 +1077,7 @@ export default class UserViewForm extends mixins<
     return this.$store.state.settings.current.getEntry(
       'form_sub_blocks',
       Boolean,
-      true,
+      false,
     )
   }
 }

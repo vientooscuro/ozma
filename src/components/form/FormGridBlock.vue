@@ -91,7 +91,7 @@ export default class FormGridBlock extends Vue {
     return this.$store.state.settings.current.getEntry(
       'form_sub_blocks',
       Boolean,
-      true,
+      false,
     )
   }
 }
