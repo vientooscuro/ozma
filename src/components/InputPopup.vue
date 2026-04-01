@@ -164,7 +164,7 @@ export default class InputPopup extends Vue {
 
   .popup-inner-slot {
     flex: 1 1;
-    height: 100%;
+    min-height: 0;
     overflow: auto;
   }
 }
