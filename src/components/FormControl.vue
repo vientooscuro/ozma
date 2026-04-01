@@ -49,6 +49,7 @@
       :empty="valueIsNull"
       @close-modal-input="$emit('close-modal-input')"
       @focus="onFocus"
+      @blur="onBlur"
     >
       <template #default="iSlot">
         <Errorbox v-if="inputType.name === 'error'" :message="inputType.text" />
