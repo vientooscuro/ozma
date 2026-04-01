@@ -51,7 +51,7 @@
           <slot :mode="mode" :isOpen="show" />
         </div>
         <!-- eslint-enable vue/no-deprecated-slot-attribute -->
-        <div class="popper popup">
+        <div class="popper popup" :style="popupStyle">
           <div class="popup-inner-slot">
             <slot name="inner" />
           </div>
@@ -77,6 +77,15 @@ export default class InputPopup extends Vue {
   @Prop({ validator: isOptionalUserString }) label!: UserString | undefined
   @Prop({ type: Boolean, default: false }) show!: boolean
   @Prop({ type: Object, default: () => {} }) popperOptions!: object
+  @Prop({ type: String, default: '40rem' }) popupWidth!: string
+  @Prop({ type: String, default: '19rem' }) popupHeight!: string
+
+  get popupStyle(): Record<string, string> {
+    return {
+      width: this.popupWidth,
+      height: this.popupHeight,
+    }
+  }
 
   get mode(): Mode {
     return this.$isMobile ? 'modal' : 'popup'
@@ -147,10 +156,9 @@ export default class InputPopup extends Vue {
   box-shadow: 0px 3px 12px 0px rgba(0, 0, 0, 0.08);
   border: 1px solid #efefef;
   border-radius: 0.5rem;
-  width: 20rem;
   max-width: 98%;
-  height: 19rem;
   max-height: 80vh;
+  overflow: hidden;
   resize: both;
   font-size: 1rem;
 
