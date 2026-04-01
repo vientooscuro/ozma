@@ -78,17 +78,23 @@ export default class InputPopup extends Vue {
   @Prop({ validator: isOptionalUserString }) label!: UserString | undefined
   @Prop({ type: Boolean, default: false }) show!: boolean
   @Prop({ type: Object, default: () => {} }) popperOptions!: object
-  @Prop({ type: String, default: '40rem' }) popupWidth!: string
+  @Prop({ type: String, default: '20rem' }) popupMinWidth!: string
+  @Prop({ type: String, default: '40rem' }) popupMaxWidth!: string
   @Prop({ type: String, default: '19rem' }) popupHeight!: string
 
   private resizedWidth: string | null = null
   private resizedHeight: string | null = null
 
   get popupStyle(): Record<string, string> {
-    return {
-      width: this.resizedWidth ?? this.popupWidth,
+    const style: Record<string, string> = {
       height: this.resizedHeight ?? this.popupHeight,
+      'min-width': this.popupMinWidth,
+      'max-width': this.popupMaxWidth,
     }
+    if (this.resizedWidth) {
+      style.width = this.resizedWidth
+    }
+    return style
   }
 
   onResizeStart(e: MouseEvent) {
@@ -189,7 +195,7 @@ export default class InputPopup extends Vue {
   box-shadow: 0px 3px 12px 0px rgba(0, 0, 0, 0.08);
   border: 1px solid #efefef;
   border-radius: 0.5rem;
-  max-width: 98%;
+  width: max-content;
   max-height: 80vh;
   overflow: hidden;
   font-size: 1rem;
