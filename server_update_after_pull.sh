@@ -54,6 +54,15 @@ ui_changed_in_pull() {
     '^(src/|public/|package\.json|yarn\.lock|\.yarnrc\.yml|\.yarn/|docker/Dockerfile\.ozma|docker/Caddyfile|vue\.config\.js|tsconfig\.json)'
 }
 
+deps_changed_in_pull() {
+  if [[ -z "$PRE_PULL_SHA" || -z "$POST_PULL_SHA" || "$PRE_PULL_SHA" == "$POST_PULL_SHA" ]]; then
+    return 1
+  fi
+
+  git diff --name-only "$PRE_PULL_SHA" "$POST_PULL_SHA" | grep -Eq \
+    '^(package\.json|yarn\.lock|\.yarnrc\.yml|\.yarn/)'
+}
+
 for arg in "$@"; do
   case "$arg" in
     --only_ui)
@@ -96,7 +105,7 @@ if [[ "$UI_BUILD_MODE" == "local" ]]; then
   require_cmd yarn
 fi
 
-if [[ "$SKIP_GIT_PULL" != true ]]; then
+if [[ "$SKIP_GIT_PULL" != true && "$MODE" != "db" ]]; then
   PRE_PULL_SHA="$(git rev-parse HEAD)"
   log "git pull"
   git pull --ff-only
@@ -107,8 +116,12 @@ else
 fi
 
 log "docker pull ghcr images"
-try_pull_image ghcr.io/vientooscuro/ozma:master
-try_pull_image ghcr.io/vientooscuro/ozmadb:master
+if [[ "$MODE" != "db" ]]; then
+  try_pull_image ghcr.io/vientooscuro/ozma:master
+fi
+if [[ "$MODE" != "ui" ]]; then
+  try_pull_image ghcr.io/vientooscuro/ozmadb:master
+fi
 
 DO_UI=false
 DO_DB=false
@@ -128,8 +141,13 @@ esac
 if [[ "$DO_UI" == true ]]; then
   if [[ "$UI_BUILD_MODE" == "local" ]]; then
     if [[ "$FORCE_UI_LOCAL_BUILD" == true ]] || ui_changed_in_pull; then
+      if [[ "$FORCE_UI_LOCAL_BUILD" == true ]] || deps_changed_in_pull; then
+        log "yarn install (deps changed)"
+        YARN_NODE_LINKER=node-modules yarn install --immutable --inline-builds
+      else
+        log "deps unchanged, skip yarn install"
+      fi
       log "local UI build with yarn"
-      YARN_NODE_LINKER=node-modules yarn install --immutable
       YARN_NODE_LINKER=node-modules yarn build
     else
       log "UI files unchanged by pull, skip yarn build"

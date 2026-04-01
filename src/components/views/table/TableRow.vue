@@ -193,7 +193,7 @@ export default class TableRow extends Vue {
 }
 
 td {
-  vertical-align: var(--td-vertical-align, top);
+  vertical-align: var(--td-vertical-align, middle);
   background-color: var(--cell-backgroundColor, var(--table-backgroundColor));
   overflow: hidden;
   color: var(--cell-foregroundColor, var(--table-foregroundColor));
