@@ -51,10 +51,11 @@
           <slot :mode="mode" :isOpen="show" />
         </div>
         <!-- eslint-enable vue/no-deprecated-slot-attribute -->
-        <div class="popper popup" :style="popupStyle">
+        <div ref="popupEl" class="popper popup" :style="popupStyle">
           <div class="popup-inner-slot">
             <slot name="inner" />
           </div>
+          <div class="resize-handle" @mousedown.prevent.stop="onResizeStart" />
         </div>
       </popper>
     </template>
@@ -80,11 +81,37 @@ export default class InputPopup extends Vue {
   @Prop({ type: String, default: '40rem' }) popupWidth!: string
   @Prop({ type: String, default: '19rem' }) popupHeight!: string
 
+  private resizedWidth: string | null = null
+  private resizedHeight: string | null = null
+
   get popupStyle(): Record<string, string> {
     return {
-      width: this.popupWidth,
-      height: this.popupHeight,
+      width: this.resizedWidth ?? this.popupWidth,
+      height: this.resizedHeight ?? this.popupHeight,
     }
+  }
+
+  onResizeStart(e: MouseEvent) {
+    const el = this.$refs.popupEl as HTMLElement | undefined
+    if (!el) return
+
+    const startX = e.clientX
+    const startY = e.clientY
+    const startW = el.offsetWidth
+    const startH = el.offsetHeight
+
+    const onMouseMove = (ev: MouseEvent) => {
+      this.resizedWidth = `${startW + (ev.clientX - startX)}px`
+      this.resizedHeight = `${startH + (ev.clientY - startY)}px`
+    }
+
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('mouseup', onMouseUp)
+    }
+
+    document.addEventListener('mousemove', onMouseMove)
+    document.addEventListener('mouseup', onMouseUp)
   }
 
   get mode(): Mode {
@@ -105,6 +132,11 @@ export default class InputPopup extends Vue {
   async onShow(newValue: boolean) {
     if (newValue === this.isVisible) {
       return
+    }
+
+    if (!newValue) {
+      this.resizedWidth = null
+      this.resizedHeight = null
     }
 
     await nextRender()
@@ -150,6 +182,7 @@ export default class InputPopup extends Vue {
 }
 
 .popup {
+  position: relative;
   display: flex;
   flex-direction: column;
   z-index: 1002;
@@ -159,13 +192,32 @@ export default class InputPopup extends Vue {
   max-width: 98%;
   max-height: 80vh;
   overflow: hidden;
-  resize: both;
   font-size: 1rem;
 
   .popup-inner-slot {
     flex: 1 1;
     min-height: 0;
     overflow: auto;
+  }
+
+  .resize-handle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 16px;
+    height: 16px;
+    cursor: nwse-resize;
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: 3px;
+      bottom: 3px;
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid rgba(0, 0, 0, 0.2);
+      border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    }
   }
 }
 
