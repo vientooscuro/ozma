@@ -191,4 +191,7 @@ else
   docker compose ps ozmadb ozmadb-post-migration
 fi
 
+log "pruning unused Docker data..."
+docker system prune -af
+
 log "done"

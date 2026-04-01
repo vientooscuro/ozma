@@ -223,4 +223,7 @@ else
   docker compose ps ozma
 fi
 
+log "Pruning unused Docker data..."
+docker system prune -af
+
 log "Done."
