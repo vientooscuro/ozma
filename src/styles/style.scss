@@ -1323,6 +1323,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td:first-child {
   border-left: 1px solid var(--glass-row-border) !important;
   border-radius: 14px 0 0 14px !important;
+  overflow: hidden;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td:first-child::before {
@@ -1332,6 +1333,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td:last-child {
   border-right: 1px solid var(--glass-row-border) !important;
   border-radius: 0 14px 14px 0 !important;
+  overflow: hidden;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td:last-child::before {
@@ -1371,6 +1373,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .custom-table tbody tr td:first-child {
   border-left: 1px solid var(--glass-row-border) !important;
   border-radius: 14px 0 0 14px !important;
+  overflow: hidden;
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td:first-child::before {
@@ -1380,6 +1383,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .custom-table tbody tr td:last-child {
   border-right: 1px solid var(--glass-row-border) !important;
   border-radius: 0 14px 14px 0 !important;
+  overflow: hidden;
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td:last-child::before {
@@ -1403,10 +1407,21 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   --glass-row-border: rgba(33, 133, 160, 0.22);
 }
 
-/* ── Glass table: option chip pill shape ── */
+/* ── Glass table: option chip pill shape ──
+   Default option-variant (reference fields) get no background in glass table —
+   just text. Only explicitly coloured variants (amount_income, warning, etc.) keep
+   their chip appearance but with pill shape. ── */
 
-#app[data-theme-style='dark-glass'] .custom-table .option,
-#app[data-theme-style='light-glass'] .custom-table .option {
+#app[data-theme-style='dark-glass'] .custom-table .option.option-variant,
+#app[data-theme-style='light-glass'] .custom-table .option.option-variant {
+  background: transparent;
+  border-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#app[data-theme-style='dark-glass'] .custom-table .option:not(.option-variant),
+#app[data-theme-style='light-glass'] .custom-table .option:not(.option-variant) {
   border-radius: 999px;
 }
 
