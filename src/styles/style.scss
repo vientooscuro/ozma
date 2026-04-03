@@ -627,7 +627,7 @@ html[data-theme-style='dark-glass'] {
   --card: #0b1623;
   --ink: #e7ecef;
   --muted: #95a7b6;
-  --accent: #59d6cf;
+  --accent: #4fd6be;
   --accent-2: #f6b941;
   --line: rgb(140 176 200 / 14%);
   --control-line: rgb(140 176 200 / 10%);
@@ -639,7 +639,7 @@ html[data-theme-style='dark-glass'] {
   --glow-1: #0b2633;
   --glow-2: #050a18;
   --shape-1: #071427;
-  --shape-2: #0b5e5a;
+  --shape-2: #0b5e52;
   --contact-hover-border: rgb(169 209 232 / 18%);
   --contact-hover-shadow: 0 34px 90px rgb(0 0 0 / 55%);
   --shadow: 0 18px 50px rgb(0 0 0 / 28%);
@@ -1366,8 +1366,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 /* dark-glass — hover */
 #app[data-theme-style='dark-glass'] .custom-table tbody tr:hover {
-  --glass-row-bg: rgba(89, 214, 207, 0.075);
-  --glass-row-border: rgba(89, 214, 207, 0.17);
+  --glass-row-bg: rgba(79, 214, 190, 0.08);
+  --glass-row-border: rgba(79, 214, 190, 0.18);
   --glass-fixed-bg: #0b1e29;
 }
 
@@ -1379,8 +1379,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 /* dark-glass — cursor (active row on tap/click) */
 #app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.cursor),
 #app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.selected) {
-  --glass-row-bg: rgba(89, 214, 207, 0.10);
-  --glass-row-border: rgba(89, 214, 207, 0.22);
+  --glass-row-bg: rgba(79, 214, 190, 0.11);
+  --glass-row-border: rgba(79, 214, 190, 0.24);
   --glass-fixed-bg: #0b1e29;
 }
 
@@ -1393,8 +1393,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 /* dark-glass — selected row */
 #app[data-theme-style='dark-glass'] .custom-table tbody tr.selected,
 #app[data-theme-style='dark-glass'] .custom-table tbody tr.table-tr.selected {
-  --glass-row-bg: rgba(89, 214, 207, 0.09);
-  --glass-row-border: rgba(89, 214, 207, 0.20);
+  --glass-row-bg: rgba(79, 214, 190, 0.10);
+  --glass-row-border: rgba(79, 214, 190, 0.22);
   --glass-fixed-bg: #0b1e29;
 }
 
@@ -1505,8 +1505,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   pointer-events: none;
   background: linear-gradient(
     100deg,
-    rgba(89, 214, 207, 0.22) 0%,
-    rgba(89, 214, 207, 0.08) 100%
+    rgba(79, 214, 190, 0.22) 0%,
+    rgba(79, 214, 190, 0.08) 100%
   );
 }
 
@@ -1632,7 +1632,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 #app[data-theme-style='dark-glass'] .custom-table .table-th {
   background-color: transparent;
-  color: rgba(89, 214, 207, 0.52);
+  color: rgba(79, 214, 190, 0.55);
   font-family: 'Space Grotesk', sans-serif;
   font-size: 0.75rem !important;
   font-weight: 700;
@@ -1654,17 +1654,17 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 /* ── Glass table: resize handle & drag affordance ── */
 
 #app[data-theme-style='dark-glass'] .custom-table .resize-column-thumb {
-  background-color: rgba(89, 214, 207, 0.12);
+  background-color: rgba(79, 214, 190, 0.12);
   width: 4px;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table .resize-column-thumb .material-icons {
-  color: rgba(89, 214, 207, 0.55);
+  color: rgba(79, 214, 190, 0.55);
   font-size: 0.7rem;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table th .table-th .material-icons {
-  color: rgba(89, 214, 207, 0.45);
+  color: rgba(79, 214, 190, 0.45);
 }
 
 #app[data-theme-style='light-glass'] .custom-table .resize-column-thumb {
@@ -1683,7 +1683,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 /* Column drop-target indicator */
 #app[data-theme-style='dark-glass'] .custom-table th.column-drop-target {
-  outline-color: rgba(89, 214, 207, 0.6);
+  outline-color: rgba(79, 214, 190, 0.6);
 }
 
 #app[data-theme-style='light-glass'] .custom-table th.column-drop-target {
@@ -1697,11 +1697,11 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 }
 
 #app[data-theme-style='dark-glass'] .custom-table.show-vertical-borders tbody tr:hover td + td {
-  border-left-color: rgba(89, 214, 207, 0.13);
+  border-left-color: rgba(79, 214, 190, 0.14);
 }
 
 #app[data-theme-style='dark-glass'] .custom-table.show-vertical-borders th {
-  border-right: 1px solid rgba(89, 214, 207, 0.10);
+  border-right: 1px solid rgba(79, 214, 190, 0.10);
 }
 
 #app[data-theme-style='dark-glass'] .custom-table.show-vertical-borders th:last-child {
@@ -1743,7 +1743,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 /* ── Fixed column shadow border ── */
 
 #app[data-theme-style='dark-glass'] .custom-table.show-fixed-column-border .last-fixed-cell {
-  border-right: 1px solid rgba(89, 214, 207, 0.15);
+  border-right: 1px solid rgba(79, 214, 190, 0.16);
 }
 
 #app[data-theme-style='light-glass'] .custom-table.show-fixed-column-border .last-fixed-cell {
