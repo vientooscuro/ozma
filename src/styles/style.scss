@@ -1531,13 +1531,13 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .custom-table .option.option-variant.option-local-variant {
   background: rgba(255, 255, 255, 0.04);
   border-color: rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
+  border-radius: 24px;
 }
 
 #app[data-theme-style='light-glass'] .custom-table .option.option-variant.option-local-variant {
   background: rgba(255, 255, 255, 0.32);
   border-color: rgba(196, 182, 163, 0.18);
-  border-radius: 8px;
+  border-radius: 24px;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table .option:not(.option-variant),
