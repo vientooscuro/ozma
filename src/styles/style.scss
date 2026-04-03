@@ -1479,6 +1479,142 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   color: #1a5f7a;
 }
 
+/* ── Ambient orbs — dark-glass form cards ── */
+#app[data-theme-style='dark-glass'] .first_level_grid_block:not(.has-sub-blocks),
+#app[data-theme-style='dark-glass'] .form_sub_block {
+  position: relative;
+  isolation: isolate;
+}
+
+#app[data-theme-style='dark-glass'] .first_level_grid_block:not(.has-sub-blocks)::before,
+#app[data-theme-style='dark-glass'] .form_sub_block::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 300px;
+  height: 300px;
+  border-radius: 999px;
+  background: rgba(89, 214, 207, 0.07);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app[data-theme-style='dark-glass'] .first_level_grid_block:not(.has-sub-blocks)::after,
+#app[data-theme-style='dark-glass'] .form_sub_block::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: -40px;
+  width: 250px;
+  height: 250px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.09);
+  filter: blur(70px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Ambient orbs — light-glass-warm form cards ── */
+#app[data-theme-style='light-glass'] .first_level_grid_block:not(.has-sub-blocks),
+#app[data-theme-style='light-glass'] .form_sub_block {
+  position: relative;
+  isolation: isolate;
+}
+
+#app[data-theme-style='light-glass'] .first_level_grid_block:not(.has-sub-blocks)::before,
+#app[data-theme-style='light-glass'] .form_sub_block::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  width: 340px;
+  height: 340px;
+  border-radius: 999px;
+  background: rgba(255, 249, 226, 0.75);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app[data-theme-style='light-glass'] .first_level_grid_block:not(.has-sub-blocks)::after,
+#app[data-theme-style='light-glass'] .form_sub_block::after {
+  content: '';
+  position: absolute;
+  bottom: -50px;
+  right: -50px;
+  width: 280px;
+  height: 280px;
+  border-radius: 999px;
+  background: rgba(219, 248, 240, 0.6);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Card content above orbs ── */
+#app[data-theme-style='dark-glass'] .first_level_grid_block:not(.has-sub-blocks) > *,
+#app[data-theme-style='dark-glass'] .form_sub_block > *,
+#app[data-theme-style='light-glass'] .first_level_grid_block:not(.has-sub-blocks) > *,
+#app[data-theme-style='light-glass'] .form_sub_block > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ══════════════════════════════════════════════
+   Enum Chips — glass themes
+   ══════════════════════════════════════════════ */
+#app[data-theme-style='dark-glass'] .chip,
+#app[data-theme-style='light-glass'] .chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-family: 'Space Grotesk', Manrope, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* Neutral chip — dark-glass */
+#app[data-theme-style='dark-glass'] .chip {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Neutral chip — light-glass-warm */
+#app[data-theme-style='light-glass'] .chip {
+  background: rgba(255, 255, 255, 0.55);
+  color: #1f1f1f;
+  border: 1px solid rgba(196, 182, 163, 0.5);
+}
+
+/* Coloured chips — light-glass-warm */
+#app[data-theme-style='light-glass'] .chip.green  { background: rgba(34, 197, 94, 0.15);   color: #16a34a; border-color: rgba(34, 197, 94, 0.3); }
+#app[data-theme-style='light-glass'] .chip.teal   { background: rgba(20, 184, 166, 0.14);  color: #0f766e; border-color: rgba(20, 184, 166, 0.28); }
+#app[data-theme-style='light-glass'] .chip.blue   { background: rgba(59, 130, 246, 0.14);  color: #2563eb; border-color: rgba(59, 130, 246, 0.28); }
+#app[data-theme-style='light-glass'] .chip.indigo { background: rgba(99, 102, 241, 0.14);  color: #4f46e5; border-color: rgba(99, 102, 241, 0.28); }
+#app[data-theme-style='light-glass'] .chip.purple { background: rgba(168, 85, 247, 0.14);  color: #9333ea; border-color: rgba(168, 85, 247, 0.28); }
+#app[data-theme-style='light-glass'] .chip.amber  { background: rgba(245, 158, 11, 0.15);  color: #b45309; border-color: rgba(245, 158, 11, 0.3); }
+#app[data-theme-style='light-glass'] .chip.orange { background: rgba(249, 115, 22, 0.14);  color: #c2410c; border-color: rgba(249, 115, 22, 0.28); }
+#app[data-theme-style='light-glass'] .chip.rose   { background: rgba(244, 63, 94, 0.13);   color: #be123c; border-color: rgba(244, 63, 94, 0.28); }
+#app[data-theme-style='light-glass'] .chip.sky    { background: rgba(14, 165, 233, 0.13);  color: #0369a1; border-color: rgba(14, 165, 233, 0.28); }
+#app[data-theme-style='light-glass'] .chip.lime   { background: rgba(132, 204, 22, 0.13);  color: #4d7c0f; border-color: rgba(132, 204, 22, 0.28); }
+
+/* Coloured chips — dark-glass */
+#app[data-theme-style='dark-glass'] .chip.green  { background: rgba(34, 197, 94, 0.18);   color: #4ade80; border-color: rgba(34, 197, 94, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.teal   { background: rgba(20, 184, 166, 0.18);  color: #2dd4bf; border-color: rgba(20, 184, 166, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.blue   { background: rgba(59, 130, 246, 0.18);  color: #60a5fa; border-color: rgba(59, 130, 246, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.indigo { background: rgba(99, 102, 241, 0.18);  color: #818cf8; border-color: rgba(99, 102, 241, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.purple { background: rgba(168, 85, 247, 0.18);  color: #c084fc; border-color: rgba(168, 85, 247, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.amber  { background: rgba(245, 158, 11, 0.18);  color: #fbbf24; border-color: rgba(245, 158, 11, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.orange { background: rgba(249, 115, 22, 0.18);  color: #fb923c; border-color: rgba(249, 115, 22, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.rose   { background: rgba(244, 63, 94, 0.18);   color: #fb7185; border-color: rgba(244, 63, 94, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.sky    { background: rgba(14, 165, 233, 0.18);  color: #38bdf8; border-color: rgba(14, 165, 233, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.lime   { background: rgba(132, 204, 22, 0.18);  color: #a3e635; border-color: rgba(132, 204, 22, 0.32); }
+
 @supports not (backdrop-filter: blur(1px)) {
   #app[data-theme-style='light-glass'] .header-panel,
   #app[data-theme-style='dark-glass'] .header-panel,
