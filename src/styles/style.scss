@@ -1414,6 +1414,41 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   --cell-backgroundColor: var(--glass-row-bg);
 }
 
+/* ── Glass table: cell selection overlay — gradient fill instead of plain color ── */
+
+/* Replace the default blue inset box-shadow with a teal glow for dark-glass */
+#app[data-theme-style='dark-glass'] .custom-table .table-td.selected {
+  box-shadow: none !important;
+}
+#app[data-theme-style='dark-glass'] .custom-table .table-td.selected .selection-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(89, 214, 207, 0.18) 0%,
+    rgba(89, 214, 207, 0.08) 100%
+  ) !important;
+  opacity: 1 !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#app[data-theme-style='light-glass'] .custom-table .table-td.selected {
+  box-shadow: none !important;
+}
+#app[data-theme-style='light-glass'] .custom-table .table-td.selected .selection-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(33, 133, 160, 0.18) 0%,
+    rgba(33, 133, 160, 0.07) 100%
+  ) !important;
+  opacity: 1 !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 /* ── Glass table: option chip pill shape ──
    Default option-variant (reference fields) get no background in glass table —
    just text. Only explicitly coloured variants (amount_income, warning, etc.) keep
