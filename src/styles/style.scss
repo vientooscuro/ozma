@@ -973,8 +973,8 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 #app[data-theme-style='dark-glass'] .table-wrapper.root {
   border-color: var(--panel-border);
   background-color: transparent !important;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 #app[data-theme-style='light-glass'] .root-wrapper,
@@ -1312,6 +1312,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .custom-table tbody tr {
   --glass-row-bg: rgba(255, 255, 255, 0.012);
   --glass-row-border: rgba(255, 255, 255, 0.03);
+  background: var(--glass-row-bg);
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td {
@@ -1320,8 +1321,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
      the inherited value from tr. We override --backgroundColor directly on td
      to force the glass row bg — variant chips override this at a more specific
      level via their own variant class on the inner .option element. */
-  --backgroundColor: var(--glass-row-bg);
-  --cell-backgroundColor: var(--glass-row-bg);
+  --backgroundColor: transparent;
+  --cell-backgroundColor: transparent;
   background: transparent !important;
   border-top: 1px solid var(--glass-row-border) !important;
   border-bottom: 1px solid var(--glass-row-border) !important;
@@ -1357,8 +1358,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr:hover td {
-  --backgroundColor: var(--glass-row-bg);
-  --cell-backgroundColor: var(--glass-row-bg);
+  --backgroundColor: transparent;
+  --cell-backgroundColor: transparent;
 }
 
 /* dark-glass — cursor (active row on tap/click) */
@@ -1370,8 +1371,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.cursor) td,
 #app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.selected) td {
-  --backgroundColor: var(--glass-row-bg);
-  --cell-backgroundColor: var(--glass-row-bg);
+  --backgroundColor: transparent;
+  --cell-backgroundColor: transparent;
 }
 
 /* dark-glass — selected row */
@@ -1383,19 +1384,20 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr.selected td,
 #app[data-theme-style='dark-glass'] .custom-table tbody tr.table-tr.selected td {
-  --backgroundColor: var(--glass-row-bg);
-  --cell-backgroundColor: var(--glass-row-bg);
+  --backgroundColor: transparent;
+  --cell-backgroundColor: transparent;
 }
 
 /* light-glass — row variables */
 #app[data-theme-style='light-glass'] .custom-table tbody tr {
   --glass-row-bg: rgba(255, 255, 255, 0.22);
   --glass-row-border: rgba(196, 182, 163, 0.18);
+  background: var(--glass-row-bg);
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td {
-  --backgroundColor: var(--glass-row-bg);
-  --cell-backgroundColor: var(--glass-row-bg);
+  --backgroundColor: transparent;
+  --cell-backgroundColor: transparent;
   background: transparent !important;
   border-top: 1px solid var(--glass-row-border) !important;
   border-bottom: 1px solid var(--glass-row-border) !important;
@@ -1426,12 +1428,13 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 /* light-glass — hover */
 #app[data-theme-style='light-glass'] .custom-table tbody tr:hover {
+  --glass-row-bg: rgba(33, 133, 160, 0.07);
   --glass-row-border: rgba(33, 133, 160, 0.22);
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr:hover td {
-  --backgroundColor: rgba(33, 133, 160, 0.07);
-  --cell-backgroundColor: rgba(33, 133, 160, 0.07);
+  --backgroundColor: transparent;
+  --cell-backgroundColor: transparent;
 }
 
 /* light-glass — cursor */
@@ -1443,8 +1446,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr:has(td.cursor) td,
 #app[data-theme-style='light-glass'] .custom-table tbody tr:has(td.selected) td {
-  --backgroundColor: var(--glass-row-bg);
-  --cell-backgroundColor: var(--glass-row-bg);
+  --backgroundColor: transparent;
+  --cell-backgroundColor: transparent;
 }
 
 /* light-glass — selected row */
@@ -1456,8 +1459,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr.selected td,
 #app[data-theme-style='light-glass'] .custom-table tbody tr.table-tr.selected td {
-  --backgroundColor: var(--glass-row-bg);
-  --cell-backgroundColor: var(--glass-row-bg);
+  --backgroundColor: transparent;
+  --cell-backgroundColor: transparent;
 }
 
 /* Accent gradient on the active cell itself */
@@ -1528,8 +1531,9 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 /* select-row-cell and add-entry-cell are rendered by TableRow.vue (not TableCell).
    They are position:sticky (fixed-cell) so scrolling content passes behind them.
-   Strategy: opaque --bg base hides scrolling content, then ::before adds the same
-   semi-transparent --glass-row-bg tint on top → visually matches data cells. */
+   Strategy: transparent bg + backdrop-filter blur on cell, then ::before adds the same
+   semi-transparent tint on top → visually matches data fixed-cells.
+   With padding: 0 on wrapper, sticky cells sit at left: 0 — no gap to cover. */
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td.select-row-cell,
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td.add-entry-cell,
 #app[data-theme-style='light-glass'] .custom-table tbody tr td.select-row-cell,
@@ -1539,6 +1543,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
+
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td.select-row-cell::before,
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td.add-entry-cell::before,
