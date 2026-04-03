@@ -194,15 +194,14 @@ if [[ "$BUILD_UI" == true ]] && [[ -n "$UI_BRANCH" ]] && [[ "$NO_REBUILD" != tru
     : # already on the requested branch, use ROOT_DIR as-is
   else
     # Check if the branch is checked out in a worktree
-    WORKTREE_PATH="$(
-      current_wt=""
-      while IFS= read -r line; do
-        case "$line" in
-          "worktree "*) current_wt="${line#worktree }" ;;
-          "branch refs/heads/$UI_BRANCH") echo "$current_wt"; break ;;
-        esac
-      done < <(git worktree list --porcelain)
-    )"
+    WORKTREE_PATH=""
+    wt_current=""
+    while IFS= read -r wt_line; do
+      case "$wt_line" in
+        "worktree "*) wt_current="${wt_line#worktree }" ;;
+        "branch refs/heads/$UI_BRANCH") WORKTREE_PATH="$wt_current"; break ;;
+      esac
+    done < <(git worktree list --porcelain)
     if [[ -n "$WORKTREE_PATH" ]]; then
       log "Branch '$UI_BRANCH' is checked out in worktree at '$WORKTREE_PATH'. Using it as build context."
       UI_BUILD_CONTEXT="$WORKTREE_PATH"
