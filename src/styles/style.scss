@@ -1054,7 +1054,7 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 /* ── Form inputs — dark-glass ── */
 #app[data-theme-style='dark-glass'] .form-control,
 #app[data-theme-style='dark-glass'] .custom-select {
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: var(--cell-backgroundColor) !important;
   border: 1px solid rgba(255, 255, 255, 0.10) !important;
   border-radius: var(--radius-input, 10px) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
@@ -1064,7 +1064,7 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 /* ── Form inputs — light-glass-warm ── */
 #app[data-theme-style='light-glass'] .form-control,
 #app[data-theme-style='light-glass'] .custom-select {
-  background: rgba(255, 255, 255, 0.38) !important;
+  background: var(--cell-backgroundColor) !important;
   border: 1px solid rgba(143, 214, 228, 0.45) !important;
   border-radius: var(--radius-input, 12px) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 1px 4px rgba(28, 23, 15, 0.05) !important;
@@ -1279,16 +1279,16 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 #app[data-theme-style='dark-glass'] .form_inline_block .form-control,
 #app[data-theme-style='dark-glass'] .form_inline_block .custom-select {
-  background: rgb(0 0 0 / 30%) !important;
-  border-color: rgb(255 255 255 / 10%) !important;
-  border-radius: var(--radius-input, 0.75rem) !important;
+  background: var(--cell-backgroundColor) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  border-radius: var(--radius-input, 10px) !important;
 }
 
 #app[data-theme-style='light-glass'] .form_inline_block .form-control,
 #app[data-theme-style='light-glass'] .form_inline_block .custom-select {
-  background: rgb(255 255 255 / 60%) !important;
-  border-color: rgb(196 182 163 / 20%) !important;
-  border-radius: var(--radius-input, 0.75rem) !important;
+  background: var(--cell-backgroundColor) !important;
+  border-color: rgba(143, 214, 228, 0.45) !important;
+  border-radius: var(--radius-input, 12px) !important;
 }
 
 /* ── Form sub-blocks — dark-glass ── */
@@ -1339,19 +1339,19 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   background-color: transparent !important;
 }
 
-/* ── Inputs inside sub-blocks: contrast bg ── */
+/* ── Inputs inside sub-blocks ── */
 #app[data-theme-style='dark-glass'] .form_sub_block .form-control,
 #app[data-theme-style='dark-glass'] .form_sub_block .custom-select {
-  background: rgb(0 0 0 / 30%) !important;
-  border-color: rgb(255 255 255 / 10%) !important;
-  border-radius: var(--radius-input, 0.75rem) !important;
+  background: var(--cell-backgroundColor) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  border-radius: var(--radius-input, 10px) !important;
 }
 
 #app[data-theme-style='light-glass'] .form_sub_block .form-control,
 #app[data-theme-style='light-glass'] .form_sub_block .custom-select {
-  background: rgb(255 255 255 / 60%) !important;
-  border-color: rgb(196 182 163 / 20%) !important;
-  border-radius: var(--radius-input, 0.75rem) !important;
+  background: var(--cell-backgroundColor) !important;
+  border-color: rgba(143, 214, 228, 0.45) !important;
+  border-radius: var(--radius-input, 12px) !important;
 }
 
 /* ── Nested user-views inside sub-blocks: remove extra borders ── */
