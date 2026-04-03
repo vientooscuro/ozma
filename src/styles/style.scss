@@ -1310,8 +1310,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 /* dark-glass — row variables */
 #app[data-theme-style='dark-glass'] .custom-table tbody tr {
-  --glass-row-bg: rgba(255, 255, 255, 0.045);
-  --glass-row-border: rgba(255, 255, 255, 0.055);
+  --glass-row-bg: rgba(255, 255, 255, 0.025);
+  --glass-row-border: rgba(255, 255, 255, 0.04);
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td {
