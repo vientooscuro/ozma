@@ -984,8 +984,8 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 #app[data-theme-style='light-glass'] .custom-table,
 #app[data-theme-style='dark-glass'] .custom-table {
   background: transparent;
-  border-collapse: separate;
-  border-spacing: 0 6px;
+  border-collapse: separate !important;
+  border-spacing: 0 6px !important;
 }
 
 #app[data-theme-style='light-glass'] .table-th,
@@ -1296,110 +1296,111 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 }
 
 /* ── Glass table: floating rows ──
-   :first-child / :last-child intentionally targets the outermost td in the row,
-   which may be the selection checkbox or link column when those are enabled.
-   This is correct design: the entire row (including fixed utility columns) forms
-   one pill shape. ── */
+   All tbody td have .cell-alpha-blur which renders a ::before pseudo-element
+   using var(--cell-backgroundColor). We override that variable on the tr so the
+   ::before picks up the glass colour. border-radius is set on both the td AND its
+   ::before so fixed/alpha-blur cells also get rounded corners.
+   :first-child / :last-child covers the full row pill including utility columns
+   (checkbox, link) — this is intentional. ── */
+
+/* dark-glass — row variables */
+#app[data-theme-style='dark-glass'] .custom-table tbody tr {
+  --glass-row-bg: rgba(255, 255, 255, 0.045);
+  --glass-row-border: rgba(255, 255, 255, 0.055);
+}
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td {
-  background: rgba(255, 255, 255, 0.045);
-  border-top: 1px solid rgba(255, 255, 255, 0.055);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
-  border-left: none;
-  border-right: none;
+  --cell-backgroundColor: var(--glass-row-bg);
+  --table-backgroundColor: var(--glass-row-bg);
+  background: var(--glass-row-bg) !important;
+  border-top: 1px solid var(--glass-row-border) !important;
+  border-bottom: 1px solid var(--glass-row-border) !important;
+  border-left: none !important;
+  border-right: none !important;
   color: #e7ecef;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td:first-child {
-  border-left: 1px solid rgba(255, 255, 255, 0.055);
+  border-left: 1px solid var(--glass-row-border) !important;
+  border-radius: 14px 0 0 14px !important;
+}
+
+#app[data-theme-style='dark-glass'] .custom-table tbody tr td:first-child::before {
   border-radius: 14px 0 0 14px;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td:last-child {
-  border-right: 1px solid rgba(255, 255, 255, 0.055);
+  border-right: 1px solid var(--glass-row-border) !important;
+  border-radius: 0 14px 14px 0 !important;
+}
+
+#app[data-theme-style='dark-glass'] .custom-table tbody tr td:last-child::before {
   border-radius: 0 14px 14px 0;
 }
 
-#app[data-theme-style='dark-glass'] .custom-table tbody tr:hover td {
-  background: rgba(89, 214, 207, 0.075);
-  border-top-color: rgba(89, 214, 207, 0.17);
-  border-bottom-color: rgba(89, 214, 207, 0.17);
+/* dark-glass — hover */
+#app[data-theme-style='dark-glass'] .custom-table tbody tr:hover {
+  --glass-row-bg: rgba(89, 214, 207, 0.075);
+  --glass-row-border: rgba(89, 214, 207, 0.17);
 }
 
-#app[data-theme-style='dark-glass'] .custom-table tbody tr:hover td:first-child {
-  border-left-color: rgba(89, 214, 207, 0.17);
+/* dark-glass — selected */
+#app[data-theme-style='dark-glass'] .custom-table tbody tr.selected,
+#app[data-theme-style='dark-glass'] .custom-table tbody tr.table-tr.selected {
+  --glass-row-bg: rgba(89, 214, 207, 0.09);
+  --glass-row-border: rgba(89, 214, 207, 0.20);
 }
 
-#app[data-theme-style='dark-glass'] .custom-table tbody tr:hover td:last-child {
-  border-right-color: rgba(89, 214, 207, 0.17);
-}
-
-#app[data-theme-style='dark-glass'] .custom-table tbody tr.selected td,
-#app[data-theme-style='dark-glass'] .custom-table tbody tr.table-tr.selected td {
-  background: rgba(89, 214, 207, 0.09);
-  border-top-color: rgba(89, 214, 207, 0.20);
-  border-bottom-color: rgba(89, 214, 207, 0.20);
-}
-
-#app[data-theme-style='dark-glass'] .custom-table tbody tr.selected td:first-child,
-#app[data-theme-style='dark-glass'] .custom-table tbody tr.table-tr.selected td:first-child {
-  border-left-color: rgba(89, 214, 207, 0.20);
-}
-
-#app[data-theme-style='dark-glass'] .custom-table tbody tr.selected td:last-child,
-#app[data-theme-style='dark-glass'] .custom-table tbody tr.table-tr.selected td:last-child {
-  border-right-color: rgba(89, 214, 207, 0.20);
+/* light-glass — row variables */
+#app[data-theme-style='light-glass'] .custom-table tbody tr {
+  --glass-row-bg: rgba(255, 255, 255, 0.55);
+  --glass-row-border: rgba(196, 182, 163, 0.22);
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td {
-  background: rgba(255, 255, 255, 0.55);
-  border-top: 1px solid rgba(196, 182, 163, 0.22);
-  border-bottom: 1px solid rgba(196, 182, 163, 0.22);
-  border-left: none;
-  border-right: none;
+  --cell-backgroundColor: var(--glass-row-bg);
+  --table-backgroundColor: var(--glass-row-bg);
+  background: var(--glass-row-bg) !important;
+  border-top: 1px solid var(--glass-row-border) !important;
+  border-bottom: 1px solid var(--glass-row-border) !important;
+  border-left: none !important;
+  border-right: none !important;
   color: #1f1f1f;
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td:first-child {
-  border-left: 1px solid rgba(196, 182, 163, 0.22);
+  border-left: 1px solid var(--glass-row-border) !important;
+  border-radius: 14px 0 0 14px !important;
+}
+
+#app[data-theme-style='light-glass'] .custom-table tbody tr td:first-child::before {
   border-radius: 14px 0 0 14px;
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td:last-child {
-  border-right: 1px solid rgba(196, 182, 163, 0.22);
+  border-right: 1px solid var(--glass-row-border) !important;
+  border-radius: 0 14px 14px 0 !important;
+}
+
+#app[data-theme-style='light-glass'] .custom-table tbody tr td:last-child::before {
   border-radius: 0 14px 14px 0;
 }
 
+/* light-glass — hover */
+#app[data-theme-style='light-glass'] .custom-table tbody tr:hover {
+  --glass-row-bg: rgba(255, 255, 255, 0.85);
+  --glass-row-border: rgba(33, 133, 160, 0.22);
+}
+
 #app[data-theme-style='light-glass'] .custom-table tbody tr:hover td {
-  background: rgba(255, 255, 255, 0.85);
-  border-top-color: rgba(33, 133, 160, 0.22);
-  border-bottom-color: rgba(33, 133, 160, 0.22);
   box-shadow: 0 2px 12px rgba(28, 23, 15, 0.07);
 }
 
-#app[data-theme-style='light-glass'] .custom-table tbody tr:hover td:first-child {
-  border-left-color: rgba(33, 133, 160, 0.22);
-}
-
-#app[data-theme-style='light-glass'] .custom-table tbody tr:hover td:last-child {
-  border-right-color: rgba(33, 133, 160, 0.22);
-}
-
-#app[data-theme-style='light-glass'] .custom-table tbody tr.selected td,
-#app[data-theme-style='light-glass'] .custom-table tbody tr.table-tr.selected td {
-  background: rgba(33, 133, 160, 0.08);
-  border-top-color: rgba(33, 133, 160, 0.22);
-  border-bottom-color: rgba(33, 133, 160, 0.22);
-}
-
-#app[data-theme-style='light-glass'] .custom-table tbody tr.selected td:first-child,
-#app[data-theme-style='light-glass'] .custom-table tbody tr.table-tr.selected td:first-child {
-  border-left-color: rgba(33, 133, 160, 0.22);
-}
-
-#app[data-theme-style='light-glass'] .custom-table tbody tr.selected td:last-child,
-#app[data-theme-style='light-glass'] .custom-table tbody tr.table-tr.selected td:last-child {
-  border-right-color: rgba(33, 133, 160, 0.22);
+/* light-glass — selected */
+#app[data-theme-style='light-glass'] .custom-table tbody tr.selected,
+#app[data-theme-style='light-glass'] .custom-table tbody tr.table-tr.selected {
+  --glass-row-bg: rgba(33, 133, 160, 0.08);
+  --glass-row-border: rgba(33, 133, 160, 0.22);
 }
 
 /* ── Glass table: header th ── */
