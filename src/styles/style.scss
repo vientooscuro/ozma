@@ -1310,8 +1310,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 /* dark-glass — row variables */
 #app[data-theme-style='dark-glass'] .custom-table tbody tr {
-  --glass-row-bg: rgba(255, 255, 255, 0.025);
-  --glass-row-border: rgba(255, 255, 255, 0.04);
+  --glass-row-bg: rgba(255, 255, 255, 0.012);
+  --glass-row-border: rgba(255, 255, 255, 0.03);
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td {
@@ -1426,14 +1426,12 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 /* light-glass — hover */
 #app[data-theme-style='light-glass'] .custom-table tbody tr:hover {
-  --glass-row-bg: rgba(255, 255, 255, 0.85);
   --glass-row-border: rgba(33, 133, 160, 0.22);
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr:hover td {
-  --backgroundColor: var(--glass-row-bg);
-  --cell-backgroundColor: var(--glass-row-bg);
-  box-shadow: 0 2px 12px rgba(28, 23, 15, 0.07);
+  --backgroundColor: rgba(255, 255, 255, 0.85);
+  --cell-backgroundColor: rgba(255, 255, 255, 0.85);
 }
 
 /* light-glass — cursor */
