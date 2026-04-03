@@ -1423,6 +1423,12 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   border: none !important;
 }
 
+/* ── Field row gap — glass themes ── */
+#app[data-theme-style='dark-glass'] .form_grid_block__column:not(:last-child),
+#app[data-theme-style='light-glass'] .form_grid_block__column:not(:last-child) {
+  margin-bottom: 0.5rem !important;
+}
+
 /* ── Required indicator — glass themes ── */
 #app[data-theme-style='dark-glass'] .required-indicator.empty {
   background-color: rgba(255, 120, 100, 0.8) !important;
