@@ -1438,6 +1438,45 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   text-transform: uppercase;
 }
 
+/* ── Glass table: resize handle & drag affordance ── */
+
+#app[data-theme-style='dark-glass'] .custom-table .resize-column-thumb {
+  background-color: rgba(89, 214, 207, 0.12);
+  width: 4px;
+}
+
+#app[data-theme-style='dark-glass'] .custom-table .resize-column-thumb .material-icons {
+  color: rgba(89, 214, 207, 0.55);
+  font-size: 0.7rem;
+}
+
+#app[data-theme-style='dark-glass'] .custom-table th .table-th .material-icons {
+  color: rgba(89, 214, 207, 0.45);
+}
+
+#app[data-theme-style='light-glass'] .custom-table .resize-column-thumb {
+  background-color: rgba(33, 133, 160, 0.10);
+  width: 4px;
+}
+
+#app[data-theme-style='light-glass'] .custom-table .resize-column-thumb .material-icons {
+  color: rgba(33, 133, 160, 0.50);
+  font-size: 0.7rem;
+}
+
+#app[data-theme-style='light-glass'] .custom-table th .table-th .material-icons {
+  color: rgba(33, 133, 160, 0.45);
+}
+
+/* Column drop-target indicator */
+#app[data-theme-style='dark-glass'] .custom-table th.column-drop-target {
+  outline-color: rgba(89, 214, 207, 0.6);
+}
+
+#app[data-theme-style='light-glass'] .custom-table th.column-drop-target {
+  outline-color: rgba(33, 133, 160, 0.5);
+}
+
 @supports not (backdrop-filter: blur(1px)) {
   #app[data-theme-style='light-glass'] .header-panel,
   #app[data-theme-style='dark-glass'] .header-panel,
