@@ -1398,6 +1398,46 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   border-right-color: rgba(33, 133, 160, 0.22);
 }
 
+/* ── Glass table: header th ── */
+
+#app[data-theme-style='dark-glass'] .custom-table th,
+#app[data-theme-style='dark-glass'] .custom-table th.fixed-cell {
+  background: transparent;
+  border-top: none;
+  border-bottom: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+#app[data-theme-style='dark-glass'] .custom-table .table-th {
+  background-color: transparent;
+  color: rgba(89, 214, 207, 0.52);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+#app[data-theme-style='light-glass'] .custom-table th,
+#app[data-theme-style='light-glass'] .custom-table th.fixed-cell {
+  background: transparent;
+  border-top: none;
+  border-bottom: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+#app[data-theme-style='light-glass'] .custom-table .table-th {
+  background-color: transparent;
+  color: #2185a0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 @supports not (backdrop-filter: blur(1px)) {
   #app[data-theme-style='light-glass'] .header-panel,
   #app[data-theme-style='dark-glass'] .header-panel,
