@@ -1389,8 +1389,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 /* light-glass — row variables */
 #app[data-theme-style='light-glass'] .custom-table tbody tr {
-  --glass-row-bg: rgba(255, 255, 255, 0.55);
-  --glass-row-border: rgba(196, 182, 163, 0.22);
+  --glass-row-bg: rgba(255, 255, 255, 0.22);
+  --glass-row-border: rgba(196, 182, 163, 0.18);
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td {
