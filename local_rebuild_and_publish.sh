@@ -186,15 +186,23 @@ if [[ "$BUILD_DB" == true ]]; then
     OzmaUtils/packages.lock.json
 fi
 
-ORIGINAL_BRANCH=""
+UI_BUILD_CONTEXT="$ROOT_DIR"
 if [[ "$BUILD_UI" == true ]] && [[ -n "$UI_BRANCH" ]] && [[ "$NO_REBUILD" != true ]]; then
   require_cmd git
-  ORIGINAL_BRANCH="$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD)"
-  if [[ "$ORIGINAL_BRANCH" == "$UI_BRANCH" ]]; then
-    ORIGINAL_BRANCH=""
+  CURRENT_BRANCH="$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD)"
+  if [[ "$CURRENT_BRANCH" == "$UI_BRANCH" ]]; then
+    : # already on the requested branch, use ROOT_DIR as-is
   else
-    log "Switching to branch '$UI_BRANCH' for UI build (current: '$ORIGINAL_BRANCH')..."
-    git checkout "$UI_BRANCH"
+    # Check if the branch is checked out in a worktree
+    WORKTREE_PATH="$(git worktree list --porcelain | awk '/^worktree /{wt=$2} /^branch refs\/heads\/'"$UI_BRANCH"'$/{print wt}' | head -1)"
+    if [[ -n "$WORKTREE_PATH" ]]; then
+      log "Branch '$UI_BRANCH' is checked out in worktree at '$WORKTREE_PATH'. Using it as build context."
+      UI_BUILD_CONTEXT="$WORKTREE_PATH"
+    else
+      log "Switching to branch '$UI_BRANCH' for UI build (current: '$CURRENT_BRANCH')..."
+      git checkout "$UI_BRANCH"
+      CHECKOUT_DONE=true
+    fi
   fi
 fi
 
@@ -205,14 +213,22 @@ fi
 if [[ "$BUILD_UI" == true ]]; then
   if [[ "$NO_REBUILD" == true ]]; then
     log "Skipping ozma image rebuild (--no_rebuild)."
+  elif [[ "$UI_BUILD_CONTEXT" != "$ROOT_DIR" ]]; then
+    COMPOSE_PROJECT="$(basename "$ROOT_DIR" | tr '[:upper:]' '[:lower:]')"
+    OZMA_IMAGE="${COMPOSE_PROJECT}-ozma"
+    log "Building ozma image '$OZMA_IMAGE' from context: $UI_BUILD_CONTEXT"
+    docker build \
+      -f "$ROOT_DIR/docker/Dockerfile.ozma" \
+      -t "$OZMA_IMAGE" \
+      "$UI_BUILD_CONTEXT"
   else
     docker compose build ozma
   fi
 fi
 
-if [[ -n "$ORIGINAL_BRANCH" ]]; then
-  log "Restoring branch '$ORIGINAL_BRANCH'..."
-  git checkout "$ORIGINAL_BRANCH"
+if [[ "${CHECKOUT_DONE:-false}" == true ]]; then
+  log "Restoring branch '$CURRENT_BRANCH'..."
+  git checkout "$CURRENT_BRANCH"
 fi
 
 log "Publishing changes and restarting containers..."
