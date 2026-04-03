@@ -665,6 +665,28 @@ html[data-theme-style='dark-glass'] {
   --MainTextColorLight: rgba(255, 255, 255, 0.22);
 }
 
+html[data-theme-style='light-glass'] {
+  /* Form design tokens — light-glass-warm */
+  --cell-borderColor: rgba(143, 214, 228, 0.45);
+  --cell-backgroundColor: rgba(255, 255, 255, 0.38);
+  --cell-foregroundColor: #1f1f1f;
+  --cell-foregroundDarkerColor: rgba(111, 106, 98, 0.38);
+  --default-backgroundColor: rgba(255, 255, 255, 0.42);
+  --default-borderColor: rgba(255, 255, 255, 0.75);
+  --default-foregroundColor: #1f1f1f;
+  --default-foregroundDarkerColor: #6f6a62;
+  --FocusBorderColor: rgba(33, 133, 160, 0.5);
+  --radius-input: 12px;
+  --MainTextColor: #1f1f1f;
+  --MainTextColorLight: rgba(111, 106, 98, 0.38);
+
+  /* Aivazovsky sea palette */
+  --sea-deep: #1a5f7a;
+  --sea-mid: #2185a0;
+  --sea-bright: #3db8c8;
+  --sea-foam: rgba(143, 214, 228, 0.45);
+}
+
 #app[data-theme-style='light-glass'],
 #app[data-theme-style='dark-glass'] {
   --MainTextColor: var(--ink);
