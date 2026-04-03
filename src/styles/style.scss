@@ -1297,9 +1297,13 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 /* ── Glass table: floating rows ──
    All tbody td have .cell-alpha-blur which renders a ::before pseudo-element
-   using var(--cell-backgroundColor). We override that variable on the tr so the
-   ::before picks up the glass colour. border-radius is set on both the td AND its
-   ::before so fixed/alpha-blur cells also get rounded corners.
+   using var(--cell-backgroundColor). The .cell-local-variant class maps
+   --backgroundColor → --cell-backgroundColor, so we set --backgroundColor on tr
+   as the row default. Variant classes (amount_income-variant etc.) set
+   --backgroundColor on the td itself, which takes precedence — so coloured chips
+   keep their variant colour while plain cells use the glass row background.
+   border-radius is set on both the td AND its ::before so fixed/alpha-blur cells
+   also get rounded corners.
    :first-child / :last-child covers the full row pill including utility columns
    (checkbox, link) — this is intentional. ── */
 
@@ -1307,12 +1311,13 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .custom-table tbody tr {
   --glass-row-bg: rgba(255, 255, 255, 0.045);
   --glass-row-border: rgba(255, 255, 255, 0.055);
+  /* Set --backgroundColor as default so cell-local-variant picks it up.
+     Variant classes on td override --backgroundColor at td level. */
+  --backgroundColor: var(--glass-row-bg);
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td {
-  --cell-backgroundColor: var(--glass-row-bg);
-  --table-backgroundColor: var(--glass-row-bg);
-  background: var(--glass-row-bg) !important;
+  background: var(--cell-backgroundColor, var(--glass-row-bg)) !important;
   border-top: 1px solid var(--glass-row-border) !important;
   border-bottom: 1px solid var(--glass-row-border) !important;
   border-left: none !important;
@@ -1344,6 +1349,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .custom-table tbody tr:hover {
   --glass-row-bg: rgba(89, 214, 207, 0.075);
   --glass-row-border: rgba(89, 214, 207, 0.17);
+  --backgroundColor: var(--glass-row-bg);
 }
 
 /* dark-glass — selected */
@@ -1351,18 +1357,18 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .custom-table tbody tr.table-tr.selected {
   --glass-row-bg: rgba(89, 214, 207, 0.09);
   --glass-row-border: rgba(89, 214, 207, 0.20);
+  --backgroundColor: var(--glass-row-bg);
 }
 
 /* light-glass — row variables */
 #app[data-theme-style='light-glass'] .custom-table tbody tr {
   --glass-row-bg: rgba(255, 255, 255, 0.55);
   --glass-row-border: rgba(196, 182, 163, 0.22);
+  --backgroundColor: var(--glass-row-bg);
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td {
-  --cell-backgroundColor: var(--glass-row-bg);
-  --table-backgroundColor: var(--glass-row-bg);
-  background: var(--glass-row-bg) !important;
+  background: var(--cell-backgroundColor, var(--glass-row-bg)) !important;
   border-top: 1px solid var(--glass-row-border) !important;
   border-bottom: 1px solid var(--glass-row-border) !important;
   border-left: none !important;
@@ -1394,6 +1400,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .custom-table tbody tr:hover {
   --glass-row-bg: rgba(255, 255, 255, 0.85);
   --glass-row-border: rgba(33, 133, 160, 0.22);
+  --backgroundColor: var(--glass-row-bg);
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr:hover td {
@@ -1405,6 +1412,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .custom-table tbody tr.table-tr.selected {
   --glass-row-bg: rgba(33, 133, 160, 0.08);
   --glass-row-border: rgba(33, 133, 160, 0.22);
+  --backgroundColor: var(--glass-row-bg);
 }
 
 /* ── Glass table: option chip pill shape ──
@@ -1434,13 +1442,9 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 }
 
 /* select-row-cell and add-entry-cell don't have .cell-alpha-blur so background
-   applies directly — but their background-color comes from --table-backgroundColor.
-   We override it so they match the row pill colour. */
+   applies directly — override so they match the row pill colour. */
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td.select-row-cell,
-#app[data-theme-style='dark-glass'] .custom-table tbody tr td.add-entry-cell {
-  background-color: var(--glass-row-bg) !important;
-}
-
+#app[data-theme-style='dark-glass'] .custom-table tbody tr td.add-entry-cell,
 #app[data-theme-style='light-glass'] .custom-table tbody tr td.select-row-cell,
 #app[data-theme-style='light-glass'] .custom-table tbody tr td.add-entry-cell {
   background-color: var(--glass-row-bg) !important;
