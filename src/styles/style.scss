@@ -1333,9 +1333,15 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td:first-child {
-  border-left: 1px solid var(--glass-row-border) !important;
+  border: none !important;
   border-radius: 14px 0 0 14px !important;
   overflow: hidden;
+  background-image:
+    linear-gradient(to right, transparent 14px, var(--glass-row-border) 14px),
+    linear-gradient(to right, transparent 14px, var(--glass-row-border) 14px) !important;
+  background-size: 100% 1px, 100% 1px !important;
+  background-position: top left, bottom left !important;
+  background-repeat: no-repeat !important;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td:first-child::before {
@@ -1343,9 +1349,15 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td:last-child {
-  border-right: 1px solid var(--glass-row-border) !important;
+  border: none !important;
   border-radius: 0 14px 14px 0 !important;
   overflow: hidden;
+  background-image:
+    linear-gradient(to right, var(--glass-row-border) calc(100% - 14px), transparent calc(100% - 14px)),
+    linear-gradient(to right, var(--glass-row-border) calc(100% - 14px), transparent calc(100% - 14px)) !important;
+  background-size: 100% 1px, 100% 1px !important;
+  background-position: top left, bottom left !important;
+  background-repeat: no-repeat !important;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td:last-child::before {
@@ -1412,9 +1424,15 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td:first-child {
-  border-left: 1px solid var(--glass-row-border) !important;
+  border: none !important;
   border-radius: 14px 0 0 14px !important;
   overflow: hidden;
+  background-image:
+    linear-gradient(to right, transparent 14px, var(--glass-row-border) 14px),
+    linear-gradient(to right, transparent 14px, var(--glass-row-border) 14px) !important;
+  background-size: 100% 1px, 100% 1px !important;
+  background-position: top left, bottom left !important;
+  background-repeat: no-repeat !important;
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td:first-child::before {
@@ -1422,9 +1440,15 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td:last-child {
-  border-right: 1px solid var(--glass-row-border) !important;
+  border: none !important;
   border-radius: 0 14px 14px 0 !important;
   overflow: hidden;
+  background-image:
+    linear-gradient(to right, var(--glass-row-border) calc(100% - 14px), transparent calc(100% - 14px)),
+    linear-gradient(to right, var(--glass-row-border) calc(100% - 14px), transparent calc(100% - 14px)) !important;
+  background-size: 100% 1px, 100% 1px !important;
+  background-position: top left, bottom left !important;
+  background-repeat: no-repeat !important;
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td:last-child::before {
