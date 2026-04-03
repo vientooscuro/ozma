@@ -1391,6 +1391,28 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   border: none !important;
 }
 
+/* ── Required indicator — glass themes ── */
+#app[data-theme-style='dark-glass'] .required-indicator.empty {
+  background-color: rgba(255, 120, 100, 0.8) !important;
+  box-shadow: 0 0 6px rgba(255, 120, 100, 0.5) !important;
+  width: 5px !important;
+  height: 5px !important;
+}
+
+#app[data-theme-style='light-glass'] .required-indicator.empty {
+  background-color: rgba(220, 80, 60, 0.7) !important;
+  box-shadow: 0 0 5px rgba(220, 80, 60, 0.28) !important;
+  width: 5px !important;
+  height: 5px !important;
+}
+
+/* ── Disabled indicator — glass themes ── */
+#app[data-theme-style='dark-glass'] .disabled-indicator .material-icons,
+#app[data-theme-style='light-glass'] .disabled-indicator .material-icons {
+  opacity: 0.5;
+  font-size: 1rem;
+}
+
 /* ── Floating label typography — glass themes ── */
 #app[data-theme-style='dark-glass'] .border-label,
 #app[data-theme-style='light-glass'] .border-label {
