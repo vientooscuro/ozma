@@ -1414,39 +1414,36 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   --cell-backgroundColor: var(--glass-row-bg);
 }
 
-/* ── Glass table: cell selection overlay — gradient fill instead of plain color ── */
+/* ── Glass table: row selection — gradient fill via ::after on td ──
+   tr.selected doesn't set .selected on individual td cells, so selection-overlay
+   div is never rendered. Use ::after pseudo-element on td instead. ── */
 
-/* Replace the default blue inset box-shadow with a teal glow for dark-glass */
-#app[data-theme-style='dark-glass'] .custom-table .table-td.selected {
-  box-shadow: none !important;
-}
-#app[data-theme-style='dark-glass'] .custom-table .table-td.selected .selection-overlay {
+#app[data-theme-style='dark-glass'] .custom-table tbody tr.selected td::after,
+#app[data-theme-style='dark-glass'] .custom-table tbody tr.table-tr.selected td::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
   background: linear-gradient(
-    135deg,
-    rgba(89, 214, 207, 0.18) 0%,
-    rgba(89, 214, 207, 0.08) 100%
-  ) !important;
-  opacity: 1 !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
+    100deg,
+    rgba(89, 214, 207, 0.13) 0%,
+    rgba(89, 214, 207, 0.05) 100%
+  );
 }
 
-#app[data-theme-style='light-glass'] .custom-table .table-td.selected {
-  box-shadow: none !important;
-}
-#app[data-theme-style='light-glass'] .custom-table .table-td.selected .selection-overlay {
+#app[data-theme-style='light-glass'] .custom-table tbody tr.selected td::after,
+#app[data-theme-style='light-glass'] .custom-table tbody tr.table-tr.selected td::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
   background: linear-gradient(
-    135deg,
-    rgba(33, 133, 160, 0.18) 0%,
-    rgba(33, 133, 160, 0.07) 100%
-  ) !important;
-  opacity: 1 !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
+    100deg,
+    rgba(33, 133, 160, 0.15) 0%,
+    rgba(33, 133, 160, 0.05) 100%
+  );
 }
 
 /* ── Glass table: option chip pill shape ──
