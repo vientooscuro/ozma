@@ -1525,16 +1525,19 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 }
 
 /* ── Glass table: option chip pill shape ──
-   Default option-variant (reference fields) get no background in glass table —
-   just text. Only explicitly coloured variants (amount_income, warning, etc.) keep
-   their chip appearance but with pill shape. ── */
+   Reference fields with no explicit color get a subtle glass chip.
+   Explicitly coloured variants keep their chip appearance with pill shape. ── */
 
-#app[data-theme-style='dark-glass'] .custom-table .option.option-variant,
-#app[data-theme-style='light-glass'] .custom-table .option.option-variant {
-  background: transparent;
-  border-color: transparent;
-  padding-left: 0;
-  padding-right: 0;
+#app[data-theme-style='dark-glass'] .custom-table .option.option-variant.option-local-variant {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+#app[data-theme-style='light-glass'] .custom-table .option.option-variant.option-local-variant {
+  background: rgba(255, 255, 255, 0.32);
+  border-color: rgba(196, 182, 163, 0.18);
+  border-radius: 8px;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table .option:not(.option-variant),
