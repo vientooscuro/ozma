@@ -1403,6 +1403,27 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   --glass-row-border: rgba(33, 133, 160, 0.22);
 }
 
+/* ── Glass table: vertical padding & utility columns ── */
+
+/* Reduce row height to match design (default is 1rem = 16px, design uses 11px) */
+#app[data-theme-style='dark-glass'] .custom-table tbody .table-td,
+#app[data-theme-style='light-glass'] .custom-table tbody .table-td {
+  --td-vertical-padding: 11px;
+}
+
+/* select-row-cell and add-entry-cell don't have .cell-alpha-blur so background
+   applies directly — but their background-color comes from --table-backgroundColor.
+   We override it so they match the row pill colour. */
+#app[data-theme-style='dark-glass'] .custom-table tbody tr td.select-row-cell,
+#app[data-theme-style='dark-glass'] .custom-table tbody tr td.add-entry-cell {
+  background-color: var(--glass-row-bg) !important;
+}
+
+#app[data-theme-style='light-glass'] .custom-table tbody tr td.select-row-cell,
+#app[data-theme-style='light-glass'] .custom-table tbody tr td.add-entry-cell {
+  background-color: var(--glass-row-bg) !important;
+}
+
 /* ── Glass table: header th ── */
 
 #app[data-theme-style='dark-glass'] .custom-table th,
