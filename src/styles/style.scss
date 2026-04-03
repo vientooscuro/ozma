@@ -1324,13 +1324,21 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 
 #app[data-theme-style='dark-glass'] .form_sub_block__title,
 #app[data-theme-style='light-glass'] .form_sub_block__title {
-  color: var(--muted) !important;
-  font-size: 0.75rem !important;
+  font-family: 'Space Grotesk', Manrope, sans-serif !important;
+  font-size: 9px !important;
   font-weight: 700 !important;
-  letter-spacing: 0.1em !important;
+  letter-spacing: 0.14em !important;
   text-transform: uppercase !important;
   margin-bottom: 1.25rem !important;
   padding-bottom: 0 !important;
+}
+
+#app[data-theme-style='dark-glass'] .form_sub_block__title {
+  color: rgba(89, 214, 207, 0.6) !important;
+}
+
+#app[data-theme-style='light-glass'] .form_sub_block__title {
+  color: #1a5f7a !important;
 }
 
 /* ── border-label inside sub-blocks: use sub-block bg ── */
