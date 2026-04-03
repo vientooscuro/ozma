@@ -1140,6 +1140,11 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
     border-color 0.5s ease;
 }
 
+#app[data-theme-style='light-glass'] .btn,
+#app[data-theme-style='dark-glass'] .btn {
+  border-radius: 999px;
+}
+
 #app[data-theme-style='light-glass'] .btn:hover:not(:disabled),
 #app[data-theme-style='dark-glass'] .btn:hover:not(:disabled),
 #app[data-theme-style='light-glass'] .material-button:hover:not(:disabled),
@@ -1204,13 +1209,40 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
   color: var(--text-soft);
 }
 
-#app[data-theme-style='light-glass'] .save-button,
+/* ── Save button — dark-glass ── */
 #app[data-theme-style='dark-glass'] .save-button,
-#app[data-theme-style='light-glass'] .saving-indicator,
 #app[data-theme-style='dark-glass'] .saving-indicator {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--card);
+  background: linear-gradient(135deg, rgba(89, 214, 207, 0.25), rgba(15, 118, 110, 0.25)) !important;
+  border: 1.5px solid rgba(89, 214, 207, 0.5) !important;
+  border-radius: 999px !important;
+  color: #59d6cf !important;
+  box-shadow: 0 0 20px rgba(89, 214, 207, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ── Save button — light-glass-warm ── */
+#app[data-theme-style='light-glass'] .save-button,
+#app[data-theme-style='light-glass'] .saving-indicator {
+  background: linear-gradient(135deg, #3db8c8 0%, #2185a0 50%, #1a5f7a 100%) !important;
+  border: none !important;
+  border-radius: 999px !important;
+  color: #fff !important;
+  box-shadow: 0 4px 18px rgba(33, 133, 160, 0.35), 0 0 24px rgba(61, 184, 200, 0.15) !important;
+}
+
+/* ── Delete button pill — dark-glass ── */
+#app[data-theme-style='dark-glass'] .btn-outline-danger {
+  background: transparent !important;
+  border: 1px solid rgba(255, 80, 60, 0.25) !important;
+  border-radius: 999px !important;
+  color: rgba(255, 120, 100, 0.7) !important;
+}
+
+/* ── Delete button pill — light-glass-warm ── */
+#app[data-theme-style='light-glass'] .btn-outline-danger {
+  background: transparent !important;
+  border: 1px solid rgba(220, 60, 40, 0.2) !important;
+  border-radius: 999px !important;
+  color: rgba(200, 60, 40, 0.6) !important;
 }
 
 /* ── Overlay ── */
