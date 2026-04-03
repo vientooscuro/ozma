@@ -1295,7 +1295,11 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   border: none !important;
 }
 
-/* ── Glass table: floating rows ── */
+/* ── Glass table: floating rows ──
+   :first-child / :last-child intentionally targets the outermost td in the row,
+   which may be the selection checkbox or link column when those are enabled.
+   This is correct design: the entire row (including fixed utility columns) forms
+   one pill shape. ── */
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td {
   background: rgba(255, 255, 255, 0.045);
