@@ -1328,9 +1328,6 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   border-left: none !important;
   border-right: none !important;
   color: #e7ecef;
-  /* backdrop-filter on every td kills scroll performance — disable in table */
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td:first-child {
@@ -1405,8 +1402,6 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   border-left: none !important;
   border-right: none !important;
   color: #1f1f1f;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td:first-child {
