@@ -1383,6 +1383,34 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   border: none !important;
 }
 
+/* ── Floating label typography — glass themes ── */
+#app[data-theme-style='dark-glass'] .border-label,
+#app[data-theme-style='light-glass'] .border-label {
+  font-family: 'Space Grotesk', Manrope, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background-color: transparent !important;
+}
+
+#app[data-theme-style='dark-glass'] .border-label {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+#app[data-theme-style='light-glass'] .border-label {
+  color: #6f6a62;
+}
+
+/* Focused state */
+#app[data-theme-style='dark-glass'] .increase-z-index.border-label {
+  color: rgba(89, 214, 207, 0.70);
+}
+
+#app[data-theme-style='light-glass'] .increase-z-index.border-label {
+  color: #1a5f7a;
+}
+
 @supports not (backdrop-filter: blur(1px)) {
   #app[data-theme-style='light-glass'] .header-panel,
   #app[data-theme-style='dark-glass'] .header-panel,
