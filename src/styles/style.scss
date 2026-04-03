@@ -1442,14 +1442,20 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   -webkit-backdrop-filter: none;
 }
 
+#app[data-theme-style='dark-glass'] .custom-table .table-th .column-capture,
+#app[data-theme-style='light-glass'] .custom-table .table-th .column-capture {
+  text-transform: uppercase !important;
+  letter-spacing: 0.10em !important;
+}
+
 #app[data-theme-style='dark-glass'] .custom-table .table-th {
   background-color: transparent;
   color: rgba(89, 214, 207, 0.52);
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 9.5px;
+  font-size: 0.75rem !important;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.10em !important;
+  text-transform: uppercase !important;
 }
 
 #app[data-theme-style='light-glass'] .custom-table th,
@@ -1465,10 +1471,10 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   background-color: transparent;
   color: #2185a0;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 9.5px;
+  font-size: 0.75rem !important;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.10em !important;
+  text-transform: uppercase !important;
 }
 
 /* ── Glass table: resize handle & drag affordance ── */
