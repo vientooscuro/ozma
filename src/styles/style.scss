@@ -984,6 +984,8 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 #app[data-theme-style='light-glass'] .custom-table,
 #app[data-theme-style='dark-glass'] .custom-table {
   background: transparent;
+  border-collapse: separate;
+  border-spacing: 0 6px;
 }
 
 #app[data-theme-style='light-glass'] .table-th,
