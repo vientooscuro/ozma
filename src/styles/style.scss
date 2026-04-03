@@ -1526,13 +1526,40 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 }
 
 
-/* select-row-cell and add-entry-cell are rendered by TableRow.vue (not TableCell)
-   — keep them transparent to match the glass row. */
+/* select-row-cell and add-entry-cell are rendered by TableRow.vue (not TableCell).
+   They are position:sticky (fixed-cell) so scrolling content passes behind them.
+   Strategy: opaque --bg base hides scrolling content, then ::before adds the same
+   semi-transparent --glass-row-bg tint on top → visually matches data cells. */
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td.select-row-cell,
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td.add-entry-cell,
 #app[data-theme-style='light-glass'] .custom-table tbody tr td.select-row-cell,
 #app[data-theme-style='light-glass'] .custom-table tbody tr td.add-entry-cell {
   background: transparent !important;
+  isolation: isolate;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+#app[data-theme-style='dark-glass'] .custom-table tbody tr td.select-row-cell::before,
+#app[data-theme-style='dark-glass'] .custom-table tbody tr td.add-entry-cell::before,
+#app[data-theme-style='light-glass'] .custom-table tbody tr td.select-row-cell::before,
+#app[data-theme-style='light-glass'] .custom-table tbody tr td.add-entry-cell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: var(--cell-backgroundColor, var(--glass-row-bg));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+#app[data-theme-style='dark-glass'] .custom-table tbody tr td.select-row-cell > *,
+#app[data-theme-style='dark-glass'] .custom-table tbody tr td.add-entry-cell > *,
+#app[data-theme-style='light-glass'] .custom-table tbody tr td.select-row-cell > *,
+#app[data-theme-style='light-glass'] .custom-table tbody tr td.add-entry-cell > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Glass table: header th ── */
