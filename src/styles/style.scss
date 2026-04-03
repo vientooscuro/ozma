@@ -1403,6 +1403,13 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   --glass-row-border: rgba(33, 133, 160, 0.22);
 }
 
+/* ── Glass table: option chip pill shape ── */
+
+#app[data-theme-style='dark-glass'] .custom-table .option,
+#app[data-theme-style='light-glass'] .custom-table .option {
+  border-radius: 999px;
+}
+
 /* ── Glass table: vertical padding & utility columns ── */
 
 /* Reduce row height to match design (default is 1rem = 16px, design uses 11px) */
