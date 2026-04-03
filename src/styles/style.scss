@@ -1312,10 +1312,16 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .custom-table tbody tr {
   --glass-row-bg: rgba(255, 255, 255, 0.045);
   --glass-row-border: rgba(255, 255, 255, 0.055);
-  --cell-backgroundColor: var(--glass-row-bg);
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td {
+  /* cell-local-variant computes --cell-backgroundColor from --backgroundColor.
+     default-variant class on td sets --backgroundColor: #0b1623 which overrides
+     the inherited value from tr. We override --backgroundColor directly on td
+     to force the glass row bg — variant chips override this at a more specific
+     level via their own variant class on the inner .option element. */
+  --backgroundColor: var(--glass-row-bg);
+  --cell-backgroundColor: var(--glass-row-bg);
   background: transparent !important;
   border-top: 1px solid var(--glass-row-border) !important;
   border-bottom: 1px solid var(--glass-row-border) !important;
@@ -1348,14 +1354,36 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .custom-table tbody tr:hover {
   --glass-row-bg: rgba(89, 214, 207, 0.075);
   --glass-row-border: rgba(89, 214, 207, 0.17);
+}
+
+#app[data-theme-style='dark-glass'] .custom-table tbody tr:hover td {
+  --backgroundColor: var(--glass-row-bg);
   --cell-backgroundColor: var(--glass-row-bg);
 }
 
-/* dark-glass — selected */
+/* dark-glass — cursor (active row on tap/click) */
+#app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.cursor),
+#app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.selected) {
+  --glass-row-bg: rgba(89, 214, 207, 0.10);
+  --glass-row-border: rgba(89, 214, 207, 0.22);
+}
+
+#app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.cursor) td,
+#app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.selected) td {
+  --backgroundColor: var(--glass-row-bg);
+  --cell-backgroundColor: var(--glass-row-bg);
+}
+
+/* dark-glass — selected row */
 #app[data-theme-style='dark-glass'] .custom-table tbody tr.selected,
 #app[data-theme-style='dark-glass'] .custom-table tbody tr.table-tr.selected {
   --glass-row-bg: rgba(89, 214, 207, 0.09);
   --glass-row-border: rgba(89, 214, 207, 0.20);
+}
+
+#app[data-theme-style='dark-glass'] .custom-table tbody tr.selected td,
+#app[data-theme-style='dark-glass'] .custom-table tbody tr.table-tr.selected td {
+  --backgroundColor: var(--glass-row-bg);
   --cell-backgroundColor: var(--glass-row-bg);
 }
 
@@ -1363,10 +1391,11 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .custom-table tbody tr {
   --glass-row-bg: rgba(255, 255, 255, 0.55);
   --glass-row-border: rgba(196, 182, 163, 0.22);
-  --cell-backgroundColor: var(--glass-row-bg);
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr td {
+  --backgroundColor: var(--glass-row-bg);
+  --cell-backgroundColor: var(--glass-row-bg);
   background: transparent !important;
   border-top: 1px solid var(--glass-row-border) !important;
   border-bottom: 1px solid var(--glass-row-border) !important;
@@ -1399,41 +1428,37 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .custom-table tbody tr:hover {
   --glass-row-bg: rgba(255, 255, 255, 0.85);
   --glass-row-border: rgba(33, 133, 160, 0.22);
-  --cell-backgroundColor: var(--glass-row-bg);
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr:hover td {
+  --backgroundColor: var(--glass-row-bg);
+  --cell-backgroundColor: var(--glass-row-bg);
   box-shadow: 0 2px 12px rgba(28, 23, 15, 0.07);
 }
 
-/* light-glass — selected */
-#app[data-theme-style='light-glass'] .custom-table tbody tr.selected,
-#app[data-theme-style='light-glass'] .custom-table tbody tr.table-tr.selected {
-  --glass-row-bg: rgba(33, 133, 160, 0.08);
-  --glass-row-border: rgba(33, 133, 160, 0.22);
-  --cell-backgroundColor: var(--glass-row-bg);
-}
-
-/* ── Glass table: cursor/active cell — gradient fill via ::after ──
-   "Selection" in this table = td.cursor (set on tap/click).
-   We paint a gradient ::after on the entire tr when any td has .cursor,
-   but since CSS can't select tr from td state, we apply it to td.cursor
-   and also paint all sibling td via the tr's --cell-backgroundColor.
-   For the visual highlight we use ::after on td.cursor for the accent,
-   and boost --glass-row-bg on the tr via the hover teal already defined. ── */
-
-/* Highlight the whole row when it contains a cursor cell (:has support in modern browsers) */
-#app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.cursor),
-#app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.selected) {
-  --glass-row-bg: rgba(89, 214, 207, 0.10);
-  --glass-row-border: rgba(89, 214, 207, 0.22);
-  --cell-backgroundColor: var(--glass-row-bg);
-}
-
+/* light-glass — cursor */
 #app[data-theme-style='light-glass'] .custom-table tbody tr:has(td.cursor),
 #app[data-theme-style='light-glass'] .custom-table tbody tr:has(td.selected) {
   --glass-row-bg: rgba(33, 133, 160, 0.12);
   --glass-row-border: rgba(33, 133, 160, 0.28);
+}
+
+#app[data-theme-style='light-glass'] .custom-table tbody tr:has(td.cursor) td,
+#app[data-theme-style='light-glass'] .custom-table tbody tr:has(td.selected) td {
+  --backgroundColor: var(--glass-row-bg);
+  --cell-backgroundColor: var(--glass-row-bg);
+}
+
+/* light-glass — selected row */
+#app[data-theme-style='light-glass'] .custom-table tbody tr.selected,
+#app[data-theme-style='light-glass'] .custom-table tbody tr.table-tr.selected {
+  --glass-row-bg: rgba(33, 133, 160, 0.08);
+  --glass-row-border: rgba(33, 133, 160, 0.22);
+}
+
+#app[data-theme-style='light-glass'] .custom-table tbody tr.selected td,
+#app[data-theme-style='light-glass'] .custom-table tbody tr.table-tr.selected td {
+  --backgroundColor: var(--glass-row-bg);
   --cell-backgroundColor: var(--glass-row-bg);
 }
 
