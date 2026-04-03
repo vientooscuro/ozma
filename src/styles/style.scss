@@ -1426,7 +1426,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 /* ── Field row gap — glass themes ── */
 #app[data-theme-style='dark-glass'] .form_grid_block__column:not(:last-child),
 #app[data-theme-style='light-glass'] .form_grid_block__column:not(:last-child) {
-  margin-bottom: 0.5rem !important;
+  margin-bottom: 1rem !important;
 }
 
 /* ── Required indicator — glass themes ── */
@@ -1460,6 +1460,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   background-color: transparent !important;
+  top: -0.65rem !important;
 }
 
 #app[data-theme-style='dark-glass'] .border-label {
@@ -1490,8 +1491,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .form_sub_block::before {
   content: '';
   position: absolute;
-  top: -40px;
-  right: -40px;
+  top: 0;
+  right: 0;
   width: 300px;
   height: 300px;
   border-radius: 999px;
@@ -1505,8 +1506,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .form_sub_block::after {
   content: '';
   position: absolute;
-  bottom: -40px;
-  left: -40px;
+  bottom: 0;
+  left: 0;
   width: 250px;
   height: 250px;
   border-radius: 999px;
@@ -1527,8 +1528,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .form_sub_block::before {
   content: '';
   position: absolute;
-  top: -50px;
-  left: -50px;
+  top: 0;
+  left: 0;
   width: 340px;
   height: 340px;
   border-radius: 999px;
@@ -1542,8 +1543,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .form_sub_block::after {
   content: '';
   position: absolute;
-  bottom: -50px;
-  right: -50px;
+  bottom: 0;
+  right: 0;
   width: 280px;
   height: 280px;
   border-radius: 999px;
