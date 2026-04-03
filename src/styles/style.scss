@@ -1477,6 +1477,40 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   outline-color: rgba(33, 133, 160, 0.5);
 }
 
+/* ── Glass table: vertical dividers (opt-in) ── */
+
+#app[data-theme-style='dark-glass'] .custom-table.show-vertical-borders tbody tr td + td {
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+#app[data-theme-style='dark-glass'] .custom-table.show-vertical-borders tbody tr:hover td + td {
+  border-left-color: rgba(89, 214, 207, 0.13);
+}
+
+#app[data-theme-style='dark-glass'] .custom-table.show-vertical-borders th {
+  border-right: 1px solid rgba(89, 214, 207, 0.10);
+}
+
+#app[data-theme-style='dark-glass'] .custom-table.show-vertical-borders th:last-child {
+  border-right: none;
+}
+
+#app[data-theme-style='light-glass'] .custom-table.show-vertical-borders tbody tr td + td {
+  border-left: 1px solid rgba(196, 182, 163, 0.18);
+}
+
+#app[data-theme-style='light-glass'] .custom-table.show-vertical-borders tbody tr:hover td + td {
+  border-left-color: rgba(33, 133, 160, 0.15);
+}
+
+#app[data-theme-style='light-glass'] .custom-table.show-vertical-borders th {
+  border-right: 1px solid rgba(33, 133, 160, 0.12);
+}
+
+#app[data-theme-style='light-glass'] .custom-table.show-vertical-borders th:last-child {
+  border-right: none;
+}
+
 @supports not (backdrop-filter: blur(1px)) {
   #app[data-theme-style='light-glass'] .header-panel,
   #app[data-theme-style='dark-glass'] .header-panel,
