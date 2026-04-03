@@ -1312,6 +1312,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .custom-table tbody tr {
   --glass-row-bg: rgba(255, 255, 255, 0.012);
   --glass-row-border: rgba(255, 255, 255, 0.03);
+  --glass-fixed-bg: #081120;
   background: var(--glass-row-bg);
 }
 
@@ -1355,6 +1356,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .custom-table tbody tr:hover {
   --glass-row-bg: rgba(89, 214, 207, 0.075);
   --glass-row-border: rgba(89, 214, 207, 0.17);
+  --glass-fixed-bg: #0b1e29;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr:hover td {
@@ -1367,6 +1369,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.selected) {
   --glass-row-bg: rgba(89, 214, 207, 0.10);
   --glass-row-border: rgba(89, 214, 207, 0.22);
+  --glass-fixed-bg: #0b1e29;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.cursor) td,
@@ -1380,6 +1383,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='dark-glass'] .custom-table tbody tr.table-tr.selected {
   --glass-row-bg: rgba(89, 214, 207, 0.09);
   --glass-row-border: rgba(89, 214, 207, 0.20);
+  --glass-fixed-bg: #0b1e29;
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr.selected td,
@@ -1392,6 +1396,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .custom-table tbody tr {
   --glass-row-bg: rgba(255, 255, 255, 0.22);
   --glass-row-border: rgba(196, 182, 163, 0.18);
+  --glass-fixed-bg: #faf6f2;
   background: var(--glass-row-bg);
 }
 
@@ -1430,6 +1435,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .custom-table tbody tr:hover {
   --glass-row-bg: rgba(33, 133, 160, 0.07);
   --glass-row-border: rgba(33, 133, 160, 0.22);
+  --glass-fixed-bg: #ebece8;
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr:hover td {
@@ -1442,6 +1448,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .custom-table tbody tr:has(td.selected) {
   --glass-row-bg: rgba(33, 133, 160, 0.12);
   --glass-row-border: rgba(33, 133, 160, 0.28);
+  --glass-fixed-bg: #ebece8;
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr:has(td.cursor) td,
@@ -1455,6 +1462,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .custom-table tbody tr.table-tr.selected {
   --glass-row-bg: rgba(33, 133, 160, 0.08);
   --glass-row-border: rgba(33, 133, 160, 0.22);
+  --glass-fixed-bg: #ebece8;
 }
 
 #app[data-theme-style='light-glass'] .custom-table tbody tr.selected td,
@@ -1528,6 +1536,21 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   -webkit-backdrop-filter: none !important;
 }
 
+/* Fixed-cell (sticky) overlays — backdrop-filter can't blur sibling scroll
+   content (same compositing layer), so we use an opaque --card background. */
+#app[data-theme-style='dark-glass'] .custom-table tbody td.fixed-cell.table-td,
+#app[data-theme-style='light-glass'] .custom-table tbody td.fixed-cell.table-td {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+#app[data-theme-style='dark-glass'] .custom-table tbody td.fixed-cell.table-td::before,
+#app[data-theme-style='light-glass'] .custom-table tbody td.fixed-cell.table-td::before {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background-color: var(--glass-fixed-bg) !important;
+}
+
 
 /* select-row-cell and add-entry-cell are rendered by TableRow.vue (not TableCell).
    They are position:sticky (fixed-cell) so scrolling content passes behind them.
@@ -1539,11 +1562,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .custom-table tbody tr td.select-row-cell,
 #app[data-theme-style='light-glass'] .custom-table tbody tr td.add-entry-cell {
   background: transparent !important;
-  isolation: isolate;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
 }
-
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td.select-row-cell::before,
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td.add-entry-cell::before,
@@ -1554,9 +1573,7 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-color: var(--cell-backgroundColor, var(--glass-row-bg));
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background-color: var(--glass-fixed-bg);
 }
 
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td.select-row-cell > *,
