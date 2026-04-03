@@ -1526,13 +1526,17 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 }
 
 
-/* select-row-cell and add-entry-cell don't have .cell-alpha-blur — their ::before
-   uses background-color directly. Set it explicitly to the row glass bg. */
+/* select-row-cell and add-entry-cell are rendered by TableRow.vue (not TableCell)
+   so they lack cell-alpha-blur and have no backdrop-filter by default.
+   Add blur + transparent bg so they match the glass row pill. */
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td.select-row-cell,
 #app[data-theme-style='dark-glass'] .custom-table tbody tr td.add-entry-cell,
 #app[data-theme-style='light-glass'] .custom-table tbody tr td.select-row-cell,
 #app[data-theme-style='light-glass'] .custom-table tbody tr td.add-entry-cell {
-  background: var(--cell-backgroundColor, var(--glass-row-bg)) !important;
+  position: relative;
+  background: transparent !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
 }
 
 /* ── Glass table: header th ── */
