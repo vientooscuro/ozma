@@ -9,6 +9,7 @@ OZMADB_BIN_PATH="$OZMADB_LOCAL_DIR/out/ozmadb/OzmaDB"
 OZMADB_DOCKER_PLATFORM="${OZMADB_DOCKER_PLATFORM:-}"
 MODE="all"
 NO_REBUILD=false
+UI_BRANCH=""
 
 log() {
   printf '\n[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"
@@ -16,13 +17,14 @@ log() {
 
 usage() {
   cat <<'EOF'
-Usage: ./local_rebuild_and_publish.sh [--only_ui | --only_db] [--no_rebuild]
+Usage: ./local_rebuild_and_publish.sh [--only_ui | --only_db] [--no_rebuild] [--branch <branch>]
 
 Options:
-  --only_ui  Build and restart only ozma (UI) container.
-  --only_db  Build ozmadb from local sources, then build and restart only ozmadb container.
-  --no_rebuild  For --only_ui, skip rebuilding ozma image and copy local ./dist into container.
-  -h, --help Show this help.
+  --only_ui            Build and restart only ozma (UI) container.
+  --only_db            Build ozmadb from local sources, then build and restart only ozmadb container.
+  --no_rebuild         For --only_ui, skip rebuilding ozma image and copy local ./dist into container.
+  --branch <branch>    For UI builds: checkout this branch before building, restore current branch after.
+  -h, --help           Show this help.
 EOF
 }
 
@@ -47,8 +49,8 @@ platform_to_runtime() {
   esac
 }
 
-for arg in "$@"; do
-  case "$arg" in
+while [[ $# -gt 0 ]]; do
+  case "$1" in
     --only_ui)
       if [[ "$MODE" != "all" ]]; then
         echo "Error: --only_ui and --only_db are mutually exclusive." >&2
@@ -66,16 +68,25 @@ for arg in "$@"; do
     --no_rebuild)
       NO_REBUILD=true
       ;;
+    --branch)
+      shift
+      UI_BRANCH="${1:-}"
+      if [[ -z "$UI_BRANCH" ]]; then
+        echo "Error: --branch requires a branch name." >&2
+        exit 1
+      fi
+      ;;
     -h|--help)
       usage
       exit 0
       ;;
     *)
-      echo "Error: unknown argument: $arg" >&2
+      echo "Error: unknown argument: $1" >&2
       usage >&2
       exit 1
       ;;
   esac
+  shift
 done
 
 BUILD_UI=false
@@ -175,6 +186,18 @@ if [[ "$BUILD_DB" == true ]]; then
     OzmaUtils/packages.lock.json
 fi
 
+ORIGINAL_BRANCH=""
+if [[ "$BUILD_UI" == true ]] && [[ -n "$UI_BRANCH" ]] && [[ "$NO_REBUILD" != true ]]; then
+  require_cmd git
+  ORIGINAL_BRANCH="$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD)"
+  if [[ "$ORIGINAL_BRANCH" == "$UI_BRANCH" ]]; then
+    ORIGINAL_BRANCH=""
+  else
+    log "Switching to branch '$UI_BRANCH' for UI build (current: '$ORIGINAL_BRANCH')..."
+    git checkout "$UI_BRANCH"
+  fi
+fi
+
 log "Building Docker images..."
 if [[ "$BUILD_DB" == true ]]; then
   DOCKER_DEFAULT_PLATFORM="$OZMADB_DOCKER_PLATFORM" docker compose build ozmadb
@@ -185,6 +208,11 @@ if [[ "$BUILD_UI" == true ]]; then
   else
     docker compose build ozma
   fi
+fi
+
+if [[ -n "$ORIGINAL_BRANCH" ]]; then
+  log "Restoring branch '$ORIGINAL_BRANCH'..."
+  git checkout "$ORIGINAL_BRANCH"
 fi
 
 log "Publishing changes and restarting containers..."
