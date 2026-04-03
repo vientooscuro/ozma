@@ -1414,12 +1414,32 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   --cell-backgroundColor: var(--glass-row-bg);
 }
 
-/* ── Glass table: row selection — gradient fill via ::after on td ──
-   tr.selected doesn't set .selected on individual td cells, so selection-overlay
-   div is never rendered. Use ::after pseudo-element on td instead. ── */
+/* ── Glass table: cursor/active cell — gradient fill via ::after ──
+   "Selection" in this table = td.cursor (set on tap/click).
+   We paint a gradient ::after on the entire tr when any td has .cursor,
+   but since CSS can't select tr from td state, we apply it to td.cursor
+   and also paint all sibling td via the tr's --cell-backgroundColor.
+   For the visual highlight we use ::after on td.cursor for the accent,
+   and boost --glass-row-bg on the tr via the hover teal already defined. ── */
 
-#app[data-theme-style='dark-glass'] .custom-table tbody tr.selected td::after,
-#app[data-theme-style='dark-glass'] .custom-table tbody tr.table-tr.selected td::after {
+/* Highlight the whole row when it contains a cursor cell (:has support in modern browsers) */
+#app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.cursor),
+#app[data-theme-style='dark-glass'] .custom-table tbody tr:has(td.selected) {
+  --glass-row-bg: rgba(89, 214, 207, 0.10);
+  --glass-row-border: rgba(89, 214, 207, 0.22);
+  --cell-backgroundColor: var(--glass-row-bg);
+}
+
+#app[data-theme-style='light-glass'] .custom-table tbody tr:has(td.cursor),
+#app[data-theme-style='light-glass'] .custom-table tbody tr:has(td.selected) {
+  --glass-row-bg: rgba(33, 133, 160, 0.12);
+  --glass-row-border: rgba(33, 133, 160, 0.28);
+  --cell-backgroundColor: var(--glass-row-bg);
+}
+
+/* Accent gradient on the active cell itself */
+#app[data-theme-style='dark-glass'] .custom-table tbody td.cursor::after,
+#app[data-theme-style='dark-glass'] .custom-table tbody td.selected::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -1427,13 +1447,13 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   pointer-events: none;
   background: linear-gradient(
     100deg,
-    rgba(89, 214, 207, 0.13) 0%,
-    rgba(89, 214, 207, 0.05) 100%
+    rgba(89, 214, 207, 0.22) 0%,
+    rgba(89, 214, 207, 0.08) 100%
   );
 }
 
-#app[data-theme-style='light-glass'] .custom-table tbody tr.selected td::after,
-#app[data-theme-style='light-glass'] .custom-table tbody tr.table-tr.selected td::after {
+#app[data-theme-style='light-glass'] .custom-table tbody td.cursor::after,
+#app[data-theme-style='light-glass'] .custom-table tbody td.selected::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -1441,8 +1461,8 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   pointer-events: none;
   background: linear-gradient(
     100deg,
-    rgba(33, 133, 160, 0.15) 0%,
-    rgba(33, 133, 160, 0.05) 100%
+    rgba(33, 133, 160, 0.22) 0%,
+    rgba(33, 133, 160, 0.08) 100%
   );
 }
 
