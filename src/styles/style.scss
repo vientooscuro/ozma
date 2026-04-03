@@ -1530,14 +1530,6 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   -webkit-backdrop-filter: none !important;
 }
 
-/* Utility cells (checkbox, edit link) — no blur needed */
-#app[data-theme-style='dark-glass'] .custom-table tbody td.select-row-cell,
-#app[data-theme-style='dark-glass'] .custom-table tbody td.add-entry-cell,
-#app[data-theme-style='light-glass'] .custom-table tbody td.select-row-cell,
-#app[data-theme-style='light-glass'] .custom-table tbody td.add-entry-cell {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
 
 /* select-row-cell and add-entry-cell don't have .cell-alpha-blur — their ::before
    uses background-color directly. Set it explicitly to the row glass bg. */
