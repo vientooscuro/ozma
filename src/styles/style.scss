@@ -1622,6 +1622,17 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   animation: none !important;
 }
 
+/* Remove overflow from nested scroll containers in glass themes — Chrome wastes the first
+   scroll gesture on inner elements with overflow:auto before bubbling to the real scroller */
+html[data-theme-style='dark-glass'] .tabbed-modal .content,
+html[data-theme-style='light-glass'] .tabbed-modal .content,
+#app[data-theme-style='dark-glass'] .userview-wrapper,
+#app[data-theme-style='light-glass'] .userview-wrapper,
+#app[data-theme-style='dark-glass'] .view-container,
+#app[data-theme-style='light-glass'] .view-container {
+  overflow: visible !important;
+}
+
 @supports not (backdrop-filter: blur(1px)) {
   #app[data-theme-style='light-glass'] .header-panel,
   #app[data-theme-style='dark-glass'] .header-panel,
