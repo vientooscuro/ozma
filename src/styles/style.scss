@@ -1511,6 +1511,32 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   border-right: none;
 }
 
+/* ── Glass table: footer row ── */
+
+#app[data-theme-style='dark-glass'] .custom-table .table-footer-row .table-footer-cell {
+  background: rgba(255, 255, 255, 0.035);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: none;
+  color: rgba(149, 167, 182, 0.7);
+}
+
+#app[data-theme-style='light-glass'] .custom-table .table-footer-row .table-footer-cell {
+  background: rgba(255, 255, 255, 0.40);
+  border-top: 1px solid rgba(196, 182, 163, 0.22);
+  border-bottom: none;
+  color: rgba(111, 106, 98, 0.7);
+}
+
+/* ── Fixed column shadow border ── */
+
+#app[data-theme-style='dark-glass'] .custom-table.show-fixed-column-border .last-fixed-cell {
+  border-right: 1px solid rgba(89, 214, 207, 0.15);
+}
+
+#app[data-theme-style='light-glass'] .custom-table.show-fixed-column-border .last-fixed-cell {
+  border-right: 1px solid rgba(33, 133, 160, 0.15);
+}
+
 @supports not (backdrop-filter: blur(1px)) {
   #app[data-theme-style='light-glass'] .header-panel,
   #app[data-theme-style='dark-glass'] .header-panel,
@@ -1530,6 +1556,14 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   #app[data-theme-style='dark-glass'] .form_inline_block,
   #app[data-theme-style='light-glass'] .form_inline_block {
     background: var(--card) !important;
+  }
+
+  #app[data-theme-style='dark-glass'] .custom-table tbody tr td {
+    background: rgba(17, 32, 46, 0.85) !important;
+  }
+
+  #app[data-theme-style='light-glass'] .custom-table tbody tr td {
+    background: rgba(255, 255, 255, 0.88) !important;
   }
 }
 
