@@ -972,8 +972,9 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 #app[data-theme-style='light-glass'] .table-wrapper.root,
 #app[data-theme-style='dark-glass'] .table-wrapper.root {
   border-color: var(--panel-border);
-  padding-left: 0;
-  padding-right: 0;
+  background-color: transparent !important;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 #app[data-theme-style='light-glass'] .root-wrapper,
@@ -985,7 +986,7 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 #app[data-theme-style='dark-glass'] .custom-table {
   background: transparent;
   border-collapse: separate !important;
-  border-spacing: 8px 6px !important;
+  border-spacing: 0 6px !important;
 }
 
 #app[data-theme-style='light-glass'] .table-th,
@@ -1451,7 +1452,11 @@ html[data-theme-style='dark-glass'] .vm--overlay {
 /* ── Glass table: header th ── */
 
 #app[data-theme-style='dark-glass'] .custom-table th,
-#app[data-theme-style='dark-glass'] .custom-table th.fixed-cell {
+#app[data-theme-style='dark-glass'] .custom-table th.fixed-cell,
+#app[data-theme-style='light-glass'] .custom-table th,
+#app[data-theme-style='light-glass'] .custom-table th.fixed-cell {
+  /* --cell-backgroundColor controls the ::before pseudo-element on fixed-cell */
+  --cell-backgroundColor: transparent;
   background: transparent !important;
   background-color: transparent !important;
   border-top: none !important;
@@ -1476,15 +1481,6 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   text-transform: uppercase !important;
 }
 
-#app[data-theme-style='light-glass'] .custom-table th,
-#app[data-theme-style='light-glass'] .custom-table th.fixed-cell {
-  background: transparent !important;
-  background-color: transparent !important;
-  border-top: none !important;
-  border-bottom: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
 
 #app[data-theme-style='light-glass'] .custom-table .table-th {
   background-color: transparent;
