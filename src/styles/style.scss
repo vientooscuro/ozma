@@ -1537,6 +1537,25 @@ html[data-theme-style='dark-glass'] .vm--overlay {
   border-right: 1px solid rgba(33, 133, 160, 0.15);
 }
 
+/* ── Glass table: remove default td border-bottom (replaced by pill borders) ── */
+
+#app[data-theme-style='dark-glass'] .custom-table tbody td {
+  border-bottom: none !important;
+}
+
+#app[data-theme-style='light-glass'] .custom-table tbody td {
+  border-bottom: none !important;
+}
+
+/* Also remove the horizontal border inherited on th */
+#app[data-theme-style='dark-glass'] .custom-table thead tr {
+  border-bottom: none;
+}
+
+#app[data-theme-style='light-glass'] .custom-table thead tr {
+  border-bottom: none;
+}
+
 @supports not (backdrop-filter: blur(1px)) {
   #app[data-theme-style='light-glass'] .header-panel,
   #app[data-theme-style='dark-glass'] .header-panel,
