@@ -929,6 +929,7 @@ html[data-theme-style='dark-glass'] .vm--modal {
 
 html[data-theme-style='light-glass'] .tabbed-modal .header,
 html[data-theme-style='dark-glass'] .tabbed-modal .header {
+  flex-shrink: 0;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 }
@@ -940,9 +941,15 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header {
   border-right: none !important;
   border-left: none !important;
   border-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
   box-shadow: none !important;
+}
+
+/* Glass tab header — visible bar above form content */
+#app[data-theme-style='light-glass'] .modal__tab_header.only_tab,
+#app[data-theme-style='dark-glass'] .modal__tab_header.only_tab {
+  background-color: var(--surface) !important;
+  border-bottom: 1px solid var(--line);
 }
 
 html[data-theme-style='light-glass'] .tabbed-modal .header-panel,
@@ -953,6 +960,9 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
 
 #app[data-theme-style='light-glass'] .header-panel.is-root,
 #app[data-theme-style='dark-glass'] .header-panel.is-root {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   margin: 0.55rem 0.55rem 0;
   box-sizing: border-box;
   width: calc(100% - 1.1rem);
