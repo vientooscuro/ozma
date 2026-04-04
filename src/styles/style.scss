@@ -1005,10 +1005,14 @@ html[data-theme-style='dark-glass'] .tabbed-modal .header-panel {
   transform: none !important;
 }
 
+#app[data-theme-style='light-glass'] .table-wrapper,
+#app[data-theme-style='dark-glass'] .table-wrapper {
+  background-color: transparent !important;
+}
+
 #app[data-theme-style='light-glass'] .table-wrapper.root,
 #app[data-theme-style='dark-glass'] .table-wrapper.root {
   border-color: var(--panel-border);
-  background-color: transparent !important;
   padding-left: 0;
   padding-right: 0;
 }
@@ -2112,6 +2116,25 @@ html[data-theme-style='light-glass'] .tabbed-modal .content,
 #app[data-theme-style='dark-glass'] .view-form,
 #app[data-theme-style='light-glass'] .view-form {
   overflow: visible !important;
+}
+
+/* Embedded tables in forms: userview-wrapper bg covers glass table content */
+#app[data-theme-style='dark-glass'] .form_sub_block .userview-wrapper,
+#app[data-theme-style='light-glass'] .form_sub_block .userview-wrapper,
+#app[data-theme-style='dark-glass'] .first_level_grid_block .userview-wrapper,
+#app[data-theme-style='light-glass'] .first_level_grid_block .userview-wrapper {
+  background-color: transparent !important;
+}
+
+/* Non-sticky fixed-cells: opaque overlay not needed when columns are static.
+   stick-fixed-columns is toggled by Table.vue ResizeObserver (width > 1000px). */
+#app[data-theme-style='dark-glass'] .table-wrapper:not(.stick-fixed-columns) tbody td.fixed-cell.table-td::before,
+#app[data-theme-style='light-glass'] .table-wrapper:not(.stick-fixed-columns) tbody td.fixed-cell.table-td::before,
+#app[data-theme-style='dark-glass'] .table-wrapper:not(.stick-fixed-columns) tbody tr td.select-row-cell::before,
+#app[data-theme-style='light-glass'] .table-wrapper:not(.stick-fixed-columns) tbody tr td.select-row-cell::before,
+#app[data-theme-style='dark-glass'] .table-wrapper:not(.stick-fixed-columns) tbody tr td.add-entry-cell::before,
+#app[data-theme-style='light-glass'] .table-wrapper:not(.stick-fixed-columns) tbody tr td.add-entry-cell::before {
+  background-color: transparent !important;
 }
 
 @supports not (backdrop-filter: blur(1px)) {
