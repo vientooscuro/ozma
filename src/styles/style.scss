@@ -2137,6 +2137,20 @@ html[data-theme-style='light-glass'] .tabbed-modal .content,
   background-color: transparent !important;
 }
 
+/* Sticky fixed-cells inside forms: nearly-opaque bg that lets ambient orb
+   colours subtly bleed through while fully hiding scrolling content. */
+#app[data-theme-style='dark-glass'] .form_sub_block .table-wrapper.stick-fixed-columns tbody td.fixed-cell.table-td::before,
+#app[data-theme-style='dark-glass'] .form_sub_block .table-wrapper.stick-fixed-columns tbody tr td.select-row-cell::before,
+#app[data-theme-style='dark-glass'] .form_sub_block .table-wrapper.stick-fixed-columns tbody tr td.add-entry-cell::before {
+  background-color: rgba(8, 17, 32, 0.92) !important;
+}
+
+#app[data-theme-style='light-glass'] .form_sub_block .table-wrapper.stick-fixed-columns tbody td.fixed-cell.table-td::before,
+#app[data-theme-style='light-glass'] .form_sub_block .table-wrapper.stick-fixed-columns tbody tr td.select-row-cell::before,
+#app[data-theme-style='light-glass'] .form_sub_block .table-wrapper.stick-fixed-columns tbody tr td.add-entry-cell::before {
+  background-color: rgba(250, 246, 242, 0.92) !important;
+}
+
 @supports not (backdrop-filter: blur(1px)) {
   #app[data-theme-style='light-glass'] .header-panel,
   #app[data-theme-style='dark-glass'] .header-panel,
