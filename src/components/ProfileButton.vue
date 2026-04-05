@@ -23,6 +23,9 @@
             "form_sub_blocks": "Form sections",
             "form_sub_blocks_on": "on",
             "form_sub_blocks_off": "off",
+            "form_sub_block_monochrome": "Monochrome blocks",
+            "form_sub_block_monochrome_on": "on",
+            "form_sub_block_monochrome_off": "off",
             "en": "English",
             "es": "Spanish (Español)",
             "ru": "Russian (Русский)",
@@ -51,6 +54,9 @@
             "form_sub_blocks": "Блоки формы",
             "form_sub_blocks_on": "вкл",
             "form_sub_blocks_off": "выкл",
+            "form_sub_block_monochrome": "Однотонные блоки",
+            "form_sub_block_monochrome_on": "вкл",
+            "form_sub_block_monochrome_off": "выкл",
             "en": "Английский (English)",
             "es": "Испанский (Español)",
             "ru": "Русский",
@@ -79,6 +85,9 @@
             "form_sub_blocks": "Secciones de formulario",
             "form_sub_blocks_on": "activadas",
             "form_sub_blocks_off": "desactivadas",
+            "form_sub_block_monochrome": "Bloques monocromáticos",
+            "form_sub_block_monochrome_on": "activados",
+            "form_sub_block_monochrome_off": "desactivados",
             "en": "Inglés (English)",
             "es": "Español",
             "ru": "Ruso (Русский)",
@@ -293,6 +302,22 @@ export default class AppHeader extends Vue {
     return `${this.$t('form_sub_blocks')}: ${stateText}`
   }
 
+  private get formSubBlockMonochromeEnabled(): boolean {
+    return this.currentSettings.getEntry('form_sub_block_monochrome', Boolean, false)
+  }
+
+  private toggleFormSubBlockMonochrome() {
+    const value = this.formSubBlockMonochromeEnabled ? 'false' : 'true'
+    void this.writeUserSettings({ name: 'form_sub_block_monochrome', value })
+  }
+
+  private get formSubBlockMonochromeCaption(): string {
+    const stateText = this.$t(
+      this.formSubBlockMonochromeEnabled ? 'form_sub_block_monochrome_on' : 'form_sub_block_monochrome_off',
+    ).toString()
+    return `${this.$t('form_sub_block_monochrome')}: ${stateText}`
+  }
+
   private get buttons() {
     const buttons: Button[] = []
 
@@ -337,6 +362,15 @@ export default class AppHeader extends Vue {
       callback: () => this.toggleFormSubBlocks(),
       variant: defaultVariantAttribute,
     })
+
+    if (this.formSubBlocksEnabled) {
+      buttons.push({
+        caption: this.formSubBlockMonochromeCaption,
+        type: 'callback',
+        callback: () => this.toggleFormSubBlockMonochrome(),
+        variant: defaultVariantAttribute,
+      })
+    }
 
     buttons.push({
       caption: this.$t('change_language').toString(),

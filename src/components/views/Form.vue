@@ -804,6 +804,7 @@ export default class UserViewForm extends mixins<
     // Parse sub_block_colors: { "0": { "0": "#e74c3c", "1": "#3498db" }, ... }
     const subBlockColorsAttr = viewAttrs['sub_block_colors']
     const getSubBlockColor = (blockIdx: number, subBlockIdx: number): string | undefined => {
+      if (this.formSubBlockMonochromeEnabled) return undefined
       if (subBlockColorsAttr && typeof subBlockColorsAttr === 'object') {
         const blockColors = (subBlockColorsAttr as Record<string, any>)[String(blockIdx)]
         if (blockColors && typeof blockColors === 'object') {
@@ -1076,6 +1077,14 @@ export default class UserViewForm extends mixins<
   private get formSubBlocksEnabled(): boolean {
     return this.$store.state.settings.current.getEntry(
       'form_sub_blocks',
+      Boolean,
+      false,
+    )
+  }
+
+  private get formSubBlockMonochromeEnabled(): boolean {
+    return this.$store.state.settings.current.getEntry(
+      'form_sub_block_monochrome',
       Boolean,
       false,
     )
