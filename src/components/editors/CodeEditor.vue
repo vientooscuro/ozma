@@ -262,6 +262,29 @@ const setupOzmaFunqlLanguage = (): void => {
         lineComment: '--',
         blockComment: ['/*', '*/'],
       },
+      brackets: [
+        ['{', '}'],
+        ['[', ']'],
+        ['(', ')'],
+      ],
+      autoClosingPairs: [
+        { open: '{', close: '}' },
+        { open: '[', close: ']' },
+        { open: '(', close: ')' },
+        { open: "'", close: "'", notIn: ['string', 'comment'] },
+        { open: '"', close: '"', notIn: ['string', 'comment'] },
+      ],
+      surroundingPairs: [
+        { open: '{', close: '}' },
+        { open: '[', close: ']' },
+        { open: '(', close: ')' },
+        { open: "'", close: "'" },
+        { open: '"', close: '"' },
+      ],
+      indentationRules: {
+        increaseIndentPattern: /.*[\{\[\(]\s*$/,
+        decreaseIndentPattern: /^\s*[\}\]\)]/,
+      },
     })
     ozmaFunqlProviderInitialized = true
   }
@@ -559,6 +582,8 @@ export default class CodeEditor extends Vue {
       },
       fontLigatures: true,
       fontSize,
+      tabSize: 4,
+      insertSpaces: true,
       theme: this.monacoTheme,
     }
 
