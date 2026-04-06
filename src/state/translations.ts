@@ -68,6 +68,7 @@ const emptyTranslations = new CurrentTranslations('', {})
 export interface ITranslationsState {
   current: CurrentTranslations
   pending: Promise<CurrentTranslations> | null
+  pendingLanguage: Language | null
 }
 
 const translationsModule: Module<ITranslationsState, {}> = {
@@ -75,22 +76,35 @@ const translationsModule: Module<ITranslationsState, {}> = {
   state: {
     current: emptyTranslations,
     pending: null,
+    pendingLanguage: null,
   },
   mutations: {
     setTranslations: (state, translations: CurrentTranslations) => {
       state.current = translations
       state.pending = null
+      state.pendingLanguage = null
     },
-    setPending: (state, pending: Promise<CurrentTranslations> | null) => {
-      state.pending = pending
+    setPending: (
+      state,
+      payload: { pending: Promise<CurrentTranslations>; language: Language },
+    ) => {
+      state.pending = payload.pending
+      state.pendingLanguage = payload.language
     },
     clearTranslations: (state) => {
       state.current = emptyTranslations
       state.pending = null
+      state.pendingLanguage = null
     },
   },
   actions: {
     getTranslations: ({ state, commit, dispatch }, language: Language) => {
+      if (state.current.language === language) {
+        return Promise.resolve(state.current)
+      }
+      if (state.pending !== null && state.pendingLanguage === language) {
+        return state.pending
+      }
       const pending: IRef<Promise<CurrentTranslations>> = {}
       pending.ref = (async () => {
         await waitTimeout() // Delay promise so that it gets saved to `pending` first.
@@ -149,7 +163,7 @@ const translationsModule: Module<ITranslationsState, {}> = {
           throw e
         }
       })()
-      commit('setPending', pending.ref)
+      commit('setPending', { pending: pending.ref, language })
       return pending.ref
     },
   },
