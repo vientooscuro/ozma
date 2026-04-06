@@ -239,11 +239,11 @@ const loadColorThemeHeaders = async (): Promise<
 const loadColorVariants = async (): Promise<
   Record<RowId, Record<string, ColorVariant>>
 > => {
-  const ref = { schema: 'funapp', name: 'color_variants' }
+  const query = `SELECT theme_id, name, foreground, border, background, font_weight, font_style, text_decoration FROM funapp.color_variants`
   const res: IViewExprResult = await store.dispatch(
     'callApi',
     {
-      func: (api: FunDBAPI) => api.getNamedUserView(ref),
+      func: (api: FunDBAPI) => api.getAnonymousUserView(query),
     },
     { root: true },
   )
