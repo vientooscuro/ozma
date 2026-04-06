@@ -282,8 +282,8 @@ const setupOzmaFunqlLanguage = (): void => {
         { open: '"', close: '"' },
       ],
       indentationRules: {
-        increaseIndentPattern: /.*[\{\[\(]\s*$/,
-        decreaseIndentPattern: /^\s*[\}\]\)]/,
+        increaseIndentPattern: /.*[{[(]\s*$/,
+        decreaseIndentPattern: /^\s*[})\]]/,
       },
     })
     ozmaFunqlProviderInitialized = true
