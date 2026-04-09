@@ -68,24 +68,26 @@
       @select="selectFromScanner(barCodeColumnIndex, $event)"
     />
 
-    <transition name="fade-transform">
-      <div
-        v-if="selectedSome && selectionButtons.length !== 0"
-        class="selection-buttons-wrapper"
-      >
-        <div class="selection-buttons-label">
-          {{
-            $t('selected_n_entries', {
-              n: selectedLength,
-              loaded: loadedRowsCount,
-            })
-          }}
+    <portal to="selection-panel">
+      <transition name="fade-transform">
+        <div
+          v-if="selectedSome && selectionButtons.length !== 0"
+          class="selection-buttons-wrapper"
+        >
+          <div class="selection-buttons-label">
+            {{
+              $t('selected_n_entries', {
+                n: selectedLength,
+                loaded: loadedRowsCount,
+              })
+            }}
+          </div>
+          <div class="selection-buttons-panel">
+            <ButtonsPanel :buttons="selectionButtons" />
+          </div>
         </div>
-        <div class="selection-buttons-panel">
-          <ButtonsPanel :buttons="selectionButtons" />
-        </div>
-      </div>
-    </transition>
+      </transition>
+    </portal>
   </span>
 </template>
 
@@ -916,7 +918,7 @@ export default class UserViewCommon extends mixins<
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .selection-buttons-wrapper {
   position: fixed;
   bottom: 3rem;
@@ -934,10 +936,8 @@ export default class UserViewCommon extends mixins<
     text-align: center;
   }
 
-  ::v-deep {
-    .buttons-panel {
-      gap: 0.5rem;
-    }
+  .buttons-panel {
+    gap: 0.5rem;
   }
 }
 

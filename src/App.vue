@@ -24,6 +24,7 @@
       <ModalPortalTarget name="tabbed-modal" multiple />
 
       <portal-target name="input-popup-portal" multiple />
+      <portal-target name="selection-panel" />
 
       <ReadonlyDemoInstanceModal
         v-if="isReadonlyDemoInstance"
@@ -615,5 +616,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   position: relative;
   height: 100%;
   overflow: auto;
+}
+
+.input-popup-portal {
+  position: relative;
+  z-index: 200001;
 }
 </style>
