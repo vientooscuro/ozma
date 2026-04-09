@@ -40,7 +40,7 @@ try_pull_image() {
   local image="$1"
   local before after
   before="$(docker inspect --format='{{index .RepoDigests 0}}' "$image" 2>/dev/null || true)"
-  if docker pull "$image"; then
+  if docker pull "$image" >&2; then
     after="$(docker inspect --format='{{index .RepoDigests 0}}' "$image" 2>/dev/null || true)"
     if [[ -n "$before" && "$before" == "$after" ]]; then
       echo "unchanged"
@@ -49,7 +49,7 @@ try_pull_image() {
     fi
     return 0
   fi
-  log "docker pull $image skipped (image not available in registry)"
+  log "docker pull $image skipped (image not available in registry)" >&2
   echo "unchanged"
   return 0
 }
