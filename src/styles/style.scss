@@ -461,6 +461,11 @@ $input-focus-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
   }
 }
 
+/* VueModal container must appear above OzmaPopper popups (which start at 100050) */
+.vm--container {
+  z-index: 100100 !important;
+}
+
 .tooltip {
   z-index: 200000 !important;
   opacity: 1 !important;
