@@ -38,10 +38,19 @@ require_cmd() {
 
 try_pull_image() {
   local image="$1"
+  local before after
+  before="$(docker inspect --format='{{index .RepoDigests 0}}' "$image" 2>/dev/null || true)"
   if docker pull "$image"; then
+    after="$(docker inspect --format='{{index .RepoDigests 0}}' "$image" 2>/dev/null || true)"
+    if [[ -n "$before" && "$before" == "$after" ]]; then
+      echo "unchanged"
+    else
+      echo "updated"
+    fi
     return 0
   fi
   log "docker pull $image skipped (image not available in registry)"
+  echo "unchanged"
   return 0
 }
 
@@ -116,11 +125,15 @@ else
 fi
 
 log "docker pull ghcr images"
+UI_IMAGE_CHANGED=false
+DB_IMAGE_CHANGED=false
 if [[ "$MODE" != "db" ]]; then
-  try_pull_image ghcr.io/vientooscuro/ozma:master
+  result="$(try_pull_image ghcr.io/vientooscuro/ozma:master)"
+  [[ "$result" == "updated" ]] && UI_IMAGE_CHANGED=true
 fi
 if [[ "$MODE" != "ui" ]]; then
-  try_pull_image ghcr.io/vientooscuro/ozmadb:master
+  result="$(try_pull_image ghcr.io/vientooscuro/ozmadb:master)"
+  [[ "$result" == "updated" ]] && DB_IMAGE_CHANGED=true
 fi
 
 DO_UI=false
@@ -167,19 +180,27 @@ if [[ "$DO_UI" == true ]]; then
     docker exec "$OZMA_CONTAINER_ID" sh -lc 'rm -rf /usr/share/caddy/*'
     docker cp "$ROOT_DIR/dist/." "$OZMA_CONTAINER_ID:/usr/share/caddy"
   else
-    log "rebuild + recreate ozma (docker build)"
-    docker compose build --pull ozma
-    docker compose up -d --force-recreate ozma
+    if [[ "$UI_IMAGE_CHANGED" == true ]]; then
+      log "new ozma image available, rebuild + recreate"
+      docker compose build --pull ozma
+      docker compose up -d --force-recreate ozma
+    else
+      log "ozma image unchanged, skip rebuild"
+    fi
   fi
 fi
 
 if [[ "$DO_DB" == true ]]; then
-  log "rebuild + recreate ozmadb"
-  docker compose build --pull ozmadb
-  docker compose up -d --force-recreate ozmadb
+  if [[ "$DB_IMAGE_CHANGED" == true ]]; then
+    log "new ozmadb image available, rebuild + recreate"
+    docker compose build --pull ozmadb
+    docker compose up -d --force-recreate ozmadb
 
-  log "run post-migration one-shot"
-  docker compose up --abort-on-container-exit --exit-code-from ozmadb-post-migration ozmadb-post-migration
+    log "run post-migration one-shot"
+    docker compose up --abort-on-container-exit --exit-code-from ozmadb-post-migration ozmadb-post-migration
+  else
+    log "ozmadb image unchanged, skip rebuild"
+  fi
 fi
 
 log "current status"
