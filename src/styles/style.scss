@@ -912,7 +912,7 @@ html[data-theme-style='dark-glass'] .glass-confirm-footer .btn-outline-secondary
 
 html[data-theme-style='light-glass'] .popper,
 html[data-theme-style='dark-glass'] .popper {
-  z-index: 100050 !important;
+  z-index: 100050;
   border: 1px solid var(--panel-border);
   border-radius: 20px;
   background: var(--panel-bg);
