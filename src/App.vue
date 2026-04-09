@@ -20,6 +20,15 @@
     :style="styleSettings"
     class="default-variant default-local-variant"
   >
+    <transition name="selection-panel-fade">
+      <div v-if="selectionPanel" class="selection-buttons-wrapper">
+        <div class="selection-buttons-label">{{ selectionPanel.label }}</div>
+        <div class="selection-buttons-panel">
+          <ButtonsPanel :buttons="selectionPanel.buttons" />
+        </div>
+      </div>
+    </transition>
+
     <div class="app-container">
       <ModalPortalTarget name="tabbed-modal" multiple />
 
@@ -77,7 +86,8 @@ import {
   IThemeRef,
   ITheme,
 } from '@/utils_colors'
-import { eventBus, IShowHelpModalArgs } from '@/main'
+import { eventBus, IShowHelpModalArgs, ISelectionPanelArgs } from '@/main'
+import ButtonsPanel from '@/components/panels/ButtonsPanel.vue'
 import InviteUserModal from '@/components/InviteUserModal.vue'
 import { EntityRef } from '@/links'
 import { safeJsonParse } from '@/utils'
@@ -99,6 +109,7 @@ import { setHeadMeta, setHeadLink } from '@/elements'
   components: {
     ModalPortalTarget,
     InviteUserModal,
+    ButtonsPanel,
     ReadonlyDemoInstanceModal: () =>
       import('@/components/ReadonlyDemoInstanceModal.vue'),
     HelpModal: () => import('@/components/HelpModal.vue'),
@@ -106,6 +117,8 @@ import { setHeadMeta, setHeadLink } from '@/elements'
 })
 export default class App extends Vue {
   @Action('callApi') callApi!: ICallApi
+
+  selectionPanel: ISelectionPanelArgs | null = null
   @settings.State('current') settings!: CurrentSettings
   @settings.State('currentThemeRef') currentThemeRef!: IThemeRef | null
   @settings.Getter('language') language!: string
@@ -146,6 +159,8 @@ export default class App extends Vue {
     eventBus.on('show-invite-user-modal', this.showInviteUserModal)
     eventBus.on('show-help-modal', this.showHelpModal)
     eventBus.on('close-all-toasts', this.closeAllToasts)
+    eventBus.on('show-selection-panel', this.showSelectionPanel)
+    eventBus.on('hide-selection-panel', this.hideSelectionPanel)
     /* eslint-enable @typescript-eslint/unbound-method */
   }
 
@@ -159,6 +174,8 @@ export default class App extends Vue {
     eventBus.off('show-invite-user-modal', this.showInviteUserModal)
     eventBus.off('show-help-modal', this.showHelpModal)
     eventBus.off('close-all-toasts', this.closeAllToasts)
+    eventBus.off('show-selection-panel', this.showSelectionPanel)
+    eventBus.off('hide-selection-panel', this.hideSelectionPanel)
     /* eslint-enable @typescript-eslint/unbound-method */
 
     this.destroyWindow(this.uid)
@@ -264,6 +281,14 @@ export default class App extends Vue {
 
   private closeAllToasts() {
     this.$bvToast.hide()
+  }
+
+  private showSelectionPanel(args: ISelectionPanelArgs) {
+    this.selectionPanel = args
+  }
+
+  private hideSelectionPanel() {
+    this.selectionPanel = null
   }
 
   get url(): UserString {
@@ -620,5 +645,38 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 .input-popup-portal {
   position: relative;
   z-index: 200001;
+}
+
+.selection-buttons-wrapper {
+  position: fixed;
+  bottom: 3rem;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 1000;
+  border-radius: 0.5rem;
+  background-color: #000a;
+  padding: 0.5rem;
+
+  .selection-buttons-label {
+    padding: 0.5rem;
+    padding-top: 0;
+    color: white;
+    text-align: center;
+  }
+
+  ::v-deep .buttons-panel {
+    gap: 0.5rem;
+  }
+}
+
+.selection-panel-fade-enter-active,
+.selection-panel-fade-leave-active {
+  transition: opacity 0.4s, transform 0.4s;
+}
+
+.selection-panel-fade-enter,
+.selection-panel-fade-leave-to {
+  transform: translate(-50%, 1rem);
+  opacity: 0;
 }
 </style>
