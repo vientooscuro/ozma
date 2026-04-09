@@ -195,9 +195,6 @@ if [[ "$DO_DB" == true ]]; then
     log "new ozmadb image available, rebuild + recreate"
     docker compose build --pull ozmadb
     docker compose up -d --force-recreate ozmadb
-
-    log "run post-migration one-shot"
-    docker compose up --abort-on-container-exit --exit-code-from ozmadb-post-migration ozmadb-post-migration
   else
     log "ozmadb image unchanged, skip rebuild"
   fi
@@ -205,11 +202,11 @@ fi
 
 log "current status"
 if [[ "$DO_UI" == true && "$DO_DB" == true ]]; then
-  docker compose ps ozma ozmadb ozmadb-post-migration
+  docker compose ps ozma ozmadb
 elif [[ "$DO_UI" == true ]]; then
   docker compose ps ozma
 else
-  docker compose ps ozmadb ozmadb-post-migration
+  docker compose ps ozmadb
 fi
 
 log "pruning unused Docker data..."
