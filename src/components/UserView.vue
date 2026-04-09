@@ -890,6 +890,23 @@ export default class UserView extends Vue {
 
         if (pending.ref !== this.nextUv) return
 
+        // If the view has a lazy_load.per_page larger than our initial limit,
+        // re-fetch with the correct limit so the first page is fully loaded.
+        if (
+          limit !== undefined &&
+          uvData.rows !== null &&
+          uvData.rows.length >= limit
+        ) {
+          const lazyLoad = uvData.attributes['lazy_load'] as any
+          const perPage: number | undefined = lazyLoad?.pagination?.per_page
+          if (perPage !== undefined && perPage > limit) {
+            const opts2: IEntriesRequestOpts = { chunk: { limit: perPage, search } }
+            uvData = await fetchUserViewData(this.$store, args, opts2)
+            if (pending.ref !== this.nextUv) return
+            limit = perPage
+          }
+        }
+
         if (
           uvData.rows &&
           (limit === undefined || uvData.rows.length < limit)
