@@ -228,6 +228,9 @@ export default class UserViewCommon extends mixins<
 
   protected beforeDestroy() {
     this.removeMyAutoSaveLock()
+    if (this.selectedSome) {
+      eventBus.emit('hide-selection-panel', undefined)
+    }
   }
 
   @Watch('uv', { immediate: true })
@@ -916,11 +919,6 @@ export default class UserViewCommon extends mixins<
     }
   }
 
-  beforeDestroy() {
-    if (this.selectedSome) {
-      eventBus.emit('hide-selection-panel', undefined)
-    }
-  }
 }
 </script>
 
