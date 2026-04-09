@@ -284,10 +284,14 @@ export default class App extends Vue {
   }
 
   private showSelectionPanel(args: ISelectionPanelArgs) {
+    // eslint-disable-next-line no-console
+    console.log('[SelectionPanel] show received in App:', args)
     this.selectionPanel = args
   }
 
   private hideSelectionPanel() {
+    // eslint-disable-next-line no-console
+    console.log('[SelectionPanel] hide received in App')
     this.selectionPanel = null
   }
 

@@ -912,6 +912,8 @@ export default class UserViewCommon extends mixins<
 
   @Watch('selectionPanelState', { deep: true })
   private onSelectionPanelState(state: ISelectionPanelArgs | null) {
+    // eslint-disable-next-line no-console
+    console.log('[SelectionPanel] state changed:', state)
     if (state) {
       eventBus.emit('show-selection-panel', state)
     } else {
