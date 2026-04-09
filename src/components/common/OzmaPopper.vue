@@ -578,9 +578,14 @@ export default {
           this.appendArrow(this.popper)
         }
 
-        if (this.appendToBody && !this.appendedToBody) {
-          this.appendedToBody = true
-          document.body.appendChild(this.popper.parentElement)
+        if (this.appendToBody) {
+          const container = this.popper.parentElement
+          if (container && container.parentElement !== document.body) {
+            this.appendedToBody = true
+            document.body.appendChild(container)
+          } else if (container) {
+            this.appendedToBody = true
+          }
         }
 
         if (this.popperJS && this.popperJS.destroy) {
