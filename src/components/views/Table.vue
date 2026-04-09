@@ -1372,6 +1372,9 @@ export const tableUserViewHandler: IUserViewHandler<
 
     let lazyLoad =
       oldView?.lazyLoad ?? TableLazyLoad.parse(uv.attributes['lazy_load'])
+    if (!oldView && lazyLoad.type === 'pagination') {
+      uv.rowLoadState.perFetch = lazyLoad.pagination.perPage
+    }
     if (hasTree) {
       lazyLoad = {
         type: 'infinite_scroll',
