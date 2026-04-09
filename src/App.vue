@@ -20,8 +20,6 @@
     :style="styleSettings"
     class="default-variant default-local-variant"
   >
-    <portal-target name="selection-panel" />
-
     <div class="app-container">
       <ModalPortalTarget name="tabbed-modal" multiple />
 

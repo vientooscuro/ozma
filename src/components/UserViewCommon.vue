@@ -68,7 +68,7 @@
       @select="selectFromScanner(barCodeColumnIndex, $event)"
     />
 
-    <portal to="selection-panel">
+    <MountingPortal mount-to="body" append>
       <transition name="fade-transform">
         <div
           v-if="selectedSome && selectionButtons.length !== 0"
@@ -87,7 +87,7 @@
           </div>
         </div>
       </transition>
-    </portal>
+    </MountingPortal>
   </span>
 </template>
 
