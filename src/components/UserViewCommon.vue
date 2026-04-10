@@ -124,7 +124,7 @@ import { EntityRef, IAttrToLinkOpts } from '@/links'
 import { deserializeParsedRows, serializeValue, valueFromRaw } from '@/values'
 
 import { fetchUserViewData } from '@/user_views/fetch'
-import { eventBus, IShowHelpModalArgs, ISelectionPanelArgs } from '@/main'
+import { eventBus, IShowHelpModalArgs, ISelectionPanelContent } from '@/main'
 import { formatValue } from '@/user_views/format'
 import QRCodeScannerModal from '@/components/qrcode/QRCodeScannerModal.vue'
 import type { ICallApi } from '@/state/auth'
@@ -172,6 +172,7 @@ export default class UserViewCommon extends mixins<
   modalView: IQuery | null = null
   private showDeleteEntiesButton = false
   private autoSaveLock: AutoSaveLock | null = null
+  private readonly selectionPanelSourceId: symbol = Symbol()
 
   get helpPageReference() {
     const helpRef = EntityRef.safeParse(this.uv.attributes['help_page'])
@@ -229,7 +230,7 @@ export default class UserViewCommon extends mixins<
   protected beforeDestroy() {
     this.removeMyAutoSaveLock()
     if (this.selectedSome) {
-      eventBus.emit('hide-selection-panel', undefined)
+      eventBus.emit('hide-selection-panel', { sourceId: this.selectionPanelSourceId })
     }
   }
 
@@ -899,7 +900,7 @@ export default class UserViewCommon extends mixins<
     })
   }
 
-  private get selectionPanelState(): ISelectionPanelArgs | null {
+  private get selectionPanelState(): ISelectionPanelContent | null {
     if (!this.selectedSome || this.selectionButtons.length === 0) return null
     return {
       label: this.$t('selected_n_entries', {
@@ -911,13 +912,11 @@ export default class UserViewCommon extends mixins<
   }
 
   @Watch('selectionPanelState', { deep: true })
-  private onSelectionPanelState(state: ISelectionPanelArgs | null) {
-    // eslint-disable-next-line no-console
-    console.log('[SelectionPanel] state changed:', state)
+  private onSelectionPanelState(state: ISelectionPanelContent | null) {
     if (state) {
-      eventBus.emit('show-selection-panel', state)
+      eventBus.emit('show-selection-panel', { ...state, sourceId: this.selectionPanelSourceId })
     } else {
-      eventBus.emit('hide-selection-panel', undefined)
+      eventBus.emit('hide-selection-panel', { sourceId: this.selectionPanelSourceId })
     }
   }
 
