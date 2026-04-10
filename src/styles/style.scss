@@ -461,9 +461,12 @@ $input-focus-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
   }
 }
 
-/* VueModal container must appear above OzmaPopper popups (which start at 100050) */
-.vm--container {
-  z-index: 100100 !important;
+/* On mobile, VueModal (InputPopup modal mode) must appear above OzmaPopper popups.
+   Scoped to mobile only — on desktop, popups open inside modals and need higher z-index than the modal. */
+@include mobile {
+  .vm--container {
+    z-index: 100300 !important;
+  }
 }
 
 .tooltip {
