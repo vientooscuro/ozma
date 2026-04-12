@@ -223,6 +223,37 @@ HTTPS_PORT=443"
 
 stage_write_env
 
+stage_build_frontend() {
+  info "\n==> Stage 4b: Build frontend locally"
+
+  local script_dir
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+  command -v node > /dev/null || fail "node is required on the deploy machine to build the frontend"
+
+  # Install deps if node_modules is missing or outdated
+  if [[ ! -d "${script_dir}/node_modules" ]]; then
+    info "Installing frontend dependencies..."
+    (cd "${script_dir}" && corepack enable && YARN_NODE_LINKER=node-modules yarn install --immutable) \
+      || fail "yarn install failed"
+  fi
+
+  info "Running yarn build..."
+  (cd "${script_dir}" && YARN_NODE_LINKER=node-modules yarn build) \
+    || fail "yarn build failed"
+
+  # Upload dist/ to server
+  if [[ "$DEPLOY_MODE" == "remote" ]]; then
+    info "Uploading dist/ to server..."
+    rsync -az --delete "${script_dir}/dist/" "${DEPLOY_HOST}:~/ozma/dist/" \
+      || fail "rsync of dist/ failed"
+  fi
+
+  ok "Frontend built and uploaded"
+}
+
+stage_build_frontend
+
 stage_docker_compose() {
   info "\n==> Stage 5: Docker Compose"
 
