@@ -133,3 +133,4 @@ dist
 .DS_Store
 .worktrees
 deploy.env
+docker/keycloak-realm-prepared.json

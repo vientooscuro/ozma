@@ -222,6 +222,29 @@ HTTPS_PORT=443"
   fi
 
   ok ".env written to ~/ozma/.env"
+
+  # Prepare the Keycloak realm JSON locally (python3 is available on the deploy machine)
+  # and upload the prepared file so the Docker image doesn't need python3.
+  info "Preparing Keycloak realm JSON..."
+  command -v python3 > /dev/null || fail "python3 is required on the deploy machine to prepare the Keycloak realm"
+
+  local script_dir
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  local prepared_realm
+  prepared_realm=$(python3 "${script_dir}/docker/keycloak-prepare-realm.py" \
+    --external-origin "https://${DOMAIN}" \
+    --admin-email "${ADMIN_EMAIL}" \
+    --admin-password "${ADMIN_PASSWORD}" \
+    < "${script_dir}/docker/keycloak-realm.json") \
+    || fail "Failed to prepare Keycloak realm JSON"
+
+  if [[ "$DEPLOY_MODE" == "remote" ]]; then
+    ssh "$DEPLOY_HOST" "cat > \$HOME/ozma/docker/keycloak-realm-prepared.json" <<< "$prepared_realm"
+  else
+    echo "$prepared_realm" > "$HOME/ozma/docker/keycloak-realm-prepared.json"
+  fi
+
+  ok "Keycloak realm JSON prepared and uploaded"
 }
 
 stage_write_env
