@@ -154,19 +154,16 @@ stage_preflight
 stage_docker_install() {
   info "\n==> Stage 2: Docker install"
 
-  if run_on_server 'command -v docker > /dev/null 2>&1'; then
+  if run_on_server 'docker version > /dev/null 2>&1'; then
     skip "Docker already installed"
     return
   fi
 
   info "Installing Docker..."
-  run_on_server 'curl -fsSL https://get.docker.com | sh'
-
-  # Add current user to docker group (so docker can be run without sudo)
-  run_on_server 'sudo usermod -aG docker "$USER" || true'
+  run_on_server 'curl -fsSL https://get.docker.com | sh > /dev/null'
 
   # Re-check
-  run_on_server 'command -v docker > /dev/null 2>&1' \
+  run_on_server 'docker version > /dev/null 2>&1' \
     || fail "Docker installation failed"
 
   ok "Docker installed"
