@@ -25,14 +25,14 @@ OZMA_USER_PASSWORD=""
 # Parse args
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --remote)      DEPLOY_MODE="remote"; DEPLOY_HOST="$2"; shift 2 ;;
+    --remote)      DEPLOY_MODE="remote"; [[ -n "${2:-}" ]] || fail "--remote requires a host argument (user@host)"; DEPLOY_HOST="$2"; shift 2 ;;
     --local)       DEPLOY_MODE="local"; shift ;;
-    --env)         ENV_FILE="$2"; shift 2 ;;
-    --domain)      DOMAIN="$2"; shift 2 ;;
-    --admin-email) ADMIN_EMAIL="$2"; shift 2 ;;
-    --admin-password) ADMIN_PASSWORD="$2"; shift 2 ;;
-    --ozma-email)  OZMA_USER_EMAIL="$2"; shift 2 ;;
-    --ozma-password) OZMA_USER_PASSWORD="$2"; shift 2 ;;
+    --env)         [[ -n "${2:-}" ]] || fail "--env requires a file path"; ENV_FILE="$2"; shift 2 ;;
+    --domain)      [[ -n "${2:-}" ]] || fail "--domain requires a domain name"; DOMAIN="$2"; shift 2 ;;
+    --admin-email) [[ -n "${2:-}" ]] || fail "--admin-email requires an email address"; ADMIN_EMAIL="$2"; shift 2 ;;
+    --admin-password) [[ -n "${2:-}" ]] || fail "--admin-password requires a password"; ADMIN_PASSWORD="$2"; shift 2 ;;
+    --ozma-email)  [[ -n "${2:-}" ]] || fail "--ozma-email requires an email address"; OZMA_USER_EMAIL="$2"; shift 2 ;;
+    --ozma-password) [[ -n "${2:-}" ]] || fail "--ozma-password requires a password"; OZMA_USER_PASSWORD="$2"; shift 2 ;;
     *) fail "Unknown argument: $1" ;;
   esac
 done
@@ -49,6 +49,8 @@ if [[ -n "$ENV_FILE" ]]; then
     [[ "$key" =~ ^#.*$ || -z "$key" ]] && continue
     value="${value%%#*}"   # strip inline comments
     value="${value%"${value##*[![:space:]]}"}"  # trim trailing whitespace
+    value="${value#\"}"; value="${value%\"}"     # strip surrounding double quotes
+    value="${value#\'}"; value="${value%\'}"     # strip surrounding single quotes
     # Only set if not already set via CLI
     case "$key" in
       DEPLOY_HOST)        [[ -z "$DEPLOY_HOST" ]]        && DEPLOY_HOST="$value" ;;
@@ -78,12 +80,15 @@ prompt_if_missing() {
       else
         read -rp "$prompt: " value
       fi
-      eval "$varname=\"$value\""
+      printf -v "$varname" '%s' "$value"
     fi
   fi
 }
 
 prompt_if_missing DEPLOY_MODE      "Mode (remote/local)"
+if [[ "${DEPLOY_MODE}" == "remote" ]]; then
+  prompt_if_missing DEPLOY_HOST "SSH target (user@host)"
+fi
 prompt_if_missing DOMAIN           "Domain (e.g. example.com)"
 prompt_if_missing ADMIN_EMAIL      "Keycloak admin email"
 prompt_if_missing ADMIN_PASSWORD   "Keycloak admin password" true
