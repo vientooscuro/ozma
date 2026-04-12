@@ -268,19 +268,13 @@ REMOTE_SCRIPT
 
   # Wait for Keycloak to become healthy
   info "Waiting for Keycloak to be ready..."
-  local base_url
-  if [[ "$DEPLOY_MODE" == "remote" ]]; then
-    base_url="https://${DOMAIN}"
-  else
-    base_url="http://localhost:9080"
-  fi
 
-  local max_attempts=24   # 24 * 5s = 2 minutes
+  local max_attempts=60   # 60 * 5s = 5 minutes
   local attempt=0
-  until curl -fsS "${base_url}/auth/health" > /dev/null 2>&1; do
+  until run_on_server 'docker exec ozma-keycloak-1 curl -fsS http://localhost:8080/auth/realms/master > /dev/null 2>&1'; do
     attempt=$((attempt + 1))
     if [[ $attempt -ge $max_attempts ]]; then
-      fail "Keycloak did not become ready within 2 minutes. Check: docker compose logs keycloak"
+      fail "Keycloak did not become ready within 5 minutes. Check: docker compose logs keycloak"
     fi
     printf "."
     sleep 5
