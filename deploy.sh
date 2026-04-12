@@ -323,12 +323,22 @@ stage_provision_users() {
     KC_OZMA_USER_ID=$(echo "$existing_users" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
   else
     info "Creating user ${OZMA_USER_EMAIL} in realm ozma..."
+    local create_body
+    create_body=$(python3 -c "
+import json
+print(json.dumps({
+  'username': '${OZMA_USER_EMAIL}',
+  'email': '${OZMA_USER_EMAIL}',
+  'enabled': True,
+  'emailVerified': True
+}))
+")
     local create_http_code
     create_http_code=$(curl -fsS -o /dev/null -w "%{http_code}" \
       -X POST \
       -H "Authorization: Bearer ${KC_ADMIN_TOKEN}" \
       -H "Content-Type: application/json" \
-      -d "{\"username\":\"${OZMA_USER_EMAIL}\",\"email\":\"${OZMA_USER_EMAIL}\",\"enabled\":true,\"emailVerified\":true}" \
+      -d "$create_body" \
       "${base_url}/auth/admin/realms/ozma/users") \
       || fail "Failed to create Keycloak user"
 
@@ -347,11 +357,20 @@ stage_provision_users() {
 
   # Set password (always, even if user existed — ensures correct password)
   info "Setting password for Keycloak user..."
+  local password_body
+  password_body=$(python3 -c "
+import json
+print(json.dumps({
+  'type': 'password',
+  'value': '${OZMA_USER_PASSWORD}',
+  'temporary': False
+}))
+")
   curl -fsS \
     -X PUT \
     -H "Authorization: Bearer ${KC_ADMIN_TOKEN}" \
     -H "Content-Type: application/json" \
-    -d "{\"type\":\"password\",\"value\":\"${OZMA_USER_PASSWORD}\",\"temporary\":false}" \
+    -d "$password_body" \
     "${base_url}/auth/admin/realms/ozma/users/${KC_OZMA_USER_ID}/reset-password" \
     || fail "Failed to set password for Keycloak user"
   ok "Keycloak user password set"
@@ -373,12 +392,19 @@ stage_provision_users() {
   [[ -n "$ozma_admin_token" ]] || fail "Empty ozma admin token"
 
   # Check if user already exists in public.users
+  local query_body
+  query_body=$(python3 -c "
+import json
+print(json.dumps({
+  'query': \"SELECT id FROM public.users WHERE name = '\" + '${OZMA_USER_EMAIL}'.replace(\"'\", \"''\") + \"' LIMIT 1\"
+}))
+")
   local existing_ozma_user
   existing_ozma_user=$(curl -fsS \
     -X POST \
     -H "Authorization: Bearer ${ozma_admin_token}" \
     -H "Content-Type: application/json" \
-    -d "{\"query\":\"SELECT id FROM public.users WHERE name = '${OZMA_USER_EMAIL}' LIMIT 1\"}" \
+    -d "$query_body" \
     "${base_url}/api/views/anonymous") \
     || fail "Failed to query ozma users"
 
