@@ -427,7 +427,7 @@ print(json.dumps({
     -H "Authorization: Bearer ${ozma_admin_token}" \
     -H "Content-Type: application/json" \
     -d "$query_body" \
-    "${base_url}/api/views/anonymous") \
+    "${base_url}/api/views/anonymous/entries") \
     || fail "Failed to query ozma users"
 
   local has_rows
