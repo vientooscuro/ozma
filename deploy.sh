@@ -115,3 +115,20 @@ validate_required() {
 }
 
 validate_required
+
+stage_preflight() {
+  info "\n==> Stage 1: Preflight"
+
+  if [[ "$DEPLOY_MODE" == "remote" ]]; then
+    ssh -o BatchMode=yes -o ConnectTimeout=10 "$DEPLOY_HOST" 'echo ok' > /dev/null 2>&1 \
+      || fail "Cannot connect to $DEPLOY_HOST via SSH. Check your SSH config."
+    ok "SSH connection to $DEPLOY_HOST"
+  else
+    ok "Local mode — no SSH needed"
+  fi
+
+  command -v curl > /dev/null || fail "curl is required on the local machine"
+  ok "Preflight complete"
+}
+
+stage_preflight
