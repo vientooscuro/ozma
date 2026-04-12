@@ -12,6 +12,24 @@ fail() { echo -e "${RED}[FAIL]${NC} $*"; exit 1; }
 skip() { echo -e "${YELLOW}[SKIP]${NC} $*"; }
 info() { echo -e "$*"; }
 
+# Run a command locally or on the remote server
+run_on_server() {
+  if [[ "$DEPLOY_MODE" == "remote" ]]; then
+    ssh "$DEPLOY_HOST" "$@"
+  else
+    bash -c "$*"
+  fi
+}
+
+# Run a multi-line script on server (passes via stdin)
+run_script_on_server() {
+  if [[ "$DEPLOY_MODE" == "remote" ]]; then
+    ssh "$DEPLOY_HOST" bash -s
+  else
+    bash
+  fi
+}
+
 # Defaults
 DEPLOY_MODE=""       # "remote" or "local"
 DEPLOY_HOST=""
@@ -132,3 +150,78 @@ stage_preflight() {
 }
 
 stage_preflight
+
+stage_docker_install() {
+  info "\n==> Stage 2: Docker install"
+
+  if run_on_server 'command -v docker > /dev/null 2>&1'; then
+    skip "Docker already installed"
+    return
+  fi
+
+  info "Installing Docker..."
+  run_on_server 'curl -fsSL https://get.docker.com | sh'
+
+  # Add current user to docker group (so docker can be run without sudo)
+  run_on_server 'sudo usermod -aG docker "$USER" || true'
+
+  # Re-check
+  run_on_server 'command -v docker > /dev/null 2>&1' \
+    || fail "Docker installation failed"
+
+  ok "Docker installed"
+}
+
+stage_docker_install
+
+REPO_URL="https://github.com/vientooscuro/ozma.git"
+
+stage_deploy_repo() {
+  info "\n==> Stage 3: Deploy repo"
+
+  if [[ "$DEPLOY_MODE" == "remote" ]]; then
+    local current_branch
+    current_branch="$(git rev-parse --abbrev-ref HEAD)"
+    info "Pushing branch '$current_branch' to origin..."
+    git push origin "$current_branch" \
+      || fail "git push failed. Make sure you have push access."
+    ok "Pushed to origin"
+  fi
+
+  run_script_on_server << 'REMOTE_SCRIPT'
+    set -euo pipefail
+    if [ -d "$HOME/ozma/.git" ]; then
+      echo "Repo exists, pulling..."
+      git -C "$HOME/ozma" pull
+    else
+      echo "Cloning repo..."
+      git clone https://github.com/vientooscuro/ozma.git "$HOME/ozma"
+    fi
+REMOTE_SCRIPT
+
+  ok "Repo deployed"
+}
+
+stage_deploy_repo
+
+stage_write_env() {
+  info "\n==> Stage 4: Env setup"
+
+  local env_content
+  env_content="ADMIN_EMAIL=${ADMIN_EMAIL}
+ADMIN_PASSWORD=${ADMIN_PASSWORD}
+CADDY_ADDRESS=${DOMAIN}
+EXTERNAL_ORIGIN=https://${DOMAIN}
+HTTP_PORT=80
+HTTPS_PORT=443"
+
+  if [[ "$DEPLOY_MODE" == "remote" ]]; then
+    ssh "$DEPLOY_HOST" "cat > \$HOME/ozma/.env" <<< "$env_content"
+  else
+    echo "$env_content" > "$HOME/ozma/.env"
+  fi
+
+  ok ".env written to ~/ozma/.env"
+}
+
+stage_write_env
