@@ -25,9 +25,12 @@ if [ -z "$KEYCLOAK_ADMIN_PASSWORD" ]; then
   fi
 fi
 
-# The realm JSON was prepared by deploy.sh before docker compose up.
-# Just copy it to the import directory.
 mkdir -p /opt/keycloak/data/import
-cp /etc/keycloak/realm.json /opt/keycloak/data/import/realm.json
+/usr/local/bin/keycloak-prepare-realm.py \
+  --external-origin "$EXTERNAL_ORIGIN" \
+  --admin-email "$ADMIN_EMAIL" \
+  --admin-password "$ADMIN_PASSWORD" \
+  </etc/keycloak/realm.json \
+  >/opt/keycloak/data/import/realm.json
 
 exec /opt/keycloak/bin/kc.sh "$@"
