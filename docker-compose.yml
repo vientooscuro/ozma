@@ -33,6 +33,7 @@ services:
       EXTERNAL_ORIGIN: "${EXTERNAL_ORIGIN:-http://localhost:9080}"
       ADMIN_EMAIL: "${ADMIN_EMAIL:-admin@example.com}"
       ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+      OZMADB_CLIENT_SECRET: "${OZMADB_CLIENT_SECRET:-}"
     depends_on:
       - postgres
 

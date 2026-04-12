@@ -39,6 +39,7 @@ ADMIN_EMAIL=""
 ADMIN_PASSWORD=""
 OZMA_USER_EMAIL=""
 OZMA_USER_PASSWORD=""
+OZMADB_CLIENT_SECRET=""
 
 # Parse args
 while [[ $# -gt 0 ]]; do
@@ -51,6 +52,7 @@ while [[ $# -gt 0 ]]; do
     --admin-password) [[ -n "${2:-}" ]] || fail "--admin-password requires a password"; ADMIN_PASSWORD="$2"; shift 2 ;;
     --ozma-email)  [[ -n "${2:-}" ]] || fail "--ozma-email requires an email address"; OZMA_USER_EMAIL="$2"; shift 2 ;;
     --ozma-password) [[ -n "${2:-}" ]] || fail "--ozma-password requires a password"; OZMA_USER_PASSWORD="$2"; shift 2 ;;
+    --ozmadb-client-secret) [[ -n "${2:-}" ]] || fail "--ozmadb-client-secret requires a value"; OZMADB_CLIENT_SECRET="$2"; shift 2 ;;
     *) fail "Unknown argument: $1" ;;
   esac
 done
@@ -75,8 +77,9 @@ if [[ -n "$ENV_FILE" ]]; then
       DOMAIN)             [[ -z "$DOMAIN" ]]             && DOMAIN="$value" ;;
       ADMIN_EMAIL)        [[ -z "$ADMIN_EMAIL" ]]        && ADMIN_EMAIL="$value" ;;
       ADMIN_PASSWORD)     [[ -z "$ADMIN_PASSWORD" ]]     && ADMIN_PASSWORD="$value" ;;
-      OZMA_USER_EMAIL)    [[ -z "$OZMA_USER_EMAIL" ]]    && OZMA_USER_EMAIL="$value" ;;
-      OZMA_USER_PASSWORD) [[ -z "$OZMA_USER_PASSWORD" ]] && OZMA_USER_PASSWORD="$value" ;;
+      OZMA_USER_EMAIL)        [[ -z "$OZMA_USER_EMAIL" ]]        && OZMA_USER_EMAIL="$value" ;;
+      OZMA_USER_PASSWORD)     [[ -z "$OZMA_USER_PASSWORD" ]]     && OZMA_USER_PASSWORD="$value" ;;
+      OZMADB_CLIENT_SECRET)   [[ -z "$OZMADB_CLIENT_SECRET" ]]   && OZMADB_CLIENT_SECRET="$value" ;;
     esac
   done < "$ENV_FILE"
 fi
@@ -210,7 +213,8 @@ ADMIN_PASSWORD=${ADMIN_PASSWORD}
 CADDY_ADDRESS=${DOMAIN}
 EXTERNAL_ORIGIN=https://${DOMAIN}
 HTTP_PORT=80
-HTTPS_PORT=443"
+HTTPS_PORT=443
+OZMADB_CLIENT_SECRET=${OZMADB_CLIENT_SECRET}"
 
   if [[ "$DEPLOY_MODE" == "remote" ]]; then
     ssh "$DEPLOY_HOST" "cat > \$HOME/ozma/.env" <<< "$env_content"
