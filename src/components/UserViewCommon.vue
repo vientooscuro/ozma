@@ -172,7 +172,7 @@ export default class UserViewCommon extends mixins<
   modalView: IQuery | null = null
   private showDeleteEntiesButton = false
   private autoSaveLock: AutoSaveLock | null = null
-  private readonly selectionPanelSourceId: symbol = Symbol()
+  private readonly selectionPanelSourceId: symbol = Symbol('selectionPanelSourceId')
 
   get helpPageReference() {
     const helpRef = EntityRef.safeParse(this.uv.attributes['help_page'])
