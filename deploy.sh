@@ -262,3 +262,169 @@ REMOTE_SCRIPT
 }
 
 stage_docker_compose
+
+# Determine base URL for API calls
+get_base_url() {
+  if [[ "$DEPLOY_MODE" == "remote" ]]; then
+    echo "https://${DOMAIN}"
+  else
+    echo "http://localhost:9080"
+  fi
+}
+
+KC_ADMIN_TOKEN=""
+
+# Obtain Keycloak admin token, stores in KC_ADMIN_TOKEN
+kc_get_admin_token() {
+  local base_url
+  base_url="$(get_base_url)"
+
+  local response
+  response=$(curl -fsS \
+    -d "client_id=admin-cli" \
+    -d "username=${ADMIN_EMAIL}" \
+    -d "password=${ADMIN_PASSWORD}" \
+    -d "grant_type=password" \
+    "${base_url}/auth/realms/master/protocol/openid-connect/token") \
+    || fail "Could not obtain Keycloak admin token. Check ADMIN_EMAIL/ADMIN_PASSWORD."
+
+  KC_ADMIN_TOKEN=$(echo "$response" | grep -o '"access_token":"[^"]*"' | cut -d'"' -f4)
+  [[ -n "$KC_ADMIN_TOKEN" ]] || fail "Empty token in Keycloak response"
+}
+
+stage_provision_users() {
+  info "\n==> Stage 6: User provisioning"
+  local base_url
+  base_url="$(get_base_url)"
+  local KC_OZMA_USER_ID=""
+
+  # 6a — Verify Keycloak admin
+  info "6a: Verifying Keycloak admin token..."
+  kc_get_admin_token
+  ok "Keycloak admin authenticated"
+
+  # 6b — Create user in Keycloak realm: ozma
+  info "6b: Checking for ozma user in Keycloak realm 'ozma'..."
+
+  local encoded_email
+  encoded_email=$(python3 -c "import urllib.parse; print(urllib.parse.quote('${OZMA_USER_EMAIL}'))")
+
+  local existing_users
+  existing_users=$(curl -fsS \
+    -H "Authorization: Bearer ${KC_ADMIN_TOKEN}" \
+    "${base_url}/auth/admin/realms/ozma/users?email=${encoded_email}") \
+    || fail "Failed to query Keycloak users"
+
+  local user_count
+  user_count=$(echo "$existing_users" | grep -o '"id"' | wc -l | tr -d ' ')
+
+  if [[ "$user_count" -gt 0 ]]; then
+    skip "Keycloak user ${OZMA_USER_EMAIL} already exists in realm ozma"
+    KC_OZMA_USER_ID=$(echo "$existing_users" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
+  else
+    info "Creating user ${OZMA_USER_EMAIL} in realm ozma..."
+    local create_http_code
+    create_http_code=$(curl -fsS -o /dev/null -w "%{http_code}" \
+      -X POST \
+      -H "Authorization: Bearer ${KC_ADMIN_TOKEN}" \
+      -H "Content-Type: application/json" \
+      -d "{\"username\":\"${OZMA_USER_EMAIL}\",\"email\":\"${OZMA_USER_EMAIL}\",\"enabled\":true,\"emailVerified\":true}" \
+      "${base_url}/auth/admin/realms/ozma/users") \
+      || fail "Failed to create Keycloak user"
+
+    [[ "$create_http_code" == "201" ]] || fail "Keycloak user creation returned HTTP $create_http_code"
+
+    local user_data
+    user_data=$(curl -fsS \
+      -H "Authorization: Bearer ${KC_ADMIN_TOKEN}" \
+      "${base_url}/auth/admin/realms/ozma/users?email=${encoded_email}") \
+      || fail "Failed to fetch newly created user"
+    KC_OZMA_USER_ID=$(echo "$user_data" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
+    [[ -n "$KC_OZMA_USER_ID" ]] || fail "Could not get user ID after creation"
+
+    ok "Keycloak user created (id: ${KC_OZMA_USER_ID})"
+  fi
+
+  # Set password (always, even if user existed — ensures correct password)
+  info "Setting password for Keycloak user..."
+  curl -fsS \
+    -X PUT \
+    -H "Authorization: Bearer ${KC_ADMIN_TOKEN}" \
+    -H "Content-Type: application/json" \
+    -d "{\"type\":\"password\",\"value\":\"${OZMA_USER_PASSWORD}\",\"temporary\":false}" \
+    "${base_url}/auth/admin/realms/ozma/users/${KC_OZMA_USER_ID}/reset-password" \
+    || fail "Failed to set password for Keycloak user"
+  ok "Keycloak user password set"
+
+  # 6c — Create user in ozma database
+  info "6c: Creating user in ozma database..."
+
+  # Get ozma realm token for admin (admin is in realm ozma via keycloak-prepare-realm.py)
+  local ozma_admin_token
+  local token_response
+  token_response=$(curl -fsS \
+    -d "client_id=ozma" \
+    -d "username=${ADMIN_EMAIL}" \
+    -d "password=${ADMIN_PASSWORD}" \
+    -d "grant_type=password" \
+    "${base_url}/auth/realms/ozma/protocol/openid-connect/token") \
+    || fail "Could not obtain ozma realm token for admin."
+  ozma_admin_token=$(echo "$token_response" | grep -o '"access_token":"[^"]*"' | cut -d'"' -f4)
+  [[ -n "$ozma_admin_token" ]] || fail "Empty ozma admin token"
+
+  # Check if user already exists in public.users
+  local existing_ozma_user
+  existing_ozma_user=$(curl -fsS \
+    -X POST \
+    -H "Authorization: Bearer ${ozma_admin_token}" \
+    -H "Content-Type: application/json" \
+    -d "{\"query\":\"SELECT id FROM public.users WHERE name = '${OZMA_USER_EMAIL}' LIMIT 1\"}" \
+    "${base_url}/api/views/anonymous") \
+    || fail "Failed to query ozma users"
+
+  local has_rows
+  has_rows=$(echo "$existing_ozma_user" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+rows = d.get('result', {}).get('rows', [])
+print(len(rows))
+" 2>/dev/null || echo "0")
+
+  if [[ "$has_rows" -gt 0 ]]; then
+    skip "ozma DB user ${OZMA_USER_EMAIL} already exists"
+  else
+    info "Inserting ${OZMA_USER_EMAIL} into public.users..."
+    local insert_body
+    insert_body=$(python3 -c "
+import json
+print(json.dumps({
+  'operations': [{
+    'type': 'insert',
+    'entity': {'schema': 'public', 'name': 'users'},
+    'fields': {
+      'name': '${OZMA_USER_EMAIL}',
+      'description': '',
+      'is_enabled': True,
+      'is_root': False,
+      'metadata': {}
+    }
+  }]
+}))
+")
+    local insert_http_code
+    insert_http_code=$(curl -fsS -o /dev/null -w "%{http_code}" \
+      -X POST \
+      -H "Authorization: Bearer ${ozma_admin_token}" \
+      -H "Content-Type: application/json" \
+      -d "$insert_body" \
+      "${base_url}/api/transaction") \
+      || fail "Failed to insert ozma user"
+
+    [[ "$insert_http_code" == "200" ]] || fail "ozma user insert returned HTTP $insert_http_code"
+    ok "ozma DB user created"
+  fi
+
+  ok "User provisioning complete"
+}
+
+stage_provision_users
