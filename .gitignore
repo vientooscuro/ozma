@@ -132,3 +132,4 @@ dist
 # Mac OS
 .DS_Store
 .worktrees
+deploy.env
