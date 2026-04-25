@@ -40,6 +40,15 @@ export const saveAndRunAction = async (
               },
               { root: true },
             )
+            if (ret.finishInfo) {
+              const { status, message } = ret.finishInfo
+              app.$bvToast.toast(message ?? '', {
+                title: i18n.tc(`action_finish_${status}`),
+                toastClass: `finish-toast finish-toast--${status}`,
+                solid: true,
+                noAutoHide: status !== 'success',
+              })
+            }
           } catch (e) {
             if (!(e instanceof Error)) {
               throw e
