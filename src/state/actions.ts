@@ -44,9 +44,12 @@ export const saveAndRunAction = async (
             const finishInfo = (ret as any)?.finishInfo as
               | { status: string; message?: string }
               | undefined
+            // eslint-disable-next-line no-console
+            console.log('[finishWith] finishInfo:', finishInfo)
             if (finishInfo) {
               const { status, message } = finishInfo
-              app.$bvToast.toast(message ?? '', {
+              const toastBody = message ?? i18n.tc(`action_finish_${status}`)
+              app.$bvToast.toast(toastBody, {
                 title: i18n.tc(`action_finish_${status}`),
                 toastClass: `finish-toast finish-toast--${status}`,
                 solid: true,
