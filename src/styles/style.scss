@@ -2200,6 +2200,50 @@ html[data-theme-style='light-glass'] .tabbed-modal .content,
 }
 
 
+/* finishWith toast — base (all themes) */
+.finish-toast {
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+}
+
+.finish-toast--success {
+  background-color: #d1fae5 !important;
+  border-color: #059669 !important;
+  color: #065f46 !important;
+
+  .toast-header {
+    background-color: #a7f3d0 !important;
+    border-bottom-color: #059669 !important;
+    color: #065f46 !important;
+  }
+}
+
+.finish-toast--warning {
+  background-color: #fef3c7 !important;
+  border-color: #d97706 !important;
+  color: #78350f !important;
+
+  .toast-header {
+    background-color: #fde68a !important;
+    border-bottom-color: #d97706 !important;
+    color: #78350f !important;
+  }
+}
+
+.finish-toast--error {
+  background-color: #fee2e2 !important;
+  border-color: #dc2626 !important;
+  color: #7f1d1d !important;
+
+  .toast-header {
+    background-color: #fecaca !important;
+    border-bottom-color: #dc2626 !important;
+    color: #7f1d1d !important;
+  }
+}
+
 /* finishWith toast — liquid glass */
 html[data-theme-style='light-glass'] {
   --status-error: #dc2626;
