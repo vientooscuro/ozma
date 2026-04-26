@@ -2244,7 +2244,7 @@ html[data-theme-style='dark-glass'] {
 
   /* ── Success ── */
   .finish-toast--success {
-    background-color: rgba(var(--finish-toast-success-rgb), 0.55) !important;
+    background-color: rgba(var(--finish-toast-success-rgb), 0.28) !important;
     border-color: rgba(var(--finish-toast-success-rgb), 0.45) !important;
     color: var(--accent) !important;
     box-shadow:
@@ -2252,7 +2252,7 @@ html[data-theme-style='dark-glass'] {
       inset 0 1px 0 rgba(255, 255, 255, 0.30) !important;
 
     .toast-header {
-      background-color: rgba(var(--finish-toast-success-rgb), 0.70) !important;
+      background-color: rgba(var(--finish-toast-success-rgb), 0.42) !important;
       border-bottom-color: rgba(var(--finish-toast-success-rgb), 0.35) !important;
       color: var(--accent) !important;
     }
@@ -2263,7 +2263,7 @@ html[data-theme-style='dark-glass'] {
 
   /* ── Warning ── */
   .finish-toast--warning {
-    background-color: rgba(var(--finish-toast-warning-rgb), 0.55) !important;
+    background-color: rgba(var(--finish-toast-warning-rgb), 0.28) !important;
     border-color: rgba(var(--finish-toast-warning-rgb), 0.45) !important;
     color: var(--accent-2) !important;
     box-shadow:
@@ -2271,7 +2271,7 @@ html[data-theme-style='dark-glass'] {
       inset 0 1px 0 rgba(255, 255, 255, 0.30) !important;
 
     .toast-header {
-      background-color: rgba(var(--finish-toast-warning-rgb), 0.70) !important;
+      background-color: rgba(var(--finish-toast-warning-rgb), 0.42) !important;
       border-bottom-color: rgba(var(--finish-toast-warning-rgb), 0.35) !important;
       color: var(--accent-2) !important;
     }
@@ -2282,7 +2282,7 @@ html[data-theme-style='dark-glass'] {
 
   /* ── Error ── */
   .finish-toast--error {
-    background-color: rgba(var(--finish-toast-error-rgb), 0.55) !important;
+    background-color: rgba(var(--finish-toast-error-rgb), 0.28) !important;
     border-color: rgba(var(--finish-toast-error-rgb), 0.45) !important;
     color: var(--status-error) !important;
     box-shadow:
@@ -2290,7 +2290,7 @@ html[data-theme-style='dark-glass'] {
       inset 0 1px 0 rgba(255, 255, 255, 0.30) !important;
 
     .toast-header {
-      background-color: rgba(var(--finish-toast-error-rgb), 0.70) !important;
+      background-color: rgba(var(--finish-toast-error-rgb), 0.42) !important;
       border-bottom-color: rgba(var(--finish-toast-error-rgb), 0.35) !important;
       color: var(--status-error) !important;
     }
