@@ -72,7 +72,7 @@ services:
       - keycloak
 
   ozma-report-generator:
-    image: ozmaio/ozma-report-generator:master
+    image: ghcr.io/vientooscuro/ozma-report-generator:master
     restart: unless-stopped
     environment:
       DB_HOST: postgres
