@@ -93,7 +93,7 @@ services:
   ozma:
     build:
       context: .
-      dockerfile: docker/Dockerfile.ozma.prebuilt
+      dockerfile: docker/Dockerfile.ozma
     restart: unless-stopped
     logging:
       driver: "json-file"
