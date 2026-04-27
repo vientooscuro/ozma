@@ -127,6 +127,7 @@ fi
 log "docker pull ghcr images"
 UI_IMAGE_CHANGED=false
 DB_IMAGE_CHANGED=false
+REPORT_IMAGE_CHANGED=false
 if [[ "$MODE" != "db" ]]; then
   result="$(try_pull_image ghcr.io/vientooscuro/ozma:master)"
   [[ "$result" == "updated" ]] && UI_IMAGE_CHANGED=true
@@ -135,13 +136,19 @@ if [[ "$MODE" != "ui" ]]; then
   result="$(try_pull_image ghcr.io/vientooscuro/ozmadb:master)"
   [[ "$result" == "updated" ]] && DB_IMAGE_CHANGED=true
 fi
+if [[ "$MODE" == "all" ]]; then
+  result="$(try_pull_image ghcr.io/vientooscuro/ozma-report-generator:master)"
+  [[ "$result" == "updated" ]] && REPORT_IMAGE_CHANGED=true
+fi
 
 DO_UI=false
 DO_DB=false
+DO_REPORT=false
 case "$MODE" in
   all)
     DO_UI=true
     DO_DB=true
+    DO_REPORT=true
     ;;
   ui)
     DO_UI=true
@@ -200,12 +207,21 @@ if [[ "$DO_DB" == true ]]; then
   fi
 fi
 
+if [[ "$DO_REPORT" == true ]]; then
+  if [[ "$REPORT_IMAGE_CHANGED" == true ]]; then
+    log "new ozma-report-generator image available, recreate"
+    docker compose up -d --force-recreate ozma-report-generator
+  else
+    log "ozma-report-generator image unchanged, skip recreate"
+  fi
+fi
+
 log "current status"
 if [[ "$DO_UI" == true && "$DO_DB" == true ]]; then
-  docker compose ps ozma ozmadb
+  docker compose ps ozma ozmadb ozma-report-generator
 elif [[ "$DO_UI" == true ]]; then
   docker compose ps ozma
-else
+elif [[ "$DO_DB" == true ]]; then
   docker compose ps ozmadb
 fi
 
