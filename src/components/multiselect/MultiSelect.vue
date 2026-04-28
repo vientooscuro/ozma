@@ -89,7 +89,10 @@
                   'option-local-variant',
                   single ? 'single-value' : 'one-of-many-value',
                 ]"
-                :style="{ ...listValueStyle, ...getSelectedOptionVariantVariables(option) }"
+                :style="{
+                  ...listValueStyle,
+                  ...getSelectedOptionVariantVariables(option),
+                }"
               >
                 <slot name="option" :option="option">
                   <!-- eslint-disable vue/no-v-html -->
@@ -108,6 +111,17 @@
           </div>
 
           <b-input-group-append>
+            <button
+              v-if="showClearOptions"
+              type="button"
+              class="clear-all-button"
+              :title="$t('clear')"
+              :aria-label="$t('clear')"
+              @mousedown.stop.prevent
+              @click="onClearAllClick"
+            >
+              <i class="material-icons">close</i>
+            </button>
             <b-input-group-text
               v-if="!(mode === 'modal' && isOpen)"
               :class="[
@@ -228,7 +242,11 @@
                 @click.stop="selectOption(option.index)"
               >
                 <div
-                  :class="[getDropdownOptionVariantClassName(option), 'option-local-variant', 'option']"
+                  :class="[
+                    getDropdownOptionVariantClassName(option),
+                    'option-local-variant',
+                    'option',
+                  ]"
                   :style="getDropdownOptionVariantVariables(option)"
                 >
                   <slot name="option" :option="option">
@@ -749,6 +767,20 @@ export default class MultiSelect extends Vue {
     this.$emit('clear-values')
   }
 
+  onClearAllClick(event: MouseEvent) {
+    // Stop the click from reaching the popup-toggle wrapper so the dropdown
+    // does not open in response to a "clear" intent. If the popup happens to
+    // already be open, close it as well — the field has just been emptied so
+    // there is nothing useful left to do in the dropdown.
+    event.stopPropagation()
+    if (this.disabled) return
+    this.unselectAll()
+    if (this.showPopup) {
+      this.showPopup = false
+    }
+    this.focusSelect()
+  }
+
   async filterInputFinished() {
     if (this.processFilter && (await this.processFilter(this.filterValue))) {
       this.filterValue = ''
@@ -845,6 +877,33 @@ export default class MultiSelect extends Vue {
       display: initial;
     }
   }
+
+  .clear-all-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+    transition:
+      color 0.12s ease,
+      background-color 0.12s ease;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    padding: 0 0.35rem;
+    color: var(--cell-foregroundDarkerColor);
+    line-height: 1;
+
+    > .material-icons {
+      font-size: 1rem;
+    }
+
+    &:hover,
+    &:focus {
+      outline: none;
+      background-color: var(--default-backgroundDarker1Color);
+      color: var(--cell-foregroundColor);
+    }
+  }
 }
 
 .values-container {
@@ -884,8 +943,8 @@ export default class MultiSelect extends Vue {
   .filter-input {
     border: none;
     border-color: var(--default-borderColor);
-    background-color: var(--default-backgroundColor);
     border-radius: 0.5rem;
+    background-color: var(--default-backgroundColor);
     padding: 0.35rem 0.6rem;
     color: var(--default-foregroundColor);
 
@@ -921,19 +980,19 @@ export default class MultiSelect extends Vue {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  transition:
+    background-color 0.16s ease,
+    border-color 0.16s ease;
   border: 1px solid var(--default-borderColor);
   border-radius: 0.5rem;
   background: var(--default-backgroundDarker1Color);
   padding: 0.6rem 1rem;
   width: 100%;
   color: var(--default-foregroundColor);
-  transition:
-    background-color 0.16s ease,
-    border-color 0.16s ease;
 
   &:hover {
-    background: var(--default-backgroundDarker2Color);
     border-color: var(--default-borderColor, var(--cell-borderColor));
+    background: var(--default-backgroundDarker2Color);
   }
 }
 
@@ -996,8 +1055,8 @@ div.select-container__options__actions {
 }
 
 .selected-values > .single-value {
-  max-width: 100%;
   min-width: 0;
+  max-width: 100%;
   white-space: nowrap;
 
   > span,
@@ -1025,11 +1084,14 @@ div.select-container__options__actions {
   }
 
   .option {
-    border-radius: 0.5rem;
-    background: var(--option-backgroundColor, var(--default-backgroundDarker1Color));
-    color: var(--option-foregroundColor);
     border: 1px solid var(--option-borderColor, transparent);
+    border-radius: 0.5rem;
+    background: var(
+      --option-backgroundColor,
+      var(--default-backgroundDarker1Color)
+    );
     padding: 0.5rem 0.75rem;
+    color: var(--option-foregroundColor);
   }
 }
 

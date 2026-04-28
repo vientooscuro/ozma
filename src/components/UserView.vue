@@ -84,7 +84,12 @@
 -->
 
 <template>
-  <div :class="['userview-wrapper', { 'iframe-only-wrapper': isFormWithOnlyIframe }]">
+  <div
+    :class="[
+      'userview-wrapper',
+      { 'iframe-only-wrapper': isFormWithOnlyIframe },
+    ]"
+  >
     <b-modal
       :id="$id('business_mode_edit_view')"
       lazy
@@ -175,7 +180,9 @@
             @select="$emit('select', $event)"
             @update:buttons="componentButtons = $event"
             @update:enable-filter="$emit('update:enable-filter', $event)"
-            @update:sort-editor-props="$emit('update:sort-editor-props', $event)"
+            @update:sort-editor-props="
+              $emit('update:sort-editor-props', $event)
+            "
             @update:current-page="$emit('update:current-page', $event)"
             @update:body-style="$emit('update:body-style', $event)"
             @load-next-chunk="loadNextChunk"
@@ -488,7 +495,8 @@ export default class UserView extends Vue {
       this.state.componentName !== 'Form' ||
       uv.columnAttributes.length !== 1 ||
       uv.columnAttributes[0]['control'] !== 'iframe'
-    ) return false
+    )
+      return false
     const height = uv.columnAttributes[0]['control_height']
     return height !== undefined && String(height).endsWith('%')
   }
@@ -670,6 +678,12 @@ export default class UserView extends Vue {
     this.$emit('update:buttons', this.allButtons)
   }
 
+  // Snapshot of `args.args` from the moment this user view source was first
+  // shown. Reset whenever the source identity changes (different schema/name
+  // or anonymous source). Used by ArgumentEditor's "Reset filters" button.
+  private initialSourceKey: string | null = null
+  private initialArgsSnapshot: IUserViewArguments['args'] = null
+
   @Watch('state', { immediate: true })
   private watchState() {
     if (this.state.state !== 'show') {
@@ -678,9 +692,16 @@ export default class UserView extends Vue {
       return
     }
 
+    const sourceKey = JSON.stringify(this.state.uv.args.source)
+    if (this.initialSourceKey !== sourceKey) {
+      this.initialSourceKey = sourceKey
+      this.initialArgsSnapshot = this.state.uv.args.args
+    }
+
     const argumentEditorProps: IArgumentEditorProps = {
       userView: this.state.uv,
       applyArguments: (params) => this.applyUpdatedArguments(params),
+      initialArgumentsSnapshot: this.initialArgsSnapshot,
     }
     this.$emit('update:argument-editor-props', argumentEditorProps)
   }
@@ -900,7 +921,9 @@ export default class UserView extends Vue {
           const lazyLoad = uvData.attributes['lazy_load'] as any
           const perPage: number | undefined = lazyLoad?.pagination?.per_page
           if (perPage !== undefined && perPage > limit) {
-            const opts2: IEntriesRequestOpts = { chunk: { limit: perPage, search } }
+            const opts2: IEntriesRequestOpts = {
+              chunk: { limit: perPage, search },
+            }
             uvData = await fetchUserViewData(this.$store, args, opts2)
             if (pending.ref !== this.nextUv) return
             limit = perPage
