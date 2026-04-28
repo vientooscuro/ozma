@@ -100,6 +100,7 @@ import type { BvMsgBoxOptions } from 'bootstrap-vue'
 
 import ButtonView from '@/components/buttons/ButtonView.vue'
 import type { Button, IButtonConfirm } from '@/components/buttons/buttons'
+import type { UserString } from '@/state/translations'
 
 @Component({
   components: {
@@ -128,19 +129,19 @@ export default class ButtonItem extends Vue {
   private async askConfirm(): Promise<boolean> {
     const confirm = this.confirmConfig
     if (confirm === undefined) return true
+    const ust = (s: UserString | undefined): string =>
+      s !== undefined ? this.$ustOrEmpty(s) : ''
     const message =
-      this.$ustOrEmpty(confirm.message) ||
-      this.$ustOrEmpty(confirm.title) ||
+      ust(confirm.message) ||
+      ust(confirm.title) ||
       this.$t('confirm_default_title').toString()
     const opts: BvMsgBoxOptions = {
       title:
-        this.$ustOrEmpty(confirm.title) ||
-        this.$t('confirm_default_title').toString(),
+        ust(confirm.title) || this.$t('confirm_default_title').toString(),
       okTitle:
-        this.$ustOrEmpty(confirm.okTitle) ||
-        this.$t('confirm_default_ok').toString(),
+        ust(confirm.okTitle) || this.$t('confirm_default_ok').toString(),
       cancelTitle:
-        this.$ustOrEmpty(confirm.cancelTitle) ||
+        ust(confirm.cancelTitle) ||
         this.$t('confirm_default_cancel').toString(),
       centered: true,
       modalClass: 'glass-confirm-modal',
