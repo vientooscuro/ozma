@@ -101,6 +101,7 @@ import type { BvMsgBoxOptions } from 'bootstrap-vue'
 import ButtonView from '@/components/buttons/ButtonView.vue'
 import type { Button, IButtonConfirm } from '@/components/buttons/buttons'
 import type { UserString } from '@/state/translations'
+import { linkHandler } from '@/links'
 
 @Component({
   components: {
@@ -113,8 +114,8 @@ export default class ButtonItem extends Vue {
   @Prop({ type: Boolean, default: false }) listItemHasRightMargin!: boolean
   @Prop({ type: Boolean, default: false }) alignRight!: boolean
 
-  // Used to bypass the capture-phase confirm guard for `link`/`upload-file`
-  // when we re-dispatch the click programmatically after confirmation.
+  // Used to bypass the capture-phase confirm guard for `upload-file` when we
+  // programmatically trigger the input click after confirmation.
   private bypassConfirm = false
 
   private uploadFile(input: HTMLInputElement, next: (file: File) => void) {
@@ -169,39 +170,24 @@ export default class ButtonItem extends Vue {
   }
 
   private async onClickLinkCapture(event: MouseEvent) {
-    if (this.bypassConfirm) return
     if (this.confirmConfig === undefined) return
     event.preventDefault()
     event.stopImmediatePropagation()
     event.stopPropagation()
     const ok = await this.askConfirm()
     if (!ok) return
-    // Re-dispatch the click on the OzmaLink-rendered element (direct child of
-    // the wrapper) so OzmaLink's own click handler runs.
-    const wrapper = event.currentTarget as HTMLElement | null
-    const linkEl = wrapper?.firstElementChild as HTMLElement | null
-    if (linkEl === null) return
-    this.bypassConfirm = true
-    try {
-      const newEvent = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-        button: event.button,
-        buttons: event.buttons,
-        ctrlKey: event.ctrlKey,
-        shiftKey: event.shiftKey,
-        altKey: event.altKey,
-        metaKey: event.metaKey,
-      })
-      linkEl.dispatchEvent(newEvent)
-    } finally {
-      this.bypassConfirm = false
-    }
+    if (this.button.type !== 'link') return
+    // Mirror what OzmaLink would do — emit `button-click` and execute the
+    // link handler ourselves. Re-dispatching the DOM click after `await` is
+    // fragile (event.currentTarget is null after the microtask boundary).
+    this.$emit('button-click', this.button)
+    const handlerObj = linkHandler(this.button.link, {
+      goto: (gotoEvent) => this.$emit('goto', gotoEvent),
+    })
+    void handlerObj.handler()
   }
 
   private async onClickLocationCapture(event: MouseEvent) {
-    if (this.bypassConfirm) return
     if (this.confirmConfig === undefined) return
     event.preventDefault()
     event.stopImmediatePropagation()
