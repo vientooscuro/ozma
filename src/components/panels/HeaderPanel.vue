@@ -67,6 +67,9 @@
           v-if="!useCompactLayout && argumentEditorProps"
           :userView="argumentEditorProps.userView"
           :applyArguments="argumentEditorProps.applyArguments"
+          :initialArgumentsSnapshot="
+            argumentEditorProps.initialArgumentsSnapshot
+          "
         />
         <ButtonsPanel
           v-if="!useCompactLayout && headerButtons.length > 0"
@@ -106,6 +109,7 @@
         v-if="argumentEditorProps"
         :userView="argumentEditorProps.userView"
         :applyArguments="argumentEditorProps.applyArguments"
+        :initialArgumentsSnapshot="argumentEditorProps.initialArgumentsSnapshot"
       />
     </div>
   </div>
