@@ -27,7 +27,8 @@
       "unpin_column": "Unpin column",
       "count": "Count",
       "sum": "Sum",
-      "selected_cells_sum": "Sum"
+      "selected_cells_sum": "Sum",
+      "close_sum_popup": "Hide sum"
     },
     "ru": {
       "pagination_select": "Строк на странице",
@@ -56,7 +57,8 @@
       "unpin_column": "Открепить столбец",
       "count": "Кол-во",
       "sum": "Сумма",
-      "selected_cells_sum": "Сумма"
+      "selected_cells_sum": "Сумма",
+      "close_sum_popup": "Скрыть сумму"
     },
     "es": {
       "pagination_select": "Filas por página",
@@ -85,7 +87,8 @@
       "unpin_column": "Desfijar columna",
       "count": "Cantidad",
       "sum": "Suma",
-      "selected_cells_sum": "Suma"
+      "selected_cells_sum": "Suma",
+      "close_sum_popup": "Ocultar suma"
     }
   }
 </i18n>
@@ -456,11 +459,7 @@
         </InfiniteLoading>
 
         <div
-          v-if="
-            uv.extra.lazyLoad.type === 'pagination' ||
-            statusLine ||
-            showBottomAddButton
-          "
+          v-if="isFooterVisible"
           class="footer"
         >
           <div v-if="selectedCellsSumLabel" class="selected-cells-sum">
@@ -521,6 +520,29 @@
             {{ statusLine }}
           </div>
         </div>
+        <transition name="sum-popup-fade">
+          <div
+            v-if="
+              selectedCellsSumLabel &&
+              !isFooterVisible &&
+              !sumPopupDismissed
+            "
+            class="selected-cells-sum-popup"
+            role="status"
+          >
+            <span class="selected-cells-sum-popup__text">
+              {{ selectedCellsSumLabel }}
+            </span>
+            <button
+              type="button"
+              class="selected-cells-sum-popup__close"
+              :aria-label="$t('close_sum_popup').toString()"
+              @click="dismissSumPopup"
+            >
+              <span class="material-icons">close</span>
+            </button>
+          </div>
+        </transition>
       </template>
     </div>
   </wrapped-component>
@@ -2533,6 +2555,25 @@ export default class UserViewTable extends mixins<
     return Number(value.toFixed(12))
   }
 
+  private sumPopupDismissed = false
+
+  @Watch('selectedCellsSumLabel')
+  private onSelectedCellsSumLabelChange() {
+    this.sumPopupDismissed = false
+  }
+
+  private dismissSumPopup() {
+    this.sumPopupDismissed = true
+  }
+
+  private get isFooterVisible(): boolean {
+    return (
+      this.uv.extra.lazyLoad.type === 'pagination' ||
+      Boolean(this.statusLine) ||
+      this.showBottomAddButton
+    )
+  }
+
   private get selectedCellsSumLabel(): string | null {
     if (this.selectedCells.length === 0) return null
 
@@ -4256,6 +4297,72 @@ th.column-drop-target {
 .selected-cells-sum {
   font-size: 0.75rem;
   white-space: nowrap;
+}
+
+.selected-cells-sum-popup {
+  position: sticky;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  z-index: 31;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+  margin-top: auto;
+  margin-right: auto;
+  width: fit-content;
+  max-width: calc(100% - 1.5rem);
+  border: 1px solid var(--table-borderColor, rgba(0, 0, 0, 0.12));
+  border-radius: 0.75rem;
+  background-color: var(--default-backgroundColor, #fff);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  padding: 0.5rem 0.5rem 0.5rem 0.875rem;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  pointer-events: auto;
+}
+
+.selected-cells-sum-popup__text {
+  line-height: 1.2;
+}
+
+.selected-cells-sum-popup__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.125rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: inherit;
+  opacity: 0.6;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+
+  &:hover,
+  &:focus-visible {
+    background-color: rgba(0, 0, 0, 0.08);
+    opacity: 1;
+    outline: none;
+  }
+
+  .material-icons {
+    font-size: 1rem;
+    line-height: 1;
+  }
+}
+
+.sum-popup-fade-enter-active,
+.sum-popup-fade-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.sum-popup-fade-enter,
+.sum-popup-fade-leave-to {
+  opacity: 0;
+  transform: translateY(4px);
 }
 
 .context-menu-wrapper {
