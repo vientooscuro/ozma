@@ -3811,11 +3811,25 @@ export default class UserViewTable extends mixins<
   ) {
     if (event.ctrlKey || event.metaKey) {
       this.removeCellEditing()
-      if (this.uv.extra.cursorValue) {
-        this.selectValue(this.uv.extra.cursorValue, true)
-      }
       const ref = this.getValueRefByVisualPosition(pos)
-      this.setCursorCell(ref)
+      const cell = this.uv.getValueByRef(ref)
+      const isExplicitlySelected = cell?.value.extra.selected === true
+      const isCursor =
+        this.uv.extra.cursorValue !== null &&
+        deepEquals(this.uv.extra.cursorValue, ref)
+
+      if (isExplicitlySelected) {
+        this.selectValue(ref, false)
+      } else if (isCursor) {
+        this.clearCursorCell()
+        this.uv.extra.cursorValue = null
+        this.uv.extra.oldCursorValue = null
+      } else {
+        if (this.uv.extra.cursorValue) {
+          this.selectValue(this.uv.extra.cursorValue, true)
+        }
+        this.setCursorCell(ref)
+      }
     } else if (event.shiftKey) {
       this.removeCellEditing()
       this.shiftSelectCells(pos)
