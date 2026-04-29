@@ -3738,7 +3738,7 @@ export default class UserViewTable extends mixins<
     element: HTMLElement,
     event: MouseEvent,
   ) {
-    if (event.shiftKey || event.ctrlKey) return
+    if (event.shiftKey || event.ctrlKey || event.metaKey) return
 
     const ref = this.getValueRefByVisualPosition(pos)
     this.deselectAllCells()
@@ -3809,7 +3809,7 @@ export default class UserViewTable extends mixins<
     element: HTMLElement,
     event: MouseEvent,
   ) {
-    if (event.ctrlKey) {
+    if (event.ctrlKey || event.metaKey) {
       this.removeCellEditing()
       if (this.uv.extra.cursorValue) {
         this.selectValue(this.uv.extra.cursorValue, true)
