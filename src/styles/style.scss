@@ -930,6 +930,14 @@ html[data-theme-style='dark-glass'] .popper {
   animation: none !important;
 }
 
+/* Glass dropdown/menu items: transparent so the frosted popper itself is the
+   surface. Opaque items left page show-through gaps next to content-width
+   link items; this keeps the panel uniform. */
+html[data-theme-style='light-glass'] .popper .list-group-item,
+html[data-theme-style='dark-glass'] .popper .list-group-item {
+  background: transparent !important;
+}
+
 html[data-theme-style='light-glass'] .vm--modal,
 html[data-theme-style='dark-glass'] .vm--modal {
   overflow: hidden;
