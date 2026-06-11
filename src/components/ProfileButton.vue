@@ -493,6 +493,17 @@ export default class AppHeader extends Vue {
     0px 15px 30px -7px rgba(33, 35, 38, 0.12);
   border-radius: 0.5rem;
   padding: 1.25rem 0 0.75rem 0;
+
+  // TEMP: убираем фон-подсветку у пунктов меню (обе темы) для проверки
+  :deep(.list-group-item),
+  :deep(.list-group-item-action) {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: transparent !important;
+    }
+  }
 }
 
 .profile-block {
