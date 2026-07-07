@@ -2320,6 +2320,19 @@ export default class UserViewTable extends mixins<
     )
   }
 
+  // Total row count for the glass2 page header counter (§4). Known only
+  // once every row has been fetched; null while loading is incomplete.
+  private get completeRowCount(): number | null {
+    if (!this.uv.rows || !this.uv.rowLoadState.complete) return null
+    return this.uv.rowLoadState.fetchedRowCount
+  }
+
+  @Watch('completeRowCount', { immediate: true })
+  private updateRowCountToParent() {
+    if (!this.isTopLevel) return
+    this.$emit('update:row-count', this.completeRowCount)
+  }
+
   private get pagesCount(): number | null {
     if (
       this.uv.extra.lazyLoad.type !== 'pagination' ||

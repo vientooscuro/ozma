@@ -184,6 +184,7 @@
               $emit('update:sort-editor-props', $event)
             "
             @update:current-page="$emit('update:current-page', $event)"
+            @update:row-count="$emit('update:row-count', $event)"
             @update:body-style="$emit('update:body-style', $event)"
             @load-next-chunk="loadNextChunk"
             @load-all-chunks="loadAllChunks"
@@ -537,6 +538,19 @@ export default class UserView extends Vue {
       )
       if (descriptionAttr) {
         return descriptionAttr
+      }
+    }
+    return null
+  }
+
+  // Icon for the glass2 page header tile (§4): the view's `icon` attribute
+  // when present (a Material ligature name), otherwise null (the header
+  // falls back to the default `table` glyph).
+  get viewIcon(): string | null {
+    if (this.state.state === 'show') {
+      const iconAttr = this.state.uv.attributes['icon']
+      if (typeof iconAttr === 'string') {
+        return iconAttr
       }
     }
     return null
@@ -1154,6 +1168,11 @@ export default class UserView extends Vue {
   @Watch('description', { immediate: true })
   private updateDescription() {
     this.$emit('update:description', this.description)
+  }
+
+  @Watch('viewIcon', { immediate: true })
+  private updateViewIcon() {
+    this.$emit('update:icon', this.viewIcon)
   }
 
   // Returns whether we need to reload.

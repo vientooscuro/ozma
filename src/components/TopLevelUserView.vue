@@ -125,6 +125,8 @@
           @update:is-loading="uvLoading = $event"
           @update:iframe-only="iframeOnly = $event"
           @update:current-page="replacePage({ key: null, page: $event })"
+          @update:icon="viewIcon = $event"
+          @update:row-count="rowCount = $event"
           @update:argument-editor-props="argumentEditorProps = $event"
           @update:sort-editor-props="sortEditorProps = $event"
         />
@@ -347,6 +349,8 @@ export default class TopLevelUserView extends Vue {
   private finalSettingsStyle: string | null = null
   private title: UserString | null = null
   private description: UserString | null = null
+  private viewIcon: string | null = null
+  private rowCount: number | null = null
   private url: UserString | null = null
   private uvLoading = true
 
@@ -486,6 +490,14 @@ export default class TopLevelUserView extends Vue {
   private errorsChanged() {
     if (this.errors.length > 0) {
       this.makeErrorToast()
+    }
+  }
+
+  @Watch('uvLoading')
+  private onUvLoadingChanged(loading: boolean) {
+    if (loading) {
+      this.viewIcon = null
+      this.rowCount = null
     }
   }
 
