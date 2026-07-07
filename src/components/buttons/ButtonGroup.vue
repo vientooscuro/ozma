@@ -21,7 +21,7 @@
     :force-show="show"
     @document-click="onDocumentClick"
   >
-    <div class="popper shadow">
+    <div ref="content" class="popper shadow">
       <ButtonList
         :buttons="button.buttons"
         @button-click="onInnerButtonClick"
@@ -30,6 +30,7 @@
     </div>
     <!-- eslint-disable vue/no-deprecated-slot-attribute -->
     <ButtonView
+      ref="reference"
       slot="reference"
       :list-item="listItem"
       :button="button"
@@ -40,11 +41,16 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
 import Popper from '@/components/common/OzmaPopper.vue'
 
 import type { IButton, IButtonGroup } from '@/components/buttons/buttons'
+import type { IThemeRef } from '@/utils_colors'
+import { isGlass2Theme } from '@/utils/glass2'
 import ButtonView from '@/components/buttons/ButtonView.vue'
 import ButtonList from '@/components/buttons/ButtonList.vue'
+
+const settings = namespace('settings')
 
 @Component({
   components: {
@@ -57,7 +63,62 @@ export default class ButtonsPanel extends Vue {
   @Prop({ type: Object, required: true }) button!: IButtonGroup
   @Prop({ type: Boolean, default: false }) listItem!: boolean
 
+  @settings.State('currentThemeRef') currentThemeRef!: IThemeRef | null
+
   private show = false
+  private closeTimer: number | null = null
+
+  /* Nested menu entries (Тема, Язык…) open their submenu on hover in the
+     new glass themes; top-level toolbar groups stay click-only. */
+  private get hoverEnabled(): boolean {
+    return this.listItem && isGlass2Theme(this.currentThemeRef)
+  }
+
+  mounted() {
+    const ref = (this.$refs.reference as Vue | undefined)?.$el
+    const content = this.$refs.content as HTMLElement | undefined
+    ref?.addEventListener('mouseenter', this.onHoverEnter)
+    ref?.addEventListener('mouseleave', this.onHoverLeave)
+    content?.addEventListener('mouseenter', this.onContentEnter)
+    content?.addEventListener('mouseleave', this.onHoverLeave)
+  }
+
+  beforeDestroy() {
+    this.cancelScheduledClose()
+    const ref = (this.$refs.reference as Vue | undefined)?.$el
+    const content = this.$refs.content as HTMLElement | undefined
+    ref?.removeEventListener('mouseenter', this.onHoverEnter)
+    ref?.removeEventListener('mouseleave', this.onHoverLeave)
+    content?.removeEventListener('mouseenter', this.onContentEnter)
+    content?.removeEventListener('mouseleave', this.onHoverLeave)
+  }
+
+  private onHoverEnter() {
+    if (!this.hoverEnabled) return
+    this.cancelScheduledClose()
+    this.show = true
+  }
+
+  private onContentEnter() {
+    if (!this.hoverEnabled) return
+    this.cancelScheduledClose()
+  }
+
+  private onHoverLeave() {
+    if (!this.hoverEnabled) return
+    this.cancelScheduledClose()
+    this.closeTimer = window.setTimeout(() => {
+      this.show = false
+      this.closeTimer = null
+    }, 250)
+  }
+
+  private cancelScheduledClose() {
+    if (this.closeTimer !== null) {
+      window.clearTimeout(this.closeTimer)
+      this.closeTimer = null
+    }
+  }
 
   onReferenceClick() {
     this.show = !this.show

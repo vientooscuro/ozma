@@ -325,6 +325,23 @@ html[data-theme-style='light-glass-cool'] {
     padding: 1.75rem 2rem;
   }
 
+  /* Full-width grid pinned to the top (no vertical centering, no 1140px
+     Bootstrap cap). */
+  .menu-b-container {
+    max-width: none;
+    margin-top: 0 !important;
+  }
+
+  /* Admin-style menus nest category blocks; only the outer level is a card. */
+  .menu_category_block .menu_category_block {
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
   .menu_category_block {
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-card-lg);
@@ -727,6 +744,29 @@ html[data-theme-style='light-glass-cool'] {
     border-radius: 0 !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
+  }
+
+  /* Forms use the full page width (Bootstrap caps .container-fluid at
+     1140px with auto margins, squeezing multi-panel forms like Схема). */
+  .view-form .container-fluid {
+    max-width: none !important;
+  }
+
+  /* Nested panel headers: title + controls on ONE row, like the mockup
+     TablePanel (instead of controls wrapping under the title). */
+  .nested-userview .header-panel.compact {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nested-userview .header-panel.compact .first-row {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .nested-userview .header-panel.compact .second-row {
+    flex: 0 0 auto;
   }
 
   /* The root userview wrapper paints the DB pageBackground variant as an
