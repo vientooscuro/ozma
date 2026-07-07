@@ -15,6 +15,7 @@ import OzmaLink from '@/components/OzmaLink'
 import ButtonsPanel from '@/components/panels/ButtonsPanel.vue'
 import ButtonGroup from '@/components/buttons/ButtonGroup.vue'
 import FormControl from '@/components/FormControl.vue'
+import AppIcon from '@/components/AppIcon.vue'
 import { VueIsMobile } from '@/components'
 import App from '@/App.vue'
 
@@ -219,6 +220,7 @@ Vue.component('ButtonsPanel', ButtonsPanel)
 Vue.component('ButtonGroup', ButtonGroup)
 Vue.component('FormControl', FormControl)
 Vue.component('OzmaLink', OzmaLink)
+Vue.component('AppIcon', AppIcon)
 
 Vue.directive('visible', (el, bind) => {
   el.style.visibility = bind.value ? 'visible' : 'hidden'
