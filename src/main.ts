@@ -29,6 +29,7 @@ import errorsModule from '@/state/errors'
 import reloadModule from '@/state/reload'
 import windowsModule from '@/state/windows'
 import translationsModule from '@/state/translations'
+import mainMenuModule from '@/state/main_menu'
 
 import '@/styles/style.scss'
 import { apiUrl, IEmbeddedPageRef } from '@/api'
@@ -74,6 +75,7 @@ export const store = new Vuex.Store({
     reload: reloadModule,
     windows: windowsModule,
     translations: translationsModule,
+    mainMenu: mainMenuModule,
   },
 })
 
