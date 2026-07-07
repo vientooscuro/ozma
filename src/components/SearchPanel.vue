@@ -111,7 +111,11 @@ export default class SearchPanel extends Vue {
     if (newValue === oldValue) return
 
     if (newValue) {
-      this.$nextTick(() => (this.$refs.searchInput as HTMLElement).focus())
+      /* Always-visible (expanded) search must not steal focus on mount;
+         autofocus is only for the explicit icon-click reveal. */
+      if (!this.expanded) {
+        this.$nextTick(() => (this.$refs.searchInput as HTMLElement).focus())
+      }
     } else {
       this.localFilterString = ''
       this.updateInput()
