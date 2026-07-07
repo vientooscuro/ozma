@@ -264,3 +264,135 @@ html[data-theme-style='dark-glass'],
 html[data-theme-style='light-glass-cool'] {
   @include glass2-scrollbars;
 }
+
+/* ── Header panel (§6.2) ── */
+@mixin glass2-header {
+  .header-panel {
+    border: 1px solid var(--border-subtle);
+    border-bottom-color: var(--border-subtle);
+    background: var(--surface-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+  }
+
+  .header-panel.is-root {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    margin: 0.55rem 0.55rem 0;
+    box-sizing: border-box;
+    width: calc(100% - 1.1rem);
+    border-radius: 16px;
+    box-shadow: var(--shadow-card);
+  }
+
+  .userview-upper-div > .userview-div {
+    margin: 0.5rem 0.55rem 0;
+    box-sizing: border-box;
+    width: calc(100% - 1.1rem);
+  }
+
+  .userview-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+
+  .profile-button-wrapper {
+    padding-right: 0;
+  }
+
+  /* Avatar: gradient tile, radius 12 (overrides the inline
+     backgroundColor/borderRadius set by Avatar.vue). */
+  .header-panel .avatar-box .placeholder-avatar {
+    background: var(--gradient-accent) !important;
+    border-radius: 12px !important;
+    color: var(--text-on-accent);
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-header;
+}
+
+/* ── Main menu (§6.3) ── */
+@mixin glass2-menu {
+  .menu_category_block {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-card-lg);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    padding: var(--card-padding);
+  }
+
+  .menu-header {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+
+  .menu-entry {
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    min-height: 38px;
+    color: var(--text-primary);
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+
+  /* Approved: subtle hover returns in the NEW themes only (§6.3). */
+  .menu-entry:hover:not(.disabled),
+  .menu-entry:focus-visible:not(.disabled) {
+    border: none;
+    background: var(--surface-hover);
+    box-shadow: none;
+    transform: none;
+  }
+
+  .menu-entry .icon.no-icon {
+    color: var(--text-muted);
+  }
+
+  /* DB-driven entry variants: keep entries flat, hover still applies. */
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant {
+    border: 1px solid var(--border-subtle);
+  }
+
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant .menu-entry {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transform: none !important;
+  }
+
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant
+    .menu-entry:hover:not(.disabled),
+  .menu_category_block.menuEntry-variant.menuEntry-local-variant
+    .menu-entry:focus-visible:not(.disabled) {
+    background: var(--surface-hover) !important;
+  }
+
+  /* Count badges: small muted pills. */
+  .menu_category_block .badge {
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background: var(--surface-inset);
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-menu;
+}
