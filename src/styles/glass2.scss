@@ -598,6 +598,10 @@ html[data-theme-style='light-glass-cool'] {
 
   .form_sub_block {
     margin-bottom: 1.25rem !important;
+
+    /* Honor per-section colors from the view definition (subBlock.color →
+       --sub-block-color inline var in FormGridBlock.vue). */
+    background: var(--sub-block-color, var(--surface-card)) !important;
   }
 
   .form_sub_block:last-child {
@@ -635,7 +639,9 @@ html[data-theme-style='light-glass-cool'] {
     letter-spacing: -0.01em !important;
     text-transform: none !important;
     color: var(--text-primary) !important;
-    margin-bottom: 1.25rem !important;
+
+    /* Room for the first field's floating label under the caption. */
+    margin-bottom: 1.9rem !important;
     padding-bottom: 0 !important;
   }
 
@@ -645,15 +651,16 @@ html[data-theme-style='light-glass-cool'] {
   }
 
   .form_grid_block__column:not(:last-child) {
-    margin-bottom: 1.4rem !important;
+    margin-bottom: 1.6rem !important;
   }
 
-  /* Field labels: signature micro-labels above the control (§4). */
+  /* Field labels: signature micro-labels hugging their control (§4):
+     ~4px above the input, the wider gap stays above the label. */
   .border-label {
     @include glass2-microlabel;
 
     background-color: transparent !important;
-    top: -1.35rem !important;
+    top: -1.05rem !important;
   }
 
   .increase-z-index.border-label {
@@ -930,7 +937,7 @@ html[data-theme-style='light-glass-cool'] {
     background: color-mix(in srgb, currentcolor 13%, transparent);
     border: 1px solid color-mix(in srgb, currentcolor 30%, transparent);
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500;
     font-variant-numeric: tabular-nums;
   }
 
@@ -1200,4 +1207,22 @@ html[data-theme-style='light-glass-cool'] {
 #app[data-theme-style='dark-glass'],
 #app[data-theme-style='light-glass-cool'] {
   @include glass2-pagination;
+}
+
+/* ── Light-cool specifics ──
+   Variants copied from the warm theme carry pale tinted backgrounds with dark
+   foregrounds, so light chips use the variant background directly (the dark
+   currentcolor-derived tint reads as gray). Antialiasing thins dark-on-light
+   text that otherwise renders too heavy. */
+#app[data-theme-style='light-glass-cool'] {
+  -webkit-font-smoothing: antialiased;
+
+  .custom-table .option:not(.option-variant) {
+    background: var(--option-backgroundColor, var(--surface-inset));
+    border-color: color-mix(
+      in srgb,
+      var(--option-foregroundColor, var(--text-muted)) 18%,
+      transparent
+    );
+  }
 }
