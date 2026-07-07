@@ -1329,3 +1329,161 @@ html[data-theme-style='light-glass-cool'] {
 #app[data-theme-style='light-glass-cool'] {
   @include glass2-table-polish;
 }
+
+/* ── Phase 2 §4 — root page header + toolbar card ── */
+@mixin glass2-page-header {
+  /* Row 1 is transparent on the shell background; the Phase 1 header-card
+     chrome moves to the toolbar card below. */
+  .header-panel.is-root.glass2-root {
+    gap: 12px;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 14px 20px 4px;
+    width: 100%;
+  }
+
+  .glass2-page-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .glass2-page-header-left {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .glass2-icon-tile {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    background: var(--accent-tint);
+    width: 40px;
+    height: 40px;
+    color: var(--accent-300);
+    font-size: 20px;
+  }
+
+  .glass2-title-block {
+    min-width: 0;
+  }
+
+  .glass2-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .glass2-page-title {
+    margin: 0;
+    overflow: hidden;
+    color: var(--text-primary);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .glass2-record-count {
+    @include glass2-mono;
+
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .glass2-page-subtitle {
+    @include glass2-microlabel;
+
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .glass2-page-header-right {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Primary CTA: gradient pill with glow (§4 row 1 right). */
+  .glass2-cta-panel .btn {
+    border: none !important;
+    border-radius: 999px !important;
+    background: var(--gradient-accent) !important;
+    box-shadow: var(--shadow-accent-glow);
+    padding: 0 18px;
+    height: var(--control-h-md);
+    color: var(--text-on-accent) !important;
+    font-weight: 600;
+  }
+
+  .glass2-cta-panel .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-accent-glow-hover);
+  }
+
+  /* Row 2 — toolbar card (§4). */
+  .glass2-toolbar-card {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    background: var(--surface-card);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    padding: 10px 12px;
+  }
+
+  .glass2-toolbar-left,
+  .glass2-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .glass2-toolbar-left {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .glass2-toolbar-right {
+    flex-shrink: 0;
+  }
+
+  /* Search as a visible ~280px inset well instead of the icon toggle. */
+  .glass2-toolbar-card .search-panel .input-group {
+    width: 280px;
+    max-width: 100%;
+  }
+
+  .glass2-toolbar-card .search-panel .search-input {
+    border-color: var(--border-default);
+    background: var(--surface-inset);
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-page-header;
+}
