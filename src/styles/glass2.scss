@@ -750,7 +750,7 @@ html[data-theme-style='light-glass-cool'] {
   .custom-table tbody tr td {
     --backgroundColor: transparent;
     --cell-backgroundColor: transparent;
-    --td-vertical-padding: 10px;
+    --td-vertical-padding: 8px;
 
     height: var(--table-row-h);
     background: transparent !important;
@@ -759,6 +759,7 @@ html[data-theme-style='light-glass-cool'] {
     padding-left: 12px;
     padding-right: 12px;
     color: var(--text-primary);
+    vertical-align: middle;
     font-size: 13.5px;
   }
 
@@ -932,17 +933,28 @@ html[data-theme-style='light-glass-cool'] {
      from the chip's own foreground color instead of a neutral inset pill.
      `color` itself still comes from TableCell.vue's `.option { color:
      var(--option-foregroundColor) }` base rule / the DB variant. */
+  /* Slim chips: tighter padding/leading so wrapped chips stay light. */
+  .custom-table .option {
+    padding: 0.22rem 0.55rem;
+    line-height: 1.35;
+  }
+
   .custom-table .option:not(.option-variant) {
-    border-radius: 10px;
+    border-radius: 9px;
     background: color-mix(in srgb, currentcolor 13%, transparent);
-    border: 1px solid color-mix(in srgb, currentcolor 30%, transparent);
+    border: 1px solid color-mix(in srgb, currentcolor 24%, transparent);
     font-size: 13px;
     font-weight: 500;
     font-variant-numeric: tabular-nums;
   }
 
-  /* Reference chips (cells linking to records): text in the link color,
-     external-link icon muted, regardless of whether a DB color is set. */
+  /* Reference chips (cells linking to records): quiet inset pill, text in
+     the link color, external-link icon muted. */
+  .custom-table .option.reference-option {
+    background: var(--surface-inset);
+    border: 1px solid var(--border-subtle);
+  }
+
   .custom-table .option.reference-option .reference-text {
     color: var(--link);
     font-size: 13px;
