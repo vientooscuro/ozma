@@ -1560,6 +1560,11 @@ html[data-theme-style='light-glass-cool'] {
     min-width: 0;
     overflow-x: auto;
     scrollbar-width: none;
+
+    /* Mobile: brand + theme toggle + avatar only (§5). */
+    @media (max-width: 840px) {
+      display: none;
+    }
   }
 
   .glass2-brand-tabs::-webkit-scrollbar {
