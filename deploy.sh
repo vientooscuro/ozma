@@ -580,6 +580,132 @@ REMOTE_SCRIPT
 
 stage_seed_glass_cool_theme
 
+stage_retint_dark_glass() {
+  info "\n==> Stage 7c: Retint dark-glass variants to Glass 2.0 palette"
+
+  run_script_on_server << 'REMOTE_SCRIPT'
+    set -euo pipefail
+    docker exec -i ozma-postgres-1 psql -U postgres -d ozmadb << 'SQL'
+      UPDATE funapp.color_variants cv
+      SET background = '#0e1920', foreground = '#f1f7f7',
+          border = 'rgba(255, 255, 255, 0.11)'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'default';
+
+      UPDATE funapp.color_variants cv
+      SET background = '#081217', foreground = '#f1f7f7',
+          border = 'rgba(255, 255, 255, 0.11)'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'pageBackground';
+
+      UPDATE funapp.color_variants cv
+      SET background = '#04090b', foreground = '#f1f7f7',
+          border = 'rgba(255, 255, 255, 0.08)'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'background';
+
+      UPDATE funapp.color_variants cv
+      SET background = '#0d181f', foreground = '#f1f7f7',
+          border = 'rgba(255, 255, 255, 0.11)'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'reference';
+
+      UPDATE funapp.color_variants cv
+      SET background = 'rgba(14, 25, 32, 0.42)', foreground = '#f1f7f7',
+          border = 'rgba(255, 255, 255, 0.11)'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'interface';
+
+      UPDATE funapp.color_variants cv
+      SET background = 'rgba(14, 25, 32, 0.56)', foreground = '#f1f7f7',
+          border = 'rgba(255, 255, 255, 0.11)'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'menuEntry';
+
+      UPDATE funapp.color_variants cv
+      SET background = '#12212a', foreground = '#f1f7f7',
+          border = 'rgba(255, 255, 255, 0.12)'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'kanbanCard';
+
+      UPDATE funapp.color_variants cv
+      SET background = '#0a1418', foreground = '#d7e4e4',
+          border = 'rgba(255, 255, 255, 0.14)'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'dark';
+
+      UPDATE funapp.color_variants cv
+      SET background = '#2dd4bf', foreground = '#04211d',
+          border = '#2dd4bf'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'button';
+
+      UPDATE funapp.color_variants cv
+      SET background = 'rgba(45, 212, 191, 0.2)', foreground = '#f1f7f7',
+          border = 'rgba(45, 212, 191, 0.42)'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'primary';
+
+      UPDATE funapp.color_variants cv
+      SET background = 'rgba(70, 200, 207, 0.15)', foreground = '#f1f7f7',
+          border = 'rgba(70, 200, 207, 0.3)'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'info';
+
+      UPDATE funapp.color_variants cv
+      SET foreground = '#f1f7f7'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'secondary';
+
+      UPDATE funapp.color_variants cv
+      SET foreground = '#2dd4bf', border = '#2dd4bf'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'outline-primary';
+
+      UPDATE funapp.color_variants cv
+      SET foreground = '#46c8cf', border = '#46c8cf'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'outline-info';
+
+      UPDATE funapp.color_variants cv
+      SET foreground = '#cfe0e0', border = '#33464a'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'outline-dark';
+
+      UPDATE funapp.color_variants cv
+      SET foreground = '#cfe0e0', border = '#7f9598'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.name = 'outline-light';
+
+      UPDATE funapp.color_variants cv
+      SET foreground = '#f1f7f7'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'dark-glass'
+        AND cv.foreground IN ('#E6EDF3', '#e2e8f0', '#e7ecef', '#d8e0e5');
+SQL
+REMOTE_SCRIPT
+
+  ok "dark-glass variants retinted"
+}
+
+stage_retint_dark_glass
+
 stage_clear_settings() {
   info "\n==> Stage 8: Clear default settings"
 

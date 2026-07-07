@@ -692,6 +692,12 @@ html[data-theme-style='light-glass-cool'] {
     margin-bottom: 0 !important;
   }
 
+  /* The root userview wrapper paints the DB pageBackground variant as an
+     opaque sheet, hiding the shell gradient + glows. Let them through. */
+  .userview-wrapper {
+    background: transparent !important;
+  }
+
   /* Preserved perf/scroll fixes (§6.4 end, legacy style.scss:2128–2153). */
   .view-form {
     animation: none !important;
