@@ -396,3 +396,289 @@ html[data-theme-style='light-glass-cool'] {
 #app[data-theme-style='light-glass-cool'] {
   @include glass2-menu;
 }
+
+/* ── Buttons (§6.2, §6.5) ── */
+@mixin glass2-buttons {
+  .btn,
+  .save-cluster-button {
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-button);
+    background: transparent;
+    color: var(--text-primary);
+    transition:
+      transform var(--dur-base) var(--ease-spring),
+      box-shadow var(--dur-base) var(--ease-out),
+      background var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .btn:hover:not(:disabled),
+  .save-cluster-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    border-color: var(--border-strong);
+    background: var(--surface-hover);
+    box-shadow: none;
+  }
+
+  .btn:active:not(:disabled),
+  .save-cluster-button:active:not(:disabled) {
+    transform: scale(0.98);
+    transition-duration: var(--dur-fast);
+  }
+
+  .btn:focus-visible:not(:disabled),
+  .save-cluster-button:focus-visible:not(:disabled) {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  /* Icon buttons: borderless until hover, radius 12. */
+  .material-button {
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-primary);
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .material-button:hover:not(:disabled) {
+    border-color: var(--border-default);
+    background: var(--surface-hover);
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Primary action: gradient pill with glow. */
+  .btn-primary,
+  .save-button,
+  .saving-indicator {
+    border: none !important;
+    border-radius: var(--radius-button) !important;
+    background: var(--gradient-accent) !important;
+    color: var(--text-on-accent) !important;
+    font-weight: 600;
+    box-shadow: var(--shadow-accent-glow) !important;
+  }
+
+  .btn-primary:hover:not(:disabled),
+  .save-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-accent-glow-hover) !important;
+  }
+
+  /* Secondary: glass chips. */
+  .btn-secondary,
+  .btn-outline-secondary,
+  .btn-light {
+    border: 1px solid var(--border-default) !important;
+    background: transparent !important;
+    color: var(--text-primary) !important;
+  }
+
+  /* Danger: tinted. */
+  .btn-outline-danger,
+  .btn-danger {
+    border: 1px solid var(--danger-tint-border) !important;
+    border-radius: var(--radius-button) !important;
+    background: var(--danger-tint) !important;
+    color: var(--danger) !important;
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-buttons;
+}
+
+/* ── Inputs (§6.5) ── */
+@mixin glass2-inputs {
+  .form-control,
+  .custom-select {
+    border: 1px solid var(--border-default) !important;
+    border-radius: var(--radius-input) !important;
+    background: var(--surface-inset) !important;
+    box-shadow: none !important;
+    color: var(--text-primary) !important;
+    font-size: 15px;
+  }
+
+  .form-control::placeholder {
+    color: var(--text-disabled) !important;
+  }
+
+  .form-control:focus,
+  .custom-select:focus {
+    border-color: var(--border-focus) !important;
+    box-shadow: var(--focus-ring) !important;
+  }
+
+  .form-control:disabled,
+  .custom-select:disabled {
+    opacity: 0.6;
+    color: var(--text-disabled) !important;
+  }
+
+  .list-group-item,
+  .input-group-text {
+    border-color: var(--border-default) !important;
+    background: var(--surface-inset) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .select-container {
+    border-color: var(--border-default);
+    border-radius: var(--radius-input);
+    background: var(--surface-inset);
+    overflow: hidden;
+  }
+
+  .select-container:focus-within,
+  .select-container:focus {
+    border-color: var(--border-focus);
+    box-shadow: var(--focus-ring);
+  }
+
+  .select-container .input-group-append {
+    margin-left: 0;
+  }
+
+  .select-container .select-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: none !important;
+    border-left: 1px solid var(--border-subtle) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    color: var(--text-muted) !important;
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-inputs;
+}
+
+/* ── Form cards, labels, indicators (§6.5) ── */
+@mixin glass2-form {
+  .first_level_grid_block:not(.has-sub-blocks),
+  .form_sub_block {
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-card) !important;
+    background: var(--surface-card) !important;
+    box-shadow: var(--shadow-card) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    padding: var(--card-padding) !important;
+  }
+
+  .form_sub_block {
+    margin-bottom: 0.75rem !important;
+  }
+
+  .form_sub_block:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .first_level_grid_block.has-sub-blocks {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+  }
+
+  .form_inline_block {
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 0.75rem !important;
+    background: var(--surface-row-alt) !important;
+    box-shadow: none !important;
+    padding: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .form_inline_block:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  /* Section captions: 17px/700 (§6.5). */
+  .form_sub_block__title {
+    font-family: Inter, sans-serif !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em !important;
+    text-transform: none !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 1.25rem !important;
+    padding-bottom: 0 !important;
+  }
+
+  .form_grid_block__column:not(:last-child) {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Field labels: signature micro-labels above the control (§4). */
+  .border-label {
+    @include glass2-microlabel;
+
+    background-color: transparent !important;
+    top: -0.95rem !important;
+  }
+
+  .increase-z-index.border-label {
+    color: var(--accent-400);
+  }
+
+  .form_inline_block .border-label,
+  .form_sub_block .border-label {
+    background-color: transparent !important;
+  }
+
+  .required-indicator.empty {
+    width: 5px !important;
+    height: 5px !important;
+    background-color: var(--danger) !important;
+    box-shadow: 0 0 6px var(--danger-tint-border) !important;
+  }
+
+  .disabled-indicator .material-icons {
+    opacity: 0.6;
+    font-size: 1rem;
+    color: var(--text-muted);
+  }
+
+  .form_sub_block .nested-userview {
+    border: none !important;
+    border-radius: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Preserved perf/scroll fixes (§6.4 end, legacy style.scss:2128–2153). */
+  .view-form {
+    animation: none !important;
+  }
+
+  .userview-wrapper,
+  .view-container,
+  .view-form {
+    overflow: visible !important;
+  }
+
+  .form_sub_block .userview-wrapper,
+  .first_level_grid_block .userview-wrapper {
+    background-color: transparent !important;
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-form;
+}
