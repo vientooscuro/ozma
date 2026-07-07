@@ -74,6 +74,8 @@
       />
     </template>
 
+    <BrandBar v-if="showBrandBar" @goto="push({ ...$event, key: null })" />
+
     <div :class="'userview-upper-div'">
       <HeaderPanel
         class="header-panel"
@@ -99,7 +101,7 @@
         </template>
 
         <template #right-slot>
-          <div class="profile-button-wrapper">
+          <div v-if="!showBrandBar" class="profile-button-wrapper">
             <ProfileButton />
           </div>
         </template>
@@ -246,6 +248,9 @@ import { IArgumentEditorProps } from './ArgumentEditor.vue'
 import type { ISortEditorProps } from './SortEditor.vue'
 import ProfileButton from './ProfileButton.vue'
 import AlertBanner from './AlertBanner.vue'
+import BrandBar from './BrandBar.vue'
+import { isGlass2Theme } from '@/utils/glass2'
+import type { IThemeRef } from '@/utils_colors'
 
 const auth = namespace('auth')
 const staging = namespace('staging')
@@ -261,6 +266,7 @@ const errors = namespace('errors')
     HeaderPanel,
     ProfileButton,
     AlertBanner,
+    BrandBar,
   },
   /* Two hooks below catches only browser navigation buttons,
    * other ways of changing current page are handled in query module.
@@ -333,6 +339,7 @@ export default class TopLevelUserView extends Vue {
   @errors.State('errors') rawErrors!: Record<ErrorKey, string[]>
   @errors.State('silent') silentErrors!: boolean
   @settings.State('current') currentSettings!: CurrentSettings
+  @settings.State('currentThemeRef') currentThemeRef!: IThemeRef | null
   @settings.State('pending') settingsPending!: Promise<CurrentSettings> | null
   @settings.State('userIsRoot') userIsRoot!: boolean
   @settings.Getter('developmentModeEnabled') developmentModeEnabled!: boolean
@@ -382,6 +389,10 @@ export default class TopLevelUserView extends Vue {
         link: homeLink,
       },
     ]
+  }
+
+  get showBrandBar(): boolean {
+    return isGlass2Theme(this.currentThemeRef)
   }
 
   get titleOrNewEntry(): string | null {
