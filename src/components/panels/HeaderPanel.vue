@@ -35,6 +35,39 @@
           </div>
         </div>
         <div class="glass2-page-header-right">
+          <div v-if="!glass2ToolbarVisible" class="glass2-inline-tools">
+            <SortEditor
+              v-if="sortEditorProps"
+              :sort-editor-props="sortEditorProps"
+            />
+            <ArgumentEditor
+              v-if="argumentEditorProps"
+              :userView="argumentEditorProps.userView"
+              :applyArguments="argumentEditorProps.applyArguments"
+              :initialArgumentsSnapshot="
+                argumentEditorProps.initialArgumentsSnapshot
+              "
+            />
+            <ButtonsPanel
+              v-if="glass2HelpButtons.length > 0"
+              :buttons="glass2HelpButtons"
+              @goto="$emit('goto', $event)"
+            />
+            <ButtonsPanel
+              v-if="glass2SecondaryButtons.length > 0"
+              :buttons="glass2SecondaryButtons"
+              @goto="$emit('goto', $event)"
+            />
+            <ButtonsPanel
+              v-if="fullscreenButtons.length > 0"
+              :buttons="fullscreenButtons"
+              @goto="$emit('goto', $event)"
+            />
+            <ButtonsPanel
+              :buttons="glass2ExtraButtons"
+              @goto="$emit('goto', $event)"
+            />
+          </div>
           <ButtonsPanel
             v-if="glass2PrimaryButtons.length > 0"
             class="glass2-cta-panel"
@@ -301,15 +334,9 @@ export default class HeaderPanel extends Vue {
   }
 
   get glass2ToolbarVisible(): boolean {
-    return Boolean(
-      this.isEnableFilter ||
-        this.sortEditorProps ||
-        this.argumentEditorProps ||
-        this.glass2HelpButtons.length > 0 ||
-        this.glass2SecondaryButtons.length > 0 ||
-        this.fullscreenButtons.length > 0 ||
-        !this.glass2PanelButtons.extraButton.disabled,
-    )
+    /* The toolbar card exists for search-driven (table-like) screens;
+       other screens keep a single-row header with inline tools. */
+    return Boolean(this.isEnableFilter)
   }
 
   get extraButtons() {

@@ -319,6 +319,12 @@ html[data-theme-style='light-glass-cool'] {
 
 /* ── Main menu (§6.3) ── */
 @mixin glass2-menu {
+  /* The grid sits directly on the shell gradient (no solid sheet). */
+  .menu_container {
+    background: transparent !important;
+    padding: 1.75rem 2rem;
+  }
+
   .menu_category_block {
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-card-lg);
@@ -527,6 +533,37 @@ html[data-theme-style='light-glass-cool'] {
     color: var(--text-primary) !important;
   }
 
+  /* Input groups (date pickers etc.) render as ONE well: the group carries
+     the border/radius/background, inner controls go naked — fixes the
+     broken corner radii between the field and its appended button. */
+  .input-group:not(.select-container) {
+    overflow: hidden;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-input);
+    background: var(--surface-inset);
+  }
+
+  .input-group:not(.select-container) > .form-control {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .input-group:not(.select-container) .input-group-append .btn,
+  .input-group:not(.select-container) .input-group-append .input-group-text {
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: var(--text-muted) !important;
+  }
+
+  .input-group:not(.select-container):focus-within {
+    border-color: var(--border-focus);
+    box-shadow: var(--focus-ring);
+  }
+
   .select-container {
     border-color: var(--border-default);
     border-radius: var(--radius-input);
@@ -631,14 +668,14 @@ html[data-theme-style='light-glass-cool'] {
     margin-bottom: 0 !important;
   }
 
-  /* Section captions: 17px/700 (§6.5). */
+  /* Section captions: caps micro-labels per the mockup section cards. */
   .form_sub_block__title {
     font-family: Inter, sans-serif !important;
-    font-size: 17px !important;
-    font-weight: 700 !important;
-    letter-spacing: -0.01em !important;
-    text-transform: none !important;
-    color: var(--text-primary) !important;
+    font-size: 11.5px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.11em !important;
+    text-transform: uppercase !important;
+    color: var(--text-muted) !important;
 
     /* Room for the first field's floating label under the caption. */
     margin-bottom: 1.9rem !important;
@@ -722,14 +759,15 @@ html[data-theme-style='light-glass-cool'] {
 
 /* ── Table: flat rows (§6.4) ── */
 @mixin glass2-table {
+  /* Content sits directly on the shell gradient (no big outer card). */
   .root-wrapper {
-    padding: 0.5rem;
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-card);
-    background: var(--surface-card);
-    box-shadow: var(--shadow-card);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    padding: 0.25rem 0.5rem;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .table-wrapper {
@@ -1079,14 +1117,17 @@ html[data-theme-style='light-glass-cool'] {
     background-color: var(--surface-hover) !important;
   }
 
+  /* Modal per mockup: opaque shell surface with ambient glows inside,
+     28px radius, strong border; the dimmed backdrop carries the blur. */
   .vm--modal,
   .modal-content {
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-card);
-    background: var(--surface-card-2);
-    box-shadow: var(--shadow-card);
-    backdrop-filter: var(--glass-blur-strong);
-    -webkit-backdrop-filter: var(--glass-blur-strong);
+    border: 1px solid var(--border-strong);
+    border-radius: 28px;
+    background:
+      var(--glow-a),
+      var(--glow-b),
+      linear-gradient(180deg, var(--bg-shell) 0%, var(--bg-app) 85%);
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.5);
     color: var(--text-primary);
   }
 
@@ -1443,6 +1484,13 @@ html[data-theme-style='light-glass-cool'] {
     flex-shrink: 0;
     align-items: center;
     gap: 10px;
+  }
+
+  /* Screens without search keep a single-row header with inline tools. */
+  .glass2-inline-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   /* Primary CTA: gradient pill with glow (§4 row 1 right). */

@@ -497,6 +497,10 @@ export default class TopLevelUserView extends Vue {
 
   @Watch('$route', { deep: true, immediate: true })
   private onRouteChanged() {
+    /* uvLoading does not fire on every navigation (cached views), which
+       would leak the previous view's icon/count into the new header. */
+    this.viewIcon = null
+    this.rowCount = null
     this.resetRoute(this.$route)
   }
 
