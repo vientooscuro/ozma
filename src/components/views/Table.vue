@@ -2,6 +2,8 @@
   {
     "en": {
       "pagination_select": "Rows per page",
+      "pagination_back": "Back",
+      "pagination_forward": "Forward",
       "total_rows": "Total rows",
       "of": "of",
       "cut": "Cut",
@@ -32,6 +34,8 @@
     },
     "ru": {
       "pagination_select": "Строк на странице",
+      "pagination_back": "Назад",
+      "pagination_forward": "Вперед",
       "total_rows": "Всего строк",
       "of": "из",
       "cut": "Вырезать",
@@ -62,6 +66,8 @@
     },
     "es": {
       "pagination_select": "Filas por página",
+      "pagination_back": "Atrás",
+      "pagination_forward": "Adelante",
       "total_rows": "Filas totales",
       "of": "de",
       "cut": "Cortar",
@@ -476,7 +482,65 @@
             v-if="uv.extra.lazyLoad.type === 'pagination'"
             class="pagination-wrapper"
           >
-            <div class="pagination">
+            <div v-if="isGlass2Theme" class="pagination glass2-pagination">
+              <b-spinner
+                v-if="uv.extra.lazyLoad.pagination.loading"
+                class="mr-1"
+                small
+                label="Next page is loading"
+              />
+              <div class="current-rows">
+                {{ currentRows }}
+              </div>
+              <div class="select-wrapper">
+                <div class="select-label">
+                  {{ $t('pagination_select').toString() }}:
+                </div>
+                <b-select
+                  class="page-select"
+                  :value="uv.extra.lazyLoad.pagination.perPage"
+                  :options="pageSizes"
+                  size="sm"
+                  @input="updatePageSize"
+                />
+              </div>
+              <button
+                type="button"
+                class="glass2-page-nav"
+                :disabled="glass2PrevPageDisabled"
+                @click="goToPrevPage"
+              >
+                {{ $t('pagination_back').toString() }}
+              </button>
+              <template v-for="pageSlot in glass2PaginationSlots">
+                <span
+                  v-if="pageSlot.type === 'ellipsis'"
+                  :key="pageSlot.key"
+                  class="glass2-page-ellipsis"
+                >…</span>
+                <button
+                  v-else
+                  :key="'page' + pageSlot.page"
+                  type="button"
+                  :class="[
+                    'glass2-page-number',
+                    { current: pageSlot.page === glass2CurrentPage },
+                  ]"
+                  @click="goToPage(pageSlot.page)"
+                >
+                  {{ pageSlot.page + 1 }}
+                </button>
+              </template>
+              <button
+                type="button"
+                class="glass2-page-nav"
+                :disabled="glass2NextPageDisabled"
+                @click="goToNextPage"
+              >
+                {{ $t('pagination_forward').toString() }}
+              </button>
+            </div>
+            <div v-else class="pagination">
               <b-spinner
                 v-if="uv.extra.lazyLoad.pagination.loading"
                 class="mr-1"
@@ -624,6 +688,8 @@ import {
   defaultVariantAttribute,
   outlinedInterfaceButtonVariant,
 } from '@/utils_colors'
+import type { IThemeRef } from '@/utils_colors'
+import { isGlass2Theme } from '@/utils/glass2'
 import ButtonItem from '@/components/buttons/ButtonItem.vue'
 import ButtonList from '@/components/buttons/ButtonList.vue'
 import { Button } from '@/components/buttons/buttons'
@@ -1652,6 +1718,10 @@ const query = namespace('query')
 const windows = namespace('windows')
 const settingsStore = namespace('settings')
 
+type Glass2PaginationSlot =
+  | { type: 'page'; page: number }
+  | { type: 'ellipsis'; key: string }
+
 @UserView({
   handler: tableUserViewHandler,
   useLazyLoad: true,
@@ -1688,6 +1758,11 @@ export default class UserViewTable extends mixins<
     name: string
     value: string
   }) => Promise<void>
+  @settingsStore.State('currentThemeRef') currentThemeRef!: IThemeRef | null
+
+  get isGlass2Theme(): boolean {
+    return isGlass2Theme(this.currentThemeRef)
+  }
 
   // These two aren't computed properties for performance. They are computed during `init()` and mutated when other values change.
   // If `init()` is called again, their values after recomputation should be equal to those before it.
@@ -2256,6 +2331,58 @@ export default class UserViewTable extends mixins<
       this.uv.rowLoadState.fetchedRowCount /
         this.uv.extra.lazyLoad.pagination.perPage,
     )
+  }
+
+  get glass2CurrentPage(): number {
+    if (this.uv.extra.lazyLoad.type !== 'pagination') return 0
+    return this.uv.extra.lazyLoad.pagination.currentPage
+  }
+
+  get glass2PrevPageDisabled(): boolean {
+    return this.glass2CurrentPage === 0
+  }
+
+  get glass2NextPageDisabled(): boolean {
+    if (this.uv.extra.lazyLoad.type !== 'pagination') return true
+    return (
+      (this.uv.rowLoadState.complete && this.onLastPage) ||
+      this.uv.extra.lazyLoad.pagination.loading
+    )
+  }
+
+  // Ellipsis windowing: 1 … p-1 [p] p+1 … N (≤7 slots). While the total is
+  // unknown (rowLoadState not complete ⇒ pagesCount === null) the tail is an
+  // open ellipsis without a last-page number.
+  get glass2PaginationSlots(): Glass2PaginationSlot[] {
+    if (this.uv.extra.lazyLoad.type !== 'pagination') return []
+    const current = this.glass2CurrentPage
+    const last = this.pagesCount !== null ? this.pagesCount - 1 : null
+
+    const pages = new Set<number>()
+    pages.add(0)
+    for (let p = current - 1; p <= current + 1; p++) {
+      if (p >= 0 && (last === null || p <= last)) pages.add(p)
+    }
+    if (last !== null) {
+      pages.add(Math.max(last, 0))
+    } else if (!this.glass2NextPageDisabled) {
+      pages.add(current + 1)
+    }
+
+    const sorted = Array.from(pages).sort((a, b) => a - b)
+    const slots: Glass2PaginationSlot[] = []
+    let prev: number | null = null
+    for (const page of sorted) {
+      if (prev !== null && page - prev > 1) {
+        slots.push({ type: 'ellipsis', key: `e${prev}` })
+      }
+      slots.push({ type: 'page', page })
+      prev = page
+    }
+    if (last === null) {
+      slots.push({ type: 'ellipsis', key: 'etail' })
+    }
+    return slots
   }
 
   private updatePageSize(newPageSize: number) {

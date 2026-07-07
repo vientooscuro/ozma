@@ -1169,18 +1169,14 @@ html[data-theme-style='light-glass-cool'] {
   @include glass2-overlays;
 }
 
-/* ── Table pagination (§6.4) ── */
+/* ── Table pagination (§6.4 + Phase 2 §3 numbered pager) ──
+   In glass2 themes Table.vue renders the numbered pager branch
+   (.glass2-pagination); the old arrow/pill rules are gone because that
+   legacy markup only renders for non-glass2 themes now. */
 @mixin glass2-pagination {
   .pagination .current-rows,
   .pagination .select-label {
     @include glass2-microlabel;
-  }
-
-  .pagination .pagination-arrow-button {
-    border: 1px solid var(--border-default) !important;
-    border-radius: 8px !important;
-    background: transparent;
-    color: var(--text-primary);
   }
 
   .pagination .page-select {
@@ -1190,17 +1186,59 @@ html[data-theme-style='light-glass-cool'] {
     color: var(--text-primary);
   }
 
-  .pagination .current-page-wrapper .current-page {
+  .pagination .glass2-page-nav {
+    @include glass2-microlabel;
+
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    padding: 6px 10px;
+    color: var(--text-secondary);
+  }
+
+  .pagination .glass2-page-nav:hover:not(:disabled) {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+  }
+
+  .pagination .glass2-page-nav:disabled {
+    cursor: default;
+    color: var(--text-disabled);
+  }
+
+  .pagination .glass2-page-number {
+    @include glass2-mono;
+
     display: inline-flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    padding: 0 8px;
     min-width: 28px;
     height: 28px;
-    padding: 0 8px;
-    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  .pagination .glass2-page-number:hover:not(.current) {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+  }
+
+  .pagination .glass2-page-number.current {
+    cursor: default;
     background: var(--gradient-accent);
     color: var(--text-on-accent);
-    font-weight: 600;
+  }
+
+  .pagination .glass2-page-ellipsis {
+    padding: 0 2px;
+    color: var(--text-disabled);
   }
 }
 
