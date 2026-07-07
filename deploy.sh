@@ -558,6 +558,20 @@ stage_seed_glass_cool_theme() {
       WHERE NOT EXISTS (
         SELECT 1 FROM funapp.color_variants x WHERE x.theme_id = t_new.id
       );
+
+      UPDATE funapp.color_variants cv
+      SET background = '#e9f2f2', foreground = '#0b1b1e',
+          border = 'rgba(10, 35, 40, 0.12)'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'light-glass-cool'
+        AND cv.name = 'pageBackground';
+
+      UPDATE funapp.color_variants cv
+      SET background = '#ffffff', foreground = '#0b1b1e',
+          border = 'rgba(10, 35, 40, 0.12)'
+      FROM funapp.color_themes ct
+      WHERE cv.theme_id = ct.id AND ct.name = 'light-glass-cool'
+        AND cv.name = 'default';
 SQL
 REMOTE_SCRIPT
 
