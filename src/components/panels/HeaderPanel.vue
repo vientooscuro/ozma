@@ -35,7 +35,18 @@
           </div>
         </div>
         <div class="glass2-page-header-right">
-          <div v-if="!glass2ToolbarVisible" class="glass2-inline-tools">
+          <div class="glass2-inline-tools">
+            <ButtonsPanel
+              v-if="glass2HelpButtons.length > 0"
+              :buttons="glass2HelpButtons"
+              @goto="$emit('goto', $event)"
+            />
+            <SearchPanel
+              v-if="isEnableFilter"
+              class="search-panel"
+              :filter-string="filterString"
+              @update:filter-string="$emit('update:filter-string', $event)"
+            />
             <SortEditor
               v-if="sortEditorProps"
               :sort-editor-props="sortEditorProps"
@@ -49,11 +60,6 @@
               "
             />
             <ButtonsPanel
-              v-if="glass2HelpButtons.length > 0"
-              :buttons="glass2HelpButtons"
-              @goto="$emit('goto', $event)"
-            />
-            <ButtonsPanel
               v-if="glass2SecondaryButtons.length > 0"
               :buttons="glass2SecondaryButtons"
               @goto="$emit('goto', $event)"
@@ -63,10 +69,6 @@
               :buttons="fullscreenButtons"
               @goto="$emit('goto', $event)"
             />
-            <ButtonsPanel
-              :buttons="glass2ExtraButtons"
-              @goto="$emit('goto', $event)"
-            />
           </div>
           <ButtonsPanel
             v-if="glass2PrimaryButtons.length > 0"
@@ -74,53 +76,14 @@
             :buttons="glass2PrimaryButtons"
             @goto="$emit('goto', $event)"
           />
-          <div v-if="$slots['right-slot']" class="right-slot">
-            <slot name="right-slot" />
-          </div>
-        </div>
-      </div>
-      <div v-if="glass2ToolbarVisible" class="glass2-toolbar-card">
-        <div class="glass2-toolbar-left">
-          <SearchPanel
-            v-if="isEnableFilter"
-            class="search-panel"
-            expanded
-            :filter-string="filterString"
-            @update:filter-string="$emit('update:filter-string', $event)"
-          />
-          <SortEditor
-            v-if="sortEditorProps"
-            :sort-editor-props="sortEditorProps"
-          />
-          <ArgumentEditor
-            v-if="argumentEditorProps"
-            :userView="argumentEditorProps.userView"
-            :applyArguments="argumentEditorProps.applyArguments"
-            :initialArgumentsSnapshot="
-              argumentEditorProps.initialArgumentsSnapshot
-            "
-          />
-        </div>
-        <div class="glass2-toolbar-right">
           <ButtonsPanel
-            v-if="glass2HelpButtons.length > 0"
-            :buttons="glass2HelpButtons"
-            @goto="$emit('goto', $event)"
-          />
-          <ButtonsPanel
-            v-if="glass2SecondaryButtons.length > 0"
-            :buttons="glass2SecondaryButtons"
-            @goto="$emit('goto', $event)"
-          />
-          <ButtonsPanel
-            v-if="fullscreenButtons.length > 0"
-            :buttons="fullscreenButtons"
-            @goto="$emit('goto', $event)"
-          />
-          <ButtonsPanel
+            class="glass2-inline-tools"
             :buttons="glass2ExtraButtons"
             @goto="$emit('goto', $event)"
           />
+          <div v-if="$slots['right-slot']" class="right-slot">
+            <slot name="right-slot" />
+          </div>
         </div>
       </div>
     </template>
@@ -333,11 +296,6 @@ export default class HeaderPanel extends Vue {
     return [this.glass2PanelButtons.extraButton]
   }
 
-  get glass2ToolbarVisible(): boolean {
-    /* The toolbar card exists for search-driven (table-like) screens;
-       other screens keep a single-row header with inline tools. */
-    return Boolean(this.isEnableFilter)
-  }
 
   get extraButtons() {
     return [buttonsToPanelButtons(this.buttons).extraButton]

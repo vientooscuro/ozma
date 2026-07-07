@@ -1550,45 +1550,13 @@ html[data-theme-style='light-glass-cool'] {
     box-shadow: var(--shadow-accent-glow-hover);
   }
 
-  /* Row 2 — toolbar card (§4). */
-  .glass2-toolbar-card {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    border: 1px solid var(--border-subtle);
-    border-radius: 16px;
-    background: var(--surface-card);
-    box-shadow: var(--shadow-card);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    padding: 10px 12px;
-  }
-
-  .glass2-toolbar-left,
-  .glass2-toolbar-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .glass2-toolbar-left {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  .glass2-toolbar-right {
-    flex-shrink: 0;
-  }
-
-  /* Search as a visible ~280px inset well instead of the icon toggle. */
-  .glass2-toolbar-card .search-panel .input-group {
-    width: 280px;
+  /* Search expands from the icon into a compact inset well inline. */
+  .glass2-page-header .search-panel .input-group {
+    width: 240px;
     max-width: 100%;
   }
 
-  .glass2-toolbar-card .search-panel .search-input {
+  .glass2-page-header .search-panel .search-input {
     border-color: var(--border-default);
     background: var(--surface-inset);
   }
