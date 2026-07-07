@@ -72,7 +72,7 @@
                 class="with-material-icon calendar-icon"
                 :style="{ backgroundColor }"
               >
-                <i class="material-icons">event</i>
+                <AppIcon name="event" />
               </b-input-group-text>
             </b-input-group-append>
           </b-input-group>
@@ -92,14 +92,14 @@
                 ]"
                 @click="selectValue(null)"
               >
-                <span class="material-icons md-18 mr-1">clear</span>
+                <AppIcon class="md-18 mr-1" name="clear" />
                 {{ $t('clear') }}
               </button>
             </div>
 
             <DatePicker :value="dateValue" @update:value="onDatePicked" />
             <button class="today material-button" @click="setDateToday($event)">
-              <span class="material-icons md-18 mr-1">today</span>
+              <AppIcon class="md-18 mr-1" name="today" />
               {{ $t('today').toString() }}
             </button>
           </div>

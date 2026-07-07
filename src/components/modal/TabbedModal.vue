@@ -31,7 +31,7 @@
     @closed="onClosed"
   >
     <div v-if="$isMobile" class="mobile-close-button-wrapper">
-      <span class="material-icons">close</span>
+      <AppIcon name="close" />
     </div>
 
     <!-- eslint-disable vue/no-deprecated-slot-attribute -->
@@ -43,7 +43,7 @@
         class="desktop-close-button-wrapper"
         @click="$emit('close')"
       >
-        <span class="material-icons">close</span>
+        <AppIcon name="close" />
       </div>
     </div>
     <!-- eslint-enable vue/no-deprecated-slot-attribute -->

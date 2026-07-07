@@ -34,12 +34,12 @@
           {{ cardCount }}
         </span>
         <span class="column_controls" data-dragscroll>
-          <i
+          <AppIcon
             v-if="createButton"
-            class="material-icons material-button add-button"
+            class="material-button add-button"
+            name="add"
             @click="$emit('create')"
-            >add</i
-          >
+          />
         </span>
       </div>
     </div>

@@ -148,7 +148,7 @@
           class="save-cluster-button reset-changes-button"
           @click="resetChanges"
         >
-          <span class="material-icons md-36"> restart_alt </span>
+          <AppIcon class="md-36" name="restart_alt" />
         </button>
       </transition>
 
@@ -162,7 +162,7 @@
           class="save-cluster-button show-errors-button"
           @click="makeErrorToast"
         >
-          <span class="material-icons md-36"> help_outline </span>
+          <AppIcon class="md-36" name="help_outline" />
         </button>
       </transition>
 
@@ -183,7 +183,7 @@
             class="save-cluster-button save-button save"
             @click.capture.stop="saveView"
           >
-            <span class="material-icons md-36"> save </span>
+            <AppIcon class="md-36" name="save" />
           </button>
         </div>
       </transition>
@@ -195,7 +195,7 @@
         }"
         class="development-mode-indicator"
       >
-        <span class="material-icons md-36">developer_mode</span>
+        <AppIcon class="md-36" name="developer_mode" />
       </div>
     </div>
     <QRCodeScannerModal

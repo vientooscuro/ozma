@@ -45,17 +45,17 @@
         @goto="$emit('goto', $event)"
       >
         <i
-          :class="[
-            'material-icons',
-            'icon',
-            {
-              'no-icon': !entry.icon,
-              'emoji-icon': getIconType(entry.icon) === 'emoji',
-            },
-          ]"
+          v-if="getIconType(entry.icon) === 'emoji'"
+          class="material-icons icon emoji-icon"
         >
-          {{ entry.icon || 'chevron_right' }}
+          {{ entry.icon }}
         </i>
+        <AppIcon
+          v-else
+          class="icon"
+          :class="{ 'no-icon': !entry.icon }"
+          :name="entry.icon || 'chevron_right'"
+        />
         <span class="name" :title="$ustOrEmpty(entry.name)">
           {{ $ustOrEmpty(entry.name) }}
         </span>

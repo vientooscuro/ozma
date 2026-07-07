@@ -40,14 +40,14 @@
                 updateInput()
               "
             >
-              <i class="material-icons">clear</i>
+              <AppIcon name="clear" />
             </b-button>
             <b-button
               class="button with-material-icon"
               variant="secondary"
               @click.prevent="toggleShowInput"
             >
-              <i class="material-icons">search_off</i>
+              <AppIcon name="search_off" />
             </b-button>
           </b-input-group-append>
         </b-input-group>
@@ -60,7 +60,7 @@
       variant="light"
       @click.prevent="toggleShowInput"
     >
-      <span class="icon material-icons">search</span>
+      <AppIcon class="icon" name="search" />
       <span>&#8203;</span>
     </b-button>
   </div>

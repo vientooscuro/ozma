@@ -51,7 +51,7 @@
 
       <template #dismiss>
         <div class="dismiss-button material-button">
-          <i class="material-icons">close</i>
+          <AppIcon name="close" />
         </div>
       </template>
     </b-alert>

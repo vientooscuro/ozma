@@ -27,7 +27,7 @@
         class="icon-link"
         @goto="$emit('goto', $event)"
       >
-        <i class="material-icons edit-in-modal-icon">edit</i>
+        <AppIcon class="edit-in-modal-icon" name="edit" />
       </OzmaLink>
     </td>
     <TableCell

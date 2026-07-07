@@ -40,9 +40,9 @@
   >
     <div class="demo-message-container">
       <div class="material-button close-button" @click="hide">
-        <i class="material-icons">close</i>
+        <AppIcon name="close" />
       </div>
-      <i class="material-icons demo-icon">error_outline</i>
+      <AppIcon class="demo-icon" name="error_outline" />
       <div class="demo-message">
         <h5 class="demo-header">{{ $t('header_1') }} {{ $t('header_2') }}</h5>
         <span class="demo-body">

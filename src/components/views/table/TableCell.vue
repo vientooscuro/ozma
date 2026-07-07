@@ -64,11 +64,10 @@
             :link="link"
             @goto="$emit('goto', $event)"
           >
-            <span
-              class="material-icons md-14 reference-open-modal rounded-circle"
-            >
-              open_in_new
-            </span>
+            <AppIcon
+              class="md-14 reference-open-modal rounded-circle"
+              name="open_in_new"
+            />
           </OzmaLink>
           <!-- eslint-disable vue/no-v-html -->
           <span class="reference-text" v-html="valueHtml || '&nbsp;'" />
@@ -122,7 +121,7 @@
               @click.stop="toggleChildren"
               @dblclick.stop
             >
-              <span class="material-icons">arrow_forward_ios</span>
+              <AppIcon name="arrow_forward_ios" />
             </div>
           </div>
 

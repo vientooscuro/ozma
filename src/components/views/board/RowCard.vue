@@ -27,13 +27,12 @@
         />
         <span v-else class="card-text">
           <!-- TODO: Remove `getIconType` method call from template -->
-          <span
-            v-if="col.icon && col.textHtml"
-            :class="[
-              'card-icon',
-              { 'material-icons md-18': getIconType(col.icon) === 'material' },
-            ]"
-          >
+          <AppIcon
+            v-if="col.icon && col.textHtml && getIconType(col.icon) === 'material'"
+            class="card-icon md-18"
+            :name="col.icon"
+          />
+          <span v-else-if="col.icon && col.textHtml" class="card-icon">
             {{ col.icon }}
           </span>
           <!-- eslint-disable vue/no-v-html -->

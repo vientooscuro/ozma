@@ -14,7 +14,7 @@
       >
         {{ placeholderAvatarText }}
       </span>
-      <span v-else class="material-icons"> person </span>
+      <AppIcon v-else name="person" />
     </div>
   </div>
 </template>

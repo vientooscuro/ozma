@@ -54,7 +54,7 @@
     transition="invite-modal-transition"
   >
     <div class="message-container">
-      <i class="material-icons invite-icon">group</i>
+      <AppIcon class="invite-icon" name="group" />
       <h1 class="header">
         {{ $t('header').toString() }}
       </h1>

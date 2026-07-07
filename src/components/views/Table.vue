@@ -307,9 +307,10 @@
                     {{ $ustOrEmpty(columns[i].caption) }}
                   </span>
                   <div v-if="uv.extra.sortColumn === i" class="sorting-wrapper">
-                    <i class="material-icons sorting-icon">{{
-                      uv.extra.sortAsc ? 'expand_more' : 'expand_less'
-                    }}</i>
+                    <AppIcon
+                      class="sorting-icon"
+                      :name="uv.extra.sortAsc ? 'expand_more' : 'expand_less'"
+                    />
                   </div>
                   <div
                     class="resize-column-thumb"
@@ -319,7 +320,7 @@
                     @dragstart.stop.prevent
                     @click.stop
                   >
-                    <i class="material-icons">drag_indicator</i>
+                    <AppIcon name="drag_indicator" />
                   </div>
                 </div>
               </th>
@@ -539,7 +540,7 @@
               :aria-label="$t('close_sum_popup').toString()"
               @click="dismissSumPopup"
             >
-              <span class="material-icons">close</span>
+              <AppIcon name="close" />
             </button>
           </div>
         </transition>

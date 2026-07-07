@@ -1,16 +1,14 @@
 <template>
   <fragment>
-    <span
-      v-if="button.icon"
-      :class="['icon', iconType === 'emoji' ? 'emoji-icon' : 'material-icons']"
-      >{{ button.icon }}</span
-    >
-    <span
+    <span v-if="button.icon && iconType === 'emoji'" class="icon emoji-icon">{{
+      button.icon
+    }}</span>
+    <AppIcon v-else-if="button.icon" class="icon" :name="button.icon" />
+    <AppIcon
       v-else-if="listItem && phantomIcon"
       v-visible="false"
-      class="material-icons"
-      >arrow_right</span
-    >
+      name="arrow_right"
+    />
 
     <span
       v-if="button.caption || listItem"
@@ -18,11 +16,11 @@
       >{{ button.caption ? $ustOrEmpty(button.caption) : undefined }}</span
     >
 
-    <span
+    <AppIcon
       v-if="button.caption && button.type == 'button-group'"
-      class="material-icons ml-auto dropdown-icon"
-      >arrow_right</span
-    >
+      class="ml-auto dropdown-icon"
+      name="arrow_right"
+    />
 
     <span v-if="!button.caption">&#8203;</span>
   </fragment>

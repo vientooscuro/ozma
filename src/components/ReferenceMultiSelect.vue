@@ -63,9 +63,10 @@
             :link="select.option.value.link"
             @goto="$emit('goto', $event)"
           >
-            <i class="material-icons rounded-circle md-14 open-modal-button">
-              {{ iconValue(select.option.value.link.target) }}
-            </i>
+            <AppIcon
+              class="rounded-circle md-14 open-modal-button"
+              :name="iconValue(select.option.value.link.target)"
+            />
           </OzmaLink>
 
           <!-- eslint-disable vue/no-v-html -->
@@ -89,16 +90,18 @@
           class="action-button"
           @click="beginSelect(action)"
         >
-          <i class="material-icons md-18"> add </i>
+          <AppIcon class="md-18" name="add" />
           {{ action.name }}
         </button>
       </template>
       <template #qrcode-button>
         <b-input-group-append v-if="qrcodeInput">
           <b-button variant="outline-info" class="with-material-icon">
-            <i class="material-icons qr_code" @click="openQRCodeScanner()">
-              qr_code_2
-            </i>
+            <AppIcon
+              class="qr_code"
+              name="qr_code_2"
+              @click="openQRCodeScanner()"
+            />
           </b-button>
         </b-input-group-append>
       </template>

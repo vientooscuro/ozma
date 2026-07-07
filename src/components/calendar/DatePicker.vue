@@ -16,11 +16,11 @@
       <span class="delimiter" />
 
       <div class="month-control">
-        <span
-          class="material-button material-icons md-18 month-arrow"
+        <AppIcon
+          class="material-button md-18 month-arrow"
+          name="arrow_left"
           @click="changeDate(-1)"
-          >arrow_left</span
-        >
+        />
 
         <span
           v-if="mode === 'days'"
@@ -32,11 +32,11 @@
           >{{ startValue.format('MMM') }}</span
         >
 
-        <span
-          class="material-button material-icons md-18 month-arrow"
+        <AppIcon
+          class="material-button md-18 month-arrow"
+          name="arrow_right"
           @click="changeDate(1)"
-          >arrow_right</span
-        >
+        />
       </div>
     </div>
     <MonthsInYear

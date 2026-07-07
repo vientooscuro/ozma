@@ -119,7 +119,7 @@
             />
 
             <div v-if="disabled" class="disabled-indicator">
-              <span class="material-icons">edit_off</span>
+              <AppIcon name="edit_off" />
             </div>
           </div>
 

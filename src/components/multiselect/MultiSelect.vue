@@ -99,13 +99,14 @@
                   <span v-html="option.labelHtml" />
                   <!-- eslint-enable vue/no-v-html -->
                 </slot>
-                <input
+                <button
                   v-if="showUnselectOption && !compactMode"
                   type="button"
-                  class="material-icons md-14 material-button remove-value rounded-circle"
-                  value="close"
+                  class="material-button remove-value rounded-circle"
                   @click.stop="unselectOption(index)"
-                />
+                >
+                  <AppIcon class="md-14" name="close" />
+                </button>
               </span>
             </div>
           </div>
@@ -120,7 +121,7 @@
               @mousedown.stop.prevent
               @click="onClearAllClick"
             >
-              <i class="material-icons">close</i>
+              <AppIcon name="close" />
             </button>
             <b-input-group-text
               v-if="!(mode === 'modal' && isOpen)"
@@ -129,9 +130,7 @@
                 { 'is-mobile': $isMobile },
               ]"
             >
-              <i class="material-icons">
-                {{ showPopup ? 'expand_less' : 'expand_more' }}
-              </i>
+              <AppIcon :name="showPopup ? 'expand_less' : 'expand_more'" />
             </b-input-group-text>
           </b-input-group-append>
         </div>
@@ -175,7 +174,7 @@
                 class="clear-option-button"
                 @click="unselectAll"
               >
-                <i class="material-icons"> highlight_off </i>
+                <AppIcon name="highlight_off" />
                 {{ $t('clear') }}
               </button>
             </div>
@@ -196,7 +195,7 @@
                   v-if="showUnselectOption"
                   class="material-button remove-value d-flex align-items-center"
                 >
-                  <span class="material-icons md-14 remove-value">close</span>
+                  <AppIcon class="md-14 remove-value" name="close" />
                 </button>
 
                 <div
