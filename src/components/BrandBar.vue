@@ -25,15 +25,22 @@
 
     <nav v-if="!$isMobile" class="glass2-brand-tabs">
       <template v-for="(tab, tabI) in tabs">
-        <OzmaLink
+        <!-- The boxless wrapper catches hover: OzmaLink replaces DOM
+             listeners on href links, so mouseenter can't go on it. -->
+        <span
           v-if="tab.directLink"
           :key="'direct' + tabI"
-          class="glass2-brand-tab"
-          :link="tab.directLink"
-          @goto="$emit('goto', $event)"
+          style="display: contents"
+          @mouseenter="hoverDirectTab"
         >
-          {{ $ustOrEmpty(tab.name) }}
-        </OzmaLink>
+          <OzmaLink
+            class="glass2-brand-tab"
+            :link="tab.directLink"
+            @goto="$emit('goto', $event)"
+          >
+            {{ $ustOrEmpty(tab.name) }}
+          </OzmaLink>
+        </span>
         <popper
           v-else
           :key="'tab' + tabI"
@@ -64,6 +71,7 @@
             type="button"
             :class="['glass2-brand-tab', { active: tabI === activeTabIndex }]"
             @click.capture="toggleTab(tabI)"
+            @mouseenter="hoverTab(tabI)"
           >
             {{ $ustOrEmpty(tab.name) }}
             <AppIcon class="glass2-brand-tab-chevron" name="expand_more" />
@@ -209,6 +217,21 @@ export default class BrandBar extends Vue {
 
   private toggleTab(tabI: number) {
     this.openTabIndex = this.openTabIndex === tabI ? null : tabI
+  }
+
+  // Standard menubar hover behavior: while some dropdown is open, hovering
+  // another tab moves the open dropdown there; hovering a direct-link tab
+  // closes it. No hover-open when everything is closed — click opens first.
+  private hoverTab(tabI: number) {
+    if (this.openTabIndex !== null && this.openTabIndex !== tabI) {
+      this.openTabIndex = tabI
+    }
+  }
+
+  private hoverDirectTab() {
+    if (this.openTabIndex !== null) {
+      this.openTabIndex = null
+    }
   }
 
   private closeTab(tabI: number) {
