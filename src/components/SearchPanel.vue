@@ -43,6 +43,7 @@
               <AppIcon name="clear" />
             </b-button>
             <b-button
+              v-if="!expanded"
               class="button with-material-icon"
               variant="secondary"
               @click.prevent="toggleShowInput"
@@ -73,14 +74,17 @@ import { Debounce } from 'vue-debounce-decorator'
 @Component
 export default class SearchPanel extends Vue {
   @Prop({ type: String, required: true }) filterString!: string
+  // Always-open visible field (glass2 toolbar card). Default keeps the
+  // legacy icon-toggle behavior byte-identical.
+  @Prop({ type: Boolean, default: false }) expanded!: boolean
 
   private showInput = false
   private showOpenButton = true
   private localFilterString = ''
 
   created() {
-    this.showInput = this.filterString !== ''
-    this.showOpenButton = this.filterString === ''
+    this.showInput = this.expanded || this.filterString !== ''
+    this.showOpenButton = !this.expanded && this.filterString === ''
     this.localFilterString = this.filterString
   }
 

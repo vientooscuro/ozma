@@ -85,6 +85,9 @@
         :argumentEditorProps="argumentEditorProps"
         :sort-editor-props="sortEditorProps"
         :is-loading="uvLoading"
+        :icon="viewIcon"
+        :description="description ?? undefined"
+        :record-count="rowCount"
         @update:filter-string="replaceSearch({ key: null, search: $event })"
         @goto="push({ ...$event, key: null })"
       >

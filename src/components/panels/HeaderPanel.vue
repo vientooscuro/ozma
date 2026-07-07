@@ -6,117 +6,204 @@
       {
         'is-root': type === 'root',
         compact: useCompactLayout,
+        'glass2-root': useGlass2RootLayout,
       },
     ]"
   >
-    <div class="first-row">
-      <div class="left-part d-flex align-items-center">
-        <div v-if="$slots['left-slot']" class="left-slot">
-          <slot name="left-slot" />
+    <template v-if="useGlass2RootLayout">
+      <div class="glass2-page-header">
+        <div class="glass2-page-header-left">
+          <div v-if="$slots['left-slot']" class="left-slot">
+            <slot name="left-slot" />
+          </div>
+          <div class="glass2-icon-tile">
+            <AppIcon :name="icon || 'table'" />
+          </div>
+          <div class="glass2-title-block">
+            <div class="glass2-title-row">
+              <div v-if="isLoading" class="title-placeholder" />
+              <h1 v-else class="userview-title glass2-page-title">
+                {{ $ustOrEmpty(title) }}
+              </h1>
+              <span v-if="recordCount !== null" class="glass2-record-count">
+                {{ recordCount }}
+              </span>
+            </div>
+            <div v-if="description" class="glass2-page-subtitle">
+              {{ $ustOrEmpty(description) }}
+            </div>
+          </div>
         </div>
-        <div v-if="title && type === 'root'" class="middle-part">
-          <div v-if="isLoading" class="title-placeholder" />
-          <!-- `tabindex` is required for closing tooltip on blur -->
-          <h1
-            v-else
-            v-b-tooltip.click.blur.bottom.noninteractive.viewport
-            tabindex="0"
-            class="userview-title"
-          >
-            {{ $ustOrEmpty(title) }}
-          </h1>
-        </div>
-        <div v-else class="userview-title-wrapper">
-          <div v-if="isLoading" class="title-placeholder" />
-          <h2
-            v-else
-            v-b-tooltip.click.blur.bottom.noninteractive.viewport
-            tabindex="0"
-            :title="$ustOrEmpty(title)"
-            class="userview-title"
-          >
-            {{ $ustOrEmpty(title) }}
-          </h2>
+        <div class="glass2-page-header-right">
+          <ButtonsPanel
+            v-if="glass2PrimaryButtons.length > 0"
+            class="glass2-cta-panel"
+            :buttons="glass2PrimaryButtons"
+            @goto="$emit('goto', $event)"
+          />
+          <div v-if="$slots['right-slot']" class="right-slot">
+            <slot name="right-slot" />
+          </div>
         </div>
       </div>
-
-      <div class="right-part">
-        <div v-if="isLoading && type === 'root'" class="placeholder-buttons">
-          <div
-            v-for="index in $isMobile ? 1 : 3"
-            :key="index"
-            class="placeholder-button"
+      <div v-if="glass2ToolbarVisible" class="glass2-toolbar-card">
+        <div class="glass2-toolbar-left">
+          <SearchPanel
+            v-if="isEnableFilter"
+            class="search-panel"
+            expanded
+            :filter-string="filterString"
+            @update:filter-string="$emit('update:filter-string', $event)"
+          />
+          <SortEditor
+            v-if="sortEditorProps"
+            :sort-editor-props="sortEditorProps"
+          />
+          <ArgumentEditor
+            v-if="argumentEditorProps"
+            :userView="argumentEditorProps.userView"
+            :applyArguments="argumentEditorProps.applyArguments"
+            :initialArgumentsSnapshot="
+              argumentEditorProps.initialArgumentsSnapshot
+            "
           />
         </div>
+        <div class="glass2-toolbar-right">
+          <ButtonsPanel
+            v-if="glass2HelpButtons.length > 0"
+            :buttons="glass2HelpButtons"
+            @goto="$emit('goto', $event)"
+          />
+          <ButtonsPanel
+            v-if="glass2SecondaryButtons.length > 0"
+            :buttons="glass2SecondaryButtons"
+            @goto="$emit('goto', $event)"
+          />
+          <ButtonsPanel
+            v-if="fullscreenButtons.length > 0"
+            :buttons="fullscreenButtons"
+            @goto="$emit('goto', $event)"
+          />
+          <ButtonsPanel
+            :buttons="glass2ExtraButtons"
+            @goto="$emit('goto', $event)"
+          />
+        </div>
+      </div>
+    </template>
+    <template v-else>
+      <div class="first-row">
+        <div class="left-part d-flex align-items-center">
+          <div v-if="$slots['left-slot']" class="left-slot">
+            <slot name="left-slot" />
+          </div>
+          <div v-if="title && type === 'root'" class="middle-part">
+            <div v-if="isLoading" class="title-placeholder" />
+            <!-- `tabindex` is required for closing tooltip on blur -->
+            <h1
+              v-else
+              v-b-tooltip.click.blur.bottom.noninteractive.viewport
+              tabindex="0"
+              class="userview-title"
+            >
+              {{ $ustOrEmpty(title) }}
+            </h1>
+          </div>
+          <div v-else class="userview-title-wrapper">
+            <div v-if="isLoading" class="title-placeholder" />
+            <h2
+              v-else
+              v-b-tooltip.click.blur.bottom.noninteractive.viewport
+              tabindex="0"
+              :title="$ustOrEmpty(title)"
+              class="userview-title"
+            >
+              {{ $ustOrEmpty(title) }}
+            </h2>
+          </div>
+        </div>
+
+        <div class="right-part">
+          <div v-if="isLoading && type === 'root'" class="placeholder-buttons">
+            <div
+              v-for="index in $isMobile ? 1 : 3"
+              :key="index"
+              class="placeholder-button"
+            />
+          </div>
+          <ButtonsPanel
+            v-if="helpButtons.length > 0"
+            :buttons="helpButtons"
+            @goto="$emit('goto', $event)"
+          />
+          <SearchPanel
+            v-if="isEnableFilter"
+            class="search-panel"
+            :filter-string="filterString"
+            @update:filter-string="$emit('update:filter-string', $event)"
+          />
+          <SortEditor
+            v-if="!useCompactLayout && sortEditorProps"
+            :sort-editor-props="sortEditorProps"
+          />
+          <ArgumentEditor
+            v-if="!useCompactLayout && argumentEditorProps"
+            :userView="argumentEditorProps.userView"
+            :applyArguments="argumentEditorProps.applyArguments"
+            :initialArgumentsSnapshot="
+              argumentEditorProps.initialArgumentsSnapshot
+            "
+          />
+          <ButtonsPanel
+            v-if="!useCompactLayout && headerButtons.length > 0"
+            :buttons="headerButtons"
+            @goto="$emit('goto', $event)"
+          />
+          <ButtonsPanel
+            v-if="fullscreenButtons.length > 0"
+            :buttons="fullscreenButtons"
+            @goto="$emit('goto', $event)"
+          />
+          <ButtonsPanel :buttons="extraButtons" @goto="$emit('goto', $event)" />
+          <div v-if="$slots['right-slot']" class="right-slot">
+            <slot name="right-slot" />
+          </div>
+        </div>
+      </div>
+      <div
+        v-if="
+          useCompactLayout &&
+          (headerButtons.length > 0 ||
+            Object.keys(argumentEditorProps?.userView.argumentsMap ?? {})
+              .length > 0)
+        "
+        class="second-row"
+      >
         <ButtonsPanel
-          v-if="helpButtons.length > 0"
-          :buttons="helpButtons"
+          class="second-row-button-panel"
+          :buttons="headerButtons"
           @goto="$emit('goto', $event)"
         />
-        <SearchPanel
-          v-if="isEnableFilter"
-          class="search-panel"
-          :filter-string="filterString"
-          @update:filter-string="$emit('update:filter-string', $event)"
-        />
         <SortEditor
-          v-if="!useCompactLayout && sortEditorProps"
+          v-if="sortEditorProps"
           :sort-editor-props="sortEditorProps"
         />
         <ArgumentEditor
-          v-if="!useCompactLayout && argumentEditorProps"
+          v-if="argumentEditorProps"
           :userView="argumentEditorProps.userView"
           :applyArguments="argumentEditorProps.applyArguments"
           :initialArgumentsSnapshot="
             argumentEditorProps.initialArgumentsSnapshot
           "
         />
-        <ButtonsPanel
-          v-if="!useCompactLayout && headerButtons.length > 0"
-          :buttons="headerButtons"
-          @goto="$emit('goto', $event)"
-        />
-        <ButtonsPanel
-          v-if="fullscreenButtons.length > 0"
-          :buttons="fullscreenButtons"
-          @goto="$emit('goto', $event)"
-        />
-        <ButtonsPanel :buttons="extraButtons" @goto="$emit('goto', $event)" />
-        <div v-if="$slots['right-slot']" class="right-slot">
-          <slot name="right-slot" />
-        </div>
       </div>
-    </div>
-    <div
-      v-if="
-        useCompactLayout &&
-        (headerButtons.length > 0 ||
-          Object.keys(argumentEditorProps?.userView.argumentsMap ?? {}).length >
-            0)
-      "
-      class="second-row"
-    >
-      <ButtonsPanel
-        class="second-row-button-panel"
-        :buttons="headerButtons"
-        @goto="$emit('goto', $event)"
-      />
-      <SortEditor
-        v-if="sortEditorProps"
-        :sort-editor-props="sortEditorProps"
-      />
-      <ArgumentEditor
-        v-if="argumentEditorProps"
-        :userView="argumentEditorProps.userView"
-        :applyArguments="argumentEditorProps.applyArguments"
-        :initialArgumentsSnapshot="argumentEditorProps.initialArgumentsSnapshot"
-      />
-    </div>
+    </template>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
 import Popper from '@/components/common/OzmaPopper.vue'
 
 import { debounceTillAnimationFrame } from '@/utils'
@@ -126,11 +213,15 @@ import type { Button } from '@/components/buttons/buttons'
 import { buttonsToPanelButtons } from '@/components/buttons/buttons'
 import SearchPanel from '@/components/SearchPanel.vue'
 import { interfaceButtonVariant } from '@/utils_colors'
+import type { IThemeRef } from '@/utils_colors'
+import { isGlass2Theme } from '@/utils/glass2'
 import { UserString, isOptionalUserString } from '@/state/translations'
 import ArgumentEditor, {
   IArgumentEditorProps,
 } from '@/components/ArgumentEditor.vue'
 import SortEditor, { ISortEditorProps } from '@/components/SortEditor.vue'
+
+const settings = namespace('settings')
 
 const isHelpButton = (button: Button) => button.icon === 'help_outline'
 
@@ -153,6 +244,73 @@ export default class HeaderPanel extends Vue {
   @Prop({ type: Object }) argumentEditorProps!: IArgumentEditorProps | null
   @Prop({ type: Object }) sortEditorProps!: ISortEditorProps | null
   @Prop({ type: String }) type!: 'root' | 'modal' | 'nested' | undefined
+  // Glass2 page header extras (§4); ignored by the legacy branch.
+  @Prop({ type: String, default: null }) icon!: string | null
+  @Prop({ validator: isOptionalUserString }) description!:
+    | UserString
+    | undefined
+  @Prop({ type: Number, default: null }) recordCount!: number | null
+
+  @settings.State('currentThemeRef') currentThemeRef!: IThemeRef | null
+
+  get useGlass2RootLayout(): boolean {
+    return isGlass2Theme(this.currentThemeRef) && this.type === 'root'
+  }
+
+  // §4: the view's primary action — the create button UserViewCommon builds
+  // with icon 'add' (or an equivalent DB-provided one). Rendered as the CTA
+  // pill and removed from the toolbar sets below.
+  get glass2PrimaryButton(): Button | null {
+    if (!this.useGlass2RootLayout) return null
+    return (
+      this.buttons.find(
+        (button) =>
+          button.icon === 'add' &&
+          (button.type === 'link' ||
+            button.type === 'callback' ||
+            button.type === 'button-group'),
+      ) ?? null
+    )
+  }
+
+  get glass2PrimaryButtons(): Button[] {
+    return this.glass2PrimaryButton ? [this.glass2PrimaryButton] : []
+  }
+
+  private get glass2PanelButtons() {
+    const primary = this.glass2PrimaryButton
+    const rest =
+      primary === null
+        ? this.buttons
+        : this.buttons.filter((button) => button !== primary)
+    return buttonsToPanelButtons(rest)
+  }
+
+  get glass2HelpButtons(): Button[] {
+    return this.glass2PanelButtons.panelButtons.filter(isHelpButton)
+  }
+
+  get glass2SecondaryButtons(): Button[] {
+    return this.glass2PanelButtons.panelButtons.filter(
+      (button) => !isHelpButton(button),
+    )
+  }
+
+  get glass2ExtraButtons(): Button[] {
+    return [this.glass2PanelButtons.extraButton]
+  }
+
+  get glass2ToolbarVisible(): boolean {
+    return Boolean(
+      this.isEnableFilter ||
+        this.sortEditorProps ||
+        this.argumentEditorProps ||
+        this.glass2HelpButtons.length > 0 ||
+        this.glass2SecondaryButtons.length > 0 ||
+        this.fullscreenButtons.length > 0 ||
+        !this.glass2PanelButtons.extraButton.disabled,
+    )
+  }
 
   get extraButtons() {
     return [buttonsToPanelButtons(this.buttons).extraButton]
