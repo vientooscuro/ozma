@@ -486,7 +486,7 @@ stage_seed_field_attributes() {
 
   run_script_on_server << 'REMOTE_SCRIPT'
     set -euo pipefail
-    docker exec ozma-postgres-1 psql -U postgres -d ozmadb << 'SQL'
+    docker exec -i ozma-postgres-1 psql -U postgres -d ozmadb << 'SQL'
       INSERT INTO public.fields_attributes (schema_id, field_entity_id, field_name, attributes, priority, allow_broken)
       SELECT
         (SELECT id FROM public.schemas WHERE name = 'admin'),
@@ -528,6 +528,43 @@ REMOTE_SCRIPT
 }
 
 stage_seed_field_attributes
+
+stage_seed_glass_cool_theme() {
+  info "\n==> Stage 7b: Seed light-glass-cool theme"
+
+  run_script_on_server << 'REMOTE_SCRIPT'
+    set -euo pipefail
+    docker exec -i ozma-postgres-1 psql -U postgres -d ozmadb << 'SQL'
+      INSERT INTO funapp.color_themes (schema_id, name, localized_name)
+      SELECT schema_id, 'light-glass-cool',
+             '{"ru": "Светлая стеклянная (холодная)", "en": "Light glass (cool)"}'
+      FROM funapp.color_themes
+      WHERE name = 'light-glass'
+        AND NOT EXISTS (
+          SELECT 1 FROM funapp.color_themes WHERE name = 'light-glass-cool'
+        )
+      LIMIT 1;
+
+      INSERT INTO funapp.color_variants
+        (name, theme_id, foreground, background, border,
+         font_weight, font_style, text_decoration)
+      SELECT v.name, t_new.id, v.foreground, v.background, v.border,
+             v.font_weight, v.font_style, v.text_decoration
+      FROM funapp.color_variants v
+      JOIN funapp.color_themes t_old
+        ON v.theme_id = t_old.id AND t_old.name = 'light-glass'
+      JOIN funapp.color_themes t_new
+        ON t_new.name = 'light-glass-cool'
+      WHERE NOT EXISTS (
+        SELECT 1 FROM funapp.color_variants x WHERE x.theme_id = t_new.id
+      );
+SQL
+REMOTE_SCRIPT
+
+  ok "light-glass-cool theme seeded"
+}
+
+stage_seed_glass_cool_theme
 
 stage_clear_settings() {
   info "\n==> Stage 8: Clear default settings"
