@@ -1487,3 +1487,157 @@ html[data-theme-style='light-glass-cool'] {
 #app[data-theme-style='light-glass-cool'] {
   @include glass2-page-header;
 }
+
+/* ── Phase 2 §5 — brand bar + shell layout ──
+   Z-ladder (top → bottom): overlays/modals 100050 (glass2-overlays) >
+   brand bar 120 > sticky root header 100 (glass2-header) > table fixed
+   cells 0–1 (glass2-table-fixed). The bar itself is a static flex row —
+   the page scroll container is .userview-div, so nothing scrolls past it. */
+@mixin glass2-brand-bar {
+  .glass2-brand-bar {
+    display: flex;
+    position: relative;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 16px;
+    z-index: 120;
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--surface-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    padding: 0 20px;
+    height: 52px;
+  }
+
+  /* Shell fix: .userview-upper-div inherits 100% height (scoped CSS in
+     TopLevelUserView); with the 52px bar above it must flex instead. */
+  .main-div > .userview-upper-div {
+    flex: 1 1 0;
+    height: auto;
+    min-height: 0;
+  }
+
+  .glass2-brand {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .glass2-brand:hover {
+    text-decoration: none;
+  }
+
+  .glass2-brand-tile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 9px;
+    background: var(--gradient-accent);
+    box-shadow: var(--shadow-accent-glow);
+    width: 28px;
+    height: 28px;
+    color: var(--text-on-accent);
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .glass2-brand-name {
+    color: var(--text-primary);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  /* 9+ categories: horizontal scroll, no wrapping, hidden scrollbar. */
+  .glass2-brand-tabs {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .glass2-brand-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .glass2-brand-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    padding: 7px 12px;
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .glass2-brand-tab:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .glass2-brand-tab.active {
+    background: var(--accent-tint);
+    color: var(--accent-300);
+  }
+
+  .glass2-brand-tab-chevron {
+    font-size: 14px;
+    opacity: 0.7;
+  }
+
+  .glass2-brand-dropdown {
+    min-width: 220px;
+  }
+
+  .glass2-brand-right {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+  }
+
+  .glass2-theme-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid var(--border-default);
+    border-radius: 10px;
+    background: transparent;
+    width: 34px;
+    height: 34px;
+    color: var(--text-secondary);
+    font-size: 16px;
+  }
+
+  .glass2-theme-toggle:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+  }
+
+  /* Avatar keeps the Phase 1 gradient-tile treatment in its new home. */
+  .glass2-brand-bar .avatar-box .placeholder-avatar {
+    background: var(--gradient-accent) !important;
+    border-radius: 12px !important;
+    color: var(--text-on-accent);
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-brand-bar;
+}
