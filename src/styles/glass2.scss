@@ -682,3 +682,295 @@ html[data-theme-style='light-glass-cool'] {
 #app[data-theme-style='light-glass-cool'] {
   @include glass2-form;
 }
+
+/* ── Table: flat rows (§6.4) ── */
+@mixin glass2-table {
+  .root-wrapper {
+    padding: 0.5rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-card);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+  }
+
+  .table-wrapper {
+    background-color: transparent !important;
+  }
+
+  .table-wrapper.root {
+    border-color: var(--border-subtle);
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .custom-table {
+    background: transparent;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+  }
+
+  /* Rows: flat, 60px, hairline separators, no vertical borders. */
+  .custom-table tbody tr {
+    background: transparent;
+  }
+
+  .custom-table tbody tr td {
+    --backgroundColor: transparent;
+    --cell-backgroundColor: transparent;
+    --td-vertical-padding: 8px;
+
+    height: var(--table-row-h);
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+    color: var(--text-primary);
+  }
+
+  /* Hover: full-row highlight. */
+  .custom-table tbody tr:hover td {
+    background: var(--surface-hover) !important;
+  }
+
+  /* Selected rows / rows with the cursor cell: accent tint. */
+  .custom-table tbody tr.selected td,
+  .custom-table tbody tr.table-tr.selected td,
+  .custom-table tbody tr:has(td.selected) td,
+  .custom-table tbody tr:has(td.cursor) td {
+    background: var(--accent-tint) !important;
+    border-bottom-color: var(--accent-tint-border) !important;
+  }
+
+  /* Cursor cell: focus outline. */
+  .custom-table tbody td.cursor {
+    outline: 2px solid var(--border-focus);
+    outline-offset: -2px;
+  }
+
+  /* Header: micro-label style, single subtle divider, sticky keeps blur. */
+  .custom-table thead tr {
+    border-bottom: none;
+  }
+
+  .custom-table th,
+  .custom-table th.fixed-cell {
+    --cell-backgroundColor: transparent;
+
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .custom-table .table-th {
+    @include glass2-microlabel;
+
+    background: var(--surface-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+  }
+
+  .custom-table .table-th .column-capture {
+    text-transform: uppercase !important;
+    letter-spacing: 0.09em !important;
+  }
+
+  /* Resize handle & drag affordance. */
+  .custom-table .resize-column-thumb {
+    width: 4px;
+    background-color: var(--accent-tint);
+  }
+
+  .custom-table .resize-column-thumb .material-icons {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+  }
+
+  .custom-table th .table-th .material-icons {
+    color: var(--text-muted);
+  }
+
+  .custom-table th.column-drop-target {
+    outline-color: var(--accent-tint-border);
+  }
+
+  /* Vertical dividers stay opt-in (show-vertical-borders). */
+  .custom-table.show-vertical-borders tbody tr td + td {
+    border-left: 1px solid var(--border-subtle) !important;
+  }
+
+  .custom-table.show-vertical-borders th {
+    border-right: 1px solid var(--border-subtle) !important;
+  }
+
+  .custom-table.show-vertical-borders th:last-child {
+    border-right: none !important;
+  }
+
+  /* Footer: micro-label counters. */
+  .custom-table .table-footer-row .table-footer-cell {
+    @include glass2-microlabel;
+
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: none;
+    background: var(--surface-card);
+  }
+
+  /* Row add / edit affordances: muted icon buttons. */
+  .custom-table .add-entry-cell .material-button,
+  .custom-table .select-row-cell .material-button {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-table;
+}
+
+/* ── Table: fixed columns + scroll performance (§6.4) ── */
+@mixin glass2-table-fixed {
+  /* backdrop-filter on many tbody cells kills scroll performance. */
+  .custom-table tbody td:not(.fixed-cell),
+  .custom-table tbody td:not(.fixed-cell)::before {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Sticky data cells: opaque fallback bg (blur cannot sample siblings). */
+  .custom-table tbody td.fixed-cell.table-td,
+  .custom-table tbody td.fixed-cell.table-td::before {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .custom-table tbody td.fixed-cell.table-td::before {
+    background-color: var(--glass-fixed-bg) !important;
+  }
+
+  /* select-row-cell / add-entry-cell are sticky cells from TableRow.vue. */
+  .custom-table tbody tr td.select-row-cell,
+  .custom-table tbody tr td.add-entry-cell {
+    background: transparent !important;
+  }
+
+  .custom-table tbody tr td.select-row-cell::before,
+  .custom-table tbody tr td.add-entry-cell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-color: var(--glass-fixed-bg);
+  }
+
+  .custom-table tbody tr td.select-row-cell > *,
+  .custom-table tbody tr td.add-entry-cell > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Static (non-sticky) layout: no opaque overlay needed. */
+  .table-wrapper:not(.stick-fixed-columns) tbody td.fixed-cell.table-td::before,
+  .table-wrapper:not(.stick-fixed-columns) tbody tr td.select-row-cell::before,
+  .table-wrapper:not(.stick-fixed-columns) tbody tr td.add-entry-cell::before {
+    background-color: transparent !important;
+  }
+
+  .custom-table.show-fixed-column-border .last-fixed-cell {
+    border-right: 1px solid var(--border-default) !important;
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-table-fixed;
+}
+
+/* ── Table: reference chips, option pills, mono cells (§6.4) ── */
+@mixin glass2-table-cells {
+  /* Reference cells without explicit colors: pill chips. */
+  .custom-table .option:not(.option-variant) {
+    border: 1px solid var(--border-default);
+    border-radius: 10px;
+    background: var(--surface-inset);
+  }
+
+  .custom-table .option:not(.option-variant) .reference-text {
+    color: var(--link);
+    font-size: 13px;
+  }
+
+  /* Explicitly coloured option_variant chips keep their DB colors. */
+  .custom-table .option.option-variant.option-local-variant {
+    border-radius: 10px;
+  }
+
+  /* JetBrains Mono where cell type is targetable. TableCell.vue exposes only
+     the date-time class for datetime cells; number/ID cells have no class, so
+     they stay in Inter (accepted by §12 of the spec). */
+  .custom-table .cell-text.date-time {
+    @include glass2-mono;
+
+    font-size: 13px;
+  }
+
+  .custom-table .table-footer-cell {
+    @include glass2-mono;
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-table-cells;
+}
+
+/* ── Enum chips (.chip) — shared structure ── */
+@mixin glass2-chips {
+  .chip {
+    display: inline-block;
+    padding: 3px 10px;
+    border: 1px solid var(--border-default);
+    border-radius: 999px;
+    background: var(--surface-inset);
+    color: var(--text-secondary);
+    font-family: Inter, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-chips;
+}
+
+/* Coloured chips — dark-glass */
+#app[data-theme-style='dark-glass'] .chip.green  { background: rgba(52, 226, 138, 0.12);  color: #34e28a; border-color: rgba(52, 226, 138, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.teal   { background: rgba(45, 212, 191, 0.12);  color: #2dd4bf; border-color: rgba(45, 212, 191, 0.35); }
+#app[data-theme-style='dark-glass'] .chip.blue   { background: rgba(79, 201, 232, 0.12);  color: #4fc9e8; border-color: rgba(79, 201, 232, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.indigo { background: rgba(129, 140, 248, 0.12); color: #818cf8; border-color: rgba(129, 140, 248, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.purple { background: rgba(177, 140, 255, 0.12); color: #b18cff; border-color: rgba(177, 140, 255, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.amber  { background: rgba(255, 186, 83, 0.12);  color: #ffba53; border-color: rgba(255, 186, 83, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.orange { background: rgba(251, 146, 60, 0.12);  color: #fb923c; border-color: rgba(251, 146, 60, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.rose   { background: rgba(255, 92, 107, 0.12);  color: #ff5c6b; border-color: rgba(255, 92, 107, 0.3); }
+#app[data-theme-style='dark-glass'] .chip.sky    { background: rgba(56, 189, 248, 0.12);  color: #38bdf8; border-color: rgba(56, 189, 248, 0.32); }
+#app[data-theme-style='dark-glass'] .chip.lime   { background: rgba(163, 230, 53, 0.12);  color: #a3e635; border-color: rgba(163, 230, 53, 0.32); }
+
+/* Coloured chips — light-glass-cool */
+#app[data-theme-style='light-glass-cool'] .chip.green  { background: rgba(15, 169, 104, 0.09); color: #0fa968; border-color: rgba(15, 169, 104, 0.3); }
+#app[data-theme-style='light-glass-cool'] .chip.teal   { background: rgba(15, 168, 149, 0.1);  color: #0b8577; border-color: rgba(15, 168, 149, 0.32); }
+#app[data-theme-style='light-glass-cool'] .chip.blue   { background: rgba(14, 127, 168, 0.1);  color: #0e7fa8; border-color: rgba(14, 127, 168, 0.3); }
+#app[data-theme-style='light-glass-cool'] .chip.indigo { background: rgba(99, 102, 241, 0.1);  color: #4f46e5; border-color: rgba(99, 102, 241, 0.28); }
+#app[data-theme-style='light-glass-cool'] .chip.purple { background: rgba(139, 92, 246, 0.1);  color: #8b5cf6; border-color: rgba(139, 92, 246, 0.28); }
+#app[data-theme-style='light-glass-cool'] .chip.amber  { background: rgba(245, 158, 11, 0.12); color: #b45309; border-color: rgba(245, 158, 11, 0.3); }
+#app[data-theme-style='light-glass-cool'] .chip.orange { background: rgba(249, 115, 22, 0.1);  color: #c2410c; border-color: rgba(249, 115, 22, 0.28); }
+#app[data-theme-style='light-glass-cool'] .chip.rose   { background: rgba(226, 61, 80, 0.08);  color: #e23d50; border-color: rgba(226, 61, 80, 0.28); }
+#app[data-theme-style='light-glass-cool'] .chip.sky    { background: rgba(14, 165, 233, 0.1);  color: #0369a1; border-color: rgba(14, 165, 233, 0.28); }
+#app[data-theme-style='light-glass-cool'] .chip.lime   { background: rgba(132, 204, 22, 0.1);  color: #4d7c0f; border-color: rgba(132, 204, 22, 0.28); }
