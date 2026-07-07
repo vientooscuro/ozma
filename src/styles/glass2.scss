@@ -287,9 +287,9 @@ html[data-theme-style='light-glass-cool'] {
   }
 
   .userview-upper-div > .userview-div {
-    margin: 0.5rem 0.55rem 0;
+    margin: 0.5rem 1rem 0;
     box-sizing: border-box;
-    width: calc(100% - 1.1rem);
+    width: calc(100% - 2rem);
   }
 
   .userview-title {
@@ -557,6 +557,25 @@ html[data-theme-style='light-glass-cool'] {
     -webkit-backdrop-filter: none !important;
     color: var(--text-muted) !important;
   }
+
+  /* InputSlot.vue paints an inline DB-variant backgroundColor behind the
+     control; keep it transparent so the form-control well itself shows
+     through (§6.5). Wins over the inline style because of !important. */
+  .input-slot {
+    background: transparent !important;
+  }
+
+  /* Wells: 40px with roomier text, scoped to form contexts only so table
+     filter inputs / toolbar controls (e.g. SearchPanel, SortEditor) keep
+     their compact sizing (§6.5). */
+  .form_sub_block .form-control:not(.form-control-sm),
+  .form_sub_block .custom-select:not(.form-control-sm),
+  .first_level_grid_block .form-control:not(.form-control-sm),
+  .first_level_grid_block .custom-select:not(.form-control-sm) {
+    min-height: 40px;
+    padding: 8px 12px;
+    font-size: 15px;
+  }
 }
 
 #app[data-theme-style='dark-glass'],
@@ -578,7 +597,7 @@ html[data-theme-style='light-glass-cool'] {
   }
 
   .form_sub_block {
-    margin-bottom: 0.75rem !important;
+    margin-bottom: 1.25rem !important;
   }
 
   .form_sub_block:last-child {
@@ -620,8 +639,13 @@ html[data-theme-style='light-glass-cool'] {
     padding-bottom: 0 !important;
   }
 
+  /* Widen horizontal breathing room (legacy .sm-gutters gives 5px). */
+  .form_grid_block__column {
+    padding: 0 10px;
+  }
+
   .form_grid_block__column:not(:last-child) {
-    margin-bottom: 1rem !important;
+    margin-bottom: 1.4rem !important;
   }
 
   /* Field labels: signature micro-labels above the control (§4). */
@@ -629,7 +653,7 @@ html[data-theme-style='light-glass-cool'] {
     @include glass2-microlabel;
 
     background-color: transparent !important;
-    top: -0.95rem !important;
+    top: -1.35rem !important;
   }
 
   .increase-z-index.border-label {
@@ -719,13 +743,16 @@ html[data-theme-style='light-glass-cool'] {
   .custom-table tbody tr td {
     --backgroundColor: transparent;
     --cell-backgroundColor: transparent;
-    --td-vertical-padding: 8px;
+    --td-vertical-padding: 10px;
 
     height: var(--table-row-h);
     background: transparent !important;
     border: none !important;
     border-bottom: 1px solid var(--border-subtle) !important;
+    padding-left: 12px;
+    padding-right: 12px;
     color: var(--text-primary);
+    font-size: 13.5px;
   }
 
   /* Hover: full-row highlight. */
@@ -893,16 +920,29 @@ html[data-theme-style='light-glass-cool'] {
 
 /* ── Table: reference chips, option pills, mono cells (§6.4) ── */
 @mixin glass2-table-cells {
-  /* Reference cells without explicit colors: pill chips. */
+  /* Colored option chips (e.g. sums, heat status; DB variant set on
+     .cell-text.option or the reference-option pill): tinted capsule derived
+     from the chip's own foreground color instead of a neutral inset pill.
+     `color` itself still comes from TableCell.vue's `.option { color:
+     var(--option-foregroundColor) }` base rule / the DB variant. */
   .custom-table .option:not(.option-variant) {
-    border: 1px solid var(--border-default);
     border-radius: 10px;
-    background: var(--surface-inset);
+    background: color-mix(in srgb, currentcolor 13%, transparent);
+    border: 1px solid color-mix(in srgb, currentcolor 30%, transparent);
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
   }
 
-  .custom-table .option:not(.option-variant) .reference-text {
+  /* Reference chips (cells linking to records): text in the link color,
+     external-link icon muted, regardless of whether a DB color is set. */
+  .custom-table .option.reference-option .reference-text {
     color: var(--link);
     font-size: 13px;
+  }
+
+  .custom-table .option.reference-option .reference-open-modal {
+    color: var(--text-muted);
   }
 
   /* Explicitly coloured option_variant chips keep their DB colors. */
@@ -916,7 +956,14 @@ html[data-theme-style='light-glass-cool'] {
   .custom-table .cell-text.date-time {
     @include glass2-mono;
 
-    font-size: 13px;
+    font-size: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  /* Dates must not truncate: give datetime cells back the tighter padding. */
+  .custom-table tbody td:has(> .cell-text.date-time) {
+    padding-right: 6px;
+    padding-left: 6px;
   }
 
   .custom-table .table-footer-cell {
