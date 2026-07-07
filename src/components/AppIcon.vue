@@ -15,6 +15,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 
 import type { IThemeRef } from '@/utils_colors'
+import { isGlass2Theme } from '@/utils/glass2'
 import { lucideMarkupForMaterialName } from '@/utils/lucideIcons'
 
 const settings = namespace('settings')
@@ -30,8 +31,7 @@ export default class AppIcon extends Vue {
   @settings.State('currentThemeRef') currentThemeRef!: IThemeRef | null
 
   private get isGlass2Theme(): boolean {
-    const themeName = this.currentThemeRef?.name
-    return themeName === 'dark-glass' || themeName === 'light-glass-cool'
+    return isGlass2Theme(this.currentThemeRef)
   }
 
   get lucideMarkup(): string | null {
