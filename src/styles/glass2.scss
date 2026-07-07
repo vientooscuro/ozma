@@ -1114,3 +1114,43 @@ html[data-theme-style='dark-glass'],
 html[data-theme-style='light-glass-cool'] {
   @include glass2-overlays;
 }
+
+/* ── Table pagination (§6.4) ── */
+@mixin glass2-pagination {
+  .pagination .current-rows,
+  .pagination .select-label {
+    @include glass2-microlabel;
+  }
+
+  .pagination .pagination-arrow-button {
+    border: 1px solid var(--border-default) !important;
+    border-radius: 8px !important;
+    background: transparent;
+    color: var(--text-primary);
+  }
+
+  .pagination .page-select {
+    border-color: var(--border-default) !important;
+    border-radius: 8px;
+    background-color: var(--surface-inset) !important;
+    color: var(--text-primary);
+  }
+
+  .pagination .current-page-wrapper .current-page {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 8px;
+    border-radius: 8px;
+    background: var(--gradient-accent);
+    color: var(--text-on-accent);
+    font-weight: 600;
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-pagination;
+}
