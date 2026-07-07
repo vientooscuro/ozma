@@ -1,0 +1,266 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// Glass Themes 2.0 — dark-glass (redesigned in place) + light-glass-cool.
+// Spec: docs/superpowers/specs/2026-07-07-glass-themes-v2-design.md
+//
+// Structure: per-theme token blocks (html level), a consumer-var bridge shared
+// by both themes, then component mixins instantiated under both theme
+// selectors. The frozen warm light-glass theme lives in style.scss.
+// ═══════════════════════════════════════════════════════════════════════════
+
+/* ── Tokens — dark-glass (§3.1) ── */
+html[data-theme-style='dark-glass'] {
+  --bg-app: #04090b;
+  --bg-shell: #081217;
+  --surface-card: rgba(14, 25, 32, 0.72);
+  --surface-card-2: rgba(23, 38, 47, 0.8);
+  --surface-inset: rgba(2, 7, 9, 0.55);
+  --surface-row-alt: rgba(255, 255, 255, 0.025);
+  --surface-hover: rgba(255, 255, 255, 0.05);
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-default: rgba(255, 255, 255, 0.11);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-focus: #35d3c0;
+  --text-primary: #f1f7f7;
+  --text-secondary: #a3b8be;
+  --text-muted: #64808a;
+  --text-disabled: #3e525b;
+  --text-on-accent: #04211d;
+  --accent-600: #14b8a6;
+  --accent-500: #2dd4bf;
+  --accent-400: #45e3cf;
+  --accent-300: #8cf0e3;
+  --gradient-accent: linear-gradient(
+    135deg,
+    #1fa2c9 0%,
+    #2dd4bf 55%,
+    #6ef0d2 100%
+  );
+  --accent-tint: rgba(45, 212, 191, 0.12);
+  --accent-tint-border: rgba(45, 212, 191, 0.35);
+  --link: #4fc9e8;
+  --info: #46c8cf;
+  --success: #34e28a;
+  --success-tint: rgba(52, 226, 138, 0.1);
+  --success-tint-border: rgba(52, 226, 138, 0.32);
+  --danger: #ff5c6b;
+  --danger-tint: rgba(255, 92, 107, 0.1);
+  --danger-tint-border: rgba(255, 92, 107, 0.3);
+  --warning: #ffba53;
+  --warning-tint: rgba(255, 186, 83, 0.1);
+  --purple: #b18cff;
+  --glow-a: radial-gradient(
+    600px 420px at 12% -8%,
+    rgba(45, 212, 191, 0.12),
+    transparent 70%
+  );
+  --glow-b: radial-gradient(
+    700px 480px at 95% 8%,
+    rgba(31, 162, 201, 0.09),
+    transparent 70%
+  );
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 12px 32px rgba(0, 0, 0, 0.3);
+  --shadow-accent-glow: 0 8px 28px rgba(45, 212, 191, 0.32);
+  --shadow-accent-glow-hover: 0 12px 36px rgba(45, 212, 191, 0.45);
+  --focus-ring: 0 0 0 3px rgba(53, 211, 192, 0.26);
+  --glass-fixed-bg: #0c171d;
+  --scroll-thumb: rgba(255, 255, 255, 0.14);
+  --overlay-bg: rgba(2, 8, 12, 0.6);
+}
+
+/* ── Tokens — light-glass-cool (§3.2) ── */
+html[data-theme-style='light-glass-cool'] {
+  --bg-app: #e9f2f2;
+  --bg-shell: #f6fbfa;
+  --surface-card: rgba(255, 255, 255, 0.78);
+  --surface-card-2: rgba(255, 255, 255, 0.92);
+  --surface-inset: rgba(10, 35, 40, 0.045);
+  --surface-row-alt: rgba(10, 35, 40, 0.03);
+  --surface-hover: rgba(10, 35, 40, 0.05);
+  --border-subtle: rgba(10, 35, 40, 0.07);
+  --border-default: rgba(10, 35, 40, 0.12);
+  --border-strong: rgba(10, 35, 40, 0.2);
+  --border-focus: #14b8a6;
+  --text-primary: #0b1b1e;
+  --text-secondary: #40585f;
+  --text-muted: #74898f;
+  --text-disabled: #b3c2c6;
+  --text-on-accent: #04211d;
+  --accent-600: #0b8577;
+  --accent-500: #0fa895;
+  --accent-400: #14b8a6;
+  --accent-300: #0d8a7b;
+  --gradient-accent: linear-gradient(
+    135deg,
+    #1fa2c9 0%,
+    #2dd4bf 55%,
+    #6ef0d2 100%
+  );
+  --accent-tint: rgba(15, 168, 149, 0.1);
+  --accent-tint-border: rgba(15, 168, 149, 0.32);
+  --link: #0e7fa8;
+  --info: #0e8f96;
+  --success: #0fa968;
+  --success-tint: rgba(15, 169, 104, 0.09);
+  --success-tint-border: rgba(15, 169, 104, 0.3);
+  --danger: #e23d50;
+  --danger-tint: rgba(226, 61, 80, 0.08);
+  --danger-tint-border: rgba(226, 61, 80, 0.28);
+  --warning: #b45309;
+  --warning-tint: rgba(245, 158, 11, 0.12);
+  --purple: #8b5cf6;
+  --glow-a: radial-gradient(
+    600px 420px at 12% -8%,
+    rgba(20, 184, 166, 0.1),
+    transparent 70%
+  );
+  --glow-b: radial-gradient(
+    700px 480px at 95% 8%,
+    rgba(31, 162, 201, 0.08),
+    transparent 70%
+  );
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 10px 28px rgba(20, 28, 60, 0.1);
+  --shadow-accent-glow: 0 8px 24px rgba(20, 184, 166, 0.28);
+  --shadow-accent-glow-hover: 0 12px 32px rgba(20, 184, 166, 0.38);
+  --focus-ring: 0 0 0 3px rgba(20, 184, 166, 0.2);
+  --glass-fixed-bg: #fbfdfd;
+  --scroll-thumb: rgba(10, 35, 40, 0.18);
+  --overlay-bg: rgba(10, 20, 24, 0.35);
+}
+
+/* ── Shared non-color tokens + consumer-var bridge (§3.3) ──
+   html level so poppers/modals/toasts rendered outside #app inherit too. */
+html[data-theme-style='dark-glass'],
+html[data-theme-style='light-glass-cool'] {
+  --glass-blur: blur(24px) saturate(150%);
+  --glass-blur-strong: blur(40px) saturate(160%);
+  --radius-input: 12px;
+  --radius-button: 14px;
+  --radius-card: 20px;
+  --radius-card-lg: 24px;
+  --radius-checkbox: 7px;
+  --control-h-sm: 32px;
+  --control-h-md: 40px;
+  --control-h-lg: 46px;
+  --card-padding: 28px;
+  --table-row-h: 60px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 340ms;
+
+  /* Bridge onto existing consumer vars (mirrors the legacy bridge). */
+  --MainTextColor: var(--text-primary);
+  --MainTextColorLight: var(--text-muted);
+  --MainBackgroundColor: var(--bg-shell);
+  --MainBorderColor: var(--border-default);
+  --FocusBorderColor: var(--border-focus);
+  --cell-borderColor: var(--border-default);
+  --cell-backgroundColor: var(--surface-inset);
+  --cell-foregroundColor: var(--text-primary);
+  --cell-foregroundDarkerColor: var(--text-disabled);
+  --default-backgroundColor: var(--surface-card);
+  --default-backgroundDarker1Color: var(--surface-card-2);
+  --default-backgroundDarker2Color: var(--surface-hover);
+  --default-borderColor: var(--border-default);
+  --default-foregroundColor: var(--text-primary);
+  --default-foregroundDarkerColor: var(--text-secondary);
+  --default-shadowColor: rgb(0 0 0 / 40%);
+  --table-horizontal-borderColor: var(--border-subtle);
+  --userview-background-color: transparent;
+
+  /* Compat aliases for legacy shared rules that stay multi-theme:
+     tooltips use --ink (style.scss:596), the kept toast structure uses
+     --accent / --accent-2 (style.scss finishWith block). */
+  --ink: var(--text-primary);
+  --muted: var(--text-muted);
+  --accent: var(--accent-500);
+  --accent-2: var(--warning);
+}
+
+/* ── Typography helpers (§4) ── */
+@mixin glass2-microlabel {
+  font-family: Inter, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+@mixin glass2-mono {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── App shell & background (§6.1) ── */
+@mixin glass2-shell {
+  position: relative;
+  isolation: isolate;
+  color: var(--text-primary);
+  background:
+    var(--glow-a),
+    var(--glow-b),
+    linear-gradient(180deg, var(--bg-shell) 0%, var(--bg-app) 55%);
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+
+  /* No blurred orbs and no glass-rise entrance in the new themes (§7). */
+  &::before,
+  &::after {
+    content: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  .menu-header,
+  .button-caption,
+  .userview-title {
+    font-family: inherit;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-shell;
+}
+
+/* ── Scrollbars (§6.9) ── */
+@mixin glass2-scrollbars {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-thumb) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: var(--scroll-thumb);
+  }
+
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
+html[data-theme-style='dark-glass'],
+html[data-theme-style='light-glass-cool'] {
+  @include glass2-scrollbars;
+}

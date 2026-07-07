@@ -615,49 +615,6 @@ html[data-theme-style='light-glass'] {
   --sub-block-border: rgb(196 182 163 / 25%);
 }
 
-html[data-theme-style='dark-glass'] {
-  --bg: #070e17;
-  --card: #0b1623;
-  --ink: #e7ecef;
-  --muted: #95a7b6;
-  --accent: #4fd6be;
-  --accent-2: #f6b941;
-  --line: rgb(140 176 200 / 14%);
-  --control-line: rgb(140 176 200 / 10%);
-  --surface: rgb(17 32 46 / 42%);
-  --surface-strong: rgb(17 32 46 / 56%);
-  --panel-bg: rgb(10 20 33 / 28%);
-  --panel-border: rgb(169 209 232 / 16%);
-  --text-soft: #d4dee6;
-  --glow-1: #0b2633;
-  --glow-2: #050a18;
-  --shape-1: #071427;
-  --shape-2: #0b5e52;
-  --contact-hover-border: rgb(169 209 232 / 18%);
-  --contact-hover-shadow: 0 34px 90px rgb(0 0 0 / 55%);
-  --shadow: 0 18px 50px rgb(0 0 0 / 28%);
-  --overlay-bg: rgb(2 8 17 / 58%);
-  --table-horizontal-borderColor: rgb(140 176 200 / 10%);
-
-  /* Sub-block tokens (dark) */
-  --sub-block-bg: rgb(255 255 255 / 3%);
-  --sub-block-border: rgb(255 255 255 / 6%);
-
-  /* Form design tokens — dark-glass */
-  --cell-borderColor: rgba(255, 255, 255, 0.1);
-  --cell-backgroundColor: rgba(255, 255, 255, 0.05);
-  --cell-foregroundColor: #e7ecef;
-  --cell-foregroundDarkerColor: rgba(255, 255, 255, 0.22);
-  --default-backgroundColor: rgba(255, 255, 255, 0.07);
-  --default-borderColor: rgba(255, 255, 255, 0.14);
-  --default-foregroundColor: #e7ecef;
-  --default-foregroundDarkerColor: rgba(255, 255, 255, 0.35);
-  --FocusBorderColor: rgba(89, 214, 207, 0.5);
-  --radius-input: 10px;
-  --MainTextColor: #e7ecef;
-  --MainTextColorLight: rgba(255, 255, 255, 0.22);
-}
-
 html[data-theme-style='light-glass'] {
   /* Form design tokens — light-glass-warm */
   --cell-borderColor: rgba(143, 214, 228, 0.45);
@@ -1982,3 +1939,6 @@ html[data-theme-style='dark-glass'] {
     }
   }
 }
+
+/* Glass Themes 2.0 — dark-glass (new look) + light-glass-cool. */
+@import 'glass2';
