@@ -397,8 +397,10 @@ html[data-theme-style='light-glass-warm'] {
     margin-top: 0 !important;
   }
 
-  /* Admin-style menus nest category blocks; only the outer level is a card. */
-  .menu_category_block .menu_category_block {
+  /* Category blocks without their own caption are grouping wrappers
+     (the main menu's blank top level, admin submenu boxes) — keep them
+     flat; titled blocks are the cards, at any nesting level. */
+  .menu_category_block.menu-block-untitled {
     padding: 0 !important;
     border: none !important;
     background: transparent !important;

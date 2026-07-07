@@ -10,6 +10,7 @@
             'is-mobile': $isMobile,
             'no-content-zero-level': entry.content.length === 0 && level === 1,
             two_levels_max: twoLevelsMax,
+            'menu-block-untitled': !$ustOrEmpty(entry.name),
           },
         ]"
       >
