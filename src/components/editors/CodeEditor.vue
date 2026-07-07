@@ -349,6 +349,36 @@ monaco.editor.defineTheme('ozma-light-glass', {
   },
 })
 
+monaco.editor.defineTheme('ozma-light-glass-cool', {
+  base: 'vs',
+  inherit: true,
+  rules: tokenRules(
+    '0b8577', // keyword (teal)
+    '0fa968', // string (green)
+    '0e7fa8', // number (cyan)
+    '74898f', // comment
+    '8b5cf6', // type (purple)
+    '40585f', // operator
+    '0e7fa8', // @attr / .@attr
+    'c2410c', // $arg / $$arg
+    '0b1b1e', // identifiers
+  ),
+  colors: {
+    'editor.background': '#f6fbfa',
+    'editor.foreground': '#0b1b1e',
+    'editorLineNumber.foreground': '#74898f',
+    'editorLineNumber.activeForeground': '#40585f',
+    'editor.selectionBackground': '#14b8a633',
+    'editor.inactiveSelectionBackground': '#14b8a61f',
+    'editor.lineHighlightBackground': '#0a232808',
+    'editorCursor.foreground': '#0b8577',
+    'editor.findMatchBackground': '#14b8a64d',
+    'editor.findMatchHighlightBackground': '#14b8a626',
+    'editorIndentGuide.background1': '#0a232812',
+    'editorIndentGuide.activeBackground1': '#0a232830',
+  },
+})
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ;(monaco.editor.defineTheme as any)('ozma-dark', {
   base: 'vs-dark',
@@ -433,75 +463,75 @@ monaco.editor.defineTheme('ozma-light-glass', {
   inherit: true,
   semanticHighlighting: true,
   semanticTokenColors: {
-    'variable': '#8ad8ff',
-    'variable.readonly': '#9de7e1',
-    'variable.defaultLibrary': '#8ad8ff',
-    'parameter': '#d4dee6',
-    'function': '#f6b941',
-    'function.defaultLibrary': '#8ad8ff',
-    'method': '#f6b941',
-    'method.defaultLibrary': '#8ad8ff',
-    'class': '#f6b941',
-    'class.defaultLibrary': '#f6b941',
-    'interface': '#f6b941',
-    'type': '#f6b941',
-    'typeParameter': '#f6b941',
-    'namespace': '#d4dee6',
-    'property': '#9de7e1',
-    'enumMember': '#9de7e1',
-    'event': '#9de7e1',
-    'macro': '#59d6cf',
-    'label': '#d4dee6',
-    'property.declaration': '#59d6cf',
+    'variable': '#8cd8f0',
+    'variable.readonly': '#8cf0e3',
+    'variable.defaultLibrary': '#8cd8f0',
+    'parameter': '#a3b8be',
+    'function': '#45e3cf',
+    'function.defaultLibrary': '#4fc9e8',
+    'method': '#45e3cf',
+    'method.defaultLibrary': '#4fc9e8',
+    'class': '#4fc9e8',
+    'class.defaultLibrary': '#4fc9e8',
+    'interface': '#4fc9e8',
+    'type': '#4fc9e8',
+    'typeParameter': '#4fc9e8',
+    'namespace': '#a3b8be',
+    'property': '#8cf0e3',
+    'enumMember': '#8cf0e3',
+    'event': '#8cf0e3',
+    'macro': '#2dd4bf',
+    'label': '#a3b8be',
+    'property.declaration': '#2dd4bf',
   },
   rules: [
-    { token: 'keyword', foreground: 'C9A0FF', fontStyle: 'bold' },
-    { token: 'keyword.sql', foreground: 'C9A0FF', fontStyle: 'bold' },
-    { token: 'string', foreground: '44AA99' },
-    { token: 'string.sql', foreground: '44AA99' },
-    { token: 'number', foreground: 'E39B2E' },
-    { token: 'number.sql', foreground: 'E39B2E' },
-    { token: 'comment', foreground: '666A73', fontStyle: 'italic' },
-    { token: 'comment.sql', foreground: '666A73', fontStyle: 'italic' },
-    { token: 'type', foreground: '59D6CF' },
-    { token: 'predefined', foreground: '59D6CF' },
-    { token: 'operator', foreground: '8FA2B8' },
-    { token: 'operator.sql', foreground: '8FA2B8' },
-    { token: 'identifier', foreground: 'D4DEE6' },
-    { token: 'identifier.quote', foreground: 'D4DEE6' },
-    { token: 'identifier.quote.sql', foreground: 'D4DEE6' },
-    { token: 'attribute', foreground: 'F6B941' },
-    { token: 'attribute.sql', foreground: 'F6B941' },
-    { token: 'variable', foreground: 'FF6FAE' },
-    { token: 'constant', foreground: '9DE7E1' },
-    { token: 'string.escape', foreground: '9DE7E1' },
-    { token: 'string.escape.sql', foreground: '9DE7E1' },
-    { token: 'number.float', foreground: '8AD8FF' },
-    { token: 'number.hex', foreground: '8AD8FF' },
-    { token: 'comment.block', foreground: '666A73', fontStyle: 'italic' },
-    { token: 'comment.block.sql', foreground: '666A73', fontStyle: 'italic' },
-    { token: 'delimiter', foreground: 'D4DEE680' },
-    { token: 'delimiter.sql', foreground: 'D4DEE680' },
-    { token: 'delimiter.parenthesis', foreground: 'D4DEE6CC' },
-    { token: 'delimiter.parenthesis.sql', foreground: 'D4DEE6CC' },
-    { token: 'key.json', foreground: '59D6CF' },
-    { token: 'string.value.json', foreground: '44AA99' },
-    { token: 'number.json', foreground: 'DD9900' },
-    { token: 'keyword.json', foreground: '9DE7E1' },
+    { token: 'keyword', foreground: '4FC9E8', fontStyle: 'bold' },
+    { token: 'keyword.sql', foreground: '4FC9E8', fontStyle: 'bold' },
+    { token: 'string', foreground: '6EF0D2' },
+    { token: 'string.sql', foreground: '6EF0D2' },
+    { token: 'number', foreground: 'FFBA53' },
+    { token: 'number.sql', foreground: 'FFBA53' },
+    { token: 'comment', foreground: '64808A', fontStyle: 'italic' },
+    { token: 'comment.sql', foreground: '64808A', fontStyle: 'italic' },
+    { token: 'type', foreground: '2DD4BF' },
+    { token: 'predefined', foreground: '2DD4BF' },
+    { token: 'operator', foreground: 'A3B8BE' },
+    { token: 'operator.sql', foreground: 'A3B8BE' },
+    { token: 'identifier', foreground: 'F1F7F7' },
+    { token: 'identifier.quote', foreground: 'F1F7F7' },
+    { token: 'identifier.quote.sql', foreground: 'F1F7F7' },
+    { token: 'attribute', foreground: 'FFBA53' },
+    { token: 'attribute.sql', foreground: 'FFBA53' },
+    { token: 'variable', foreground: 'B18CFF' },
+    { token: 'constant', foreground: '8CF0E3' },
+    { token: 'string.escape', foreground: '8CF0E3' },
+    { token: 'string.escape.sql', foreground: '8CF0E3' },
+    { token: 'number.float', foreground: 'FFBA53' },
+    { token: 'number.hex', foreground: 'FFBA53' },
+    { token: 'comment.block', foreground: '64808A', fontStyle: 'italic' },
+    { token: 'comment.block.sql', foreground: '64808A', fontStyle: 'italic' },
+    { token: 'delimiter', foreground: 'A3B8BE80' },
+    { token: 'delimiter.sql', foreground: 'A3B8BE80' },
+    { token: 'delimiter.parenthesis', foreground: 'A3B8BECC' },
+    { token: 'delimiter.parenthesis.sql', foreground: 'A3B8BECC' },
+    { token: 'key.json', foreground: '2DD4BF' },
+    { token: 'string.value.json', foreground: '6EF0D2' },
+    { token: 'number.json', foreground: 'FFBA53' },
+    { token: 'keyword.json', foreground: '8CF0E3' },
   ],
   colors: {
-    'editor.background': '#0b1623',
-    'editor.foreground': '#e2e8f0',
-    'editorLineNumber.foreground': '#95a7b666',
-    'editorLineNumber.activeForeground': '#d4dee6b3',
-    'editor.selectionBackground': '#59d6cf3d',
-    'editor.inactiveSelectionBackground': '#59d6cf26',
-    'editor.lineHighlightBackground': '#122235cc',
-    'editorCursor.foreground': '#59d6cf',
-    'editor.findMatchBackground': '#f6b94170',
-    'editor.findMatchHighlightBackground': '#f6b94142',
-    'editorIndentGuide.background1': '#8cb0c81a',
-    'editorIndentGuide.activeBackground1': '#8cb0c838',
+    'editor.background': '#081217',
+    'editor.foreground': '#f1f7f7',
+    'editorLineNumber.foreground': '#64808a99',
+    'editorLineNumber.activeForeground': '#a3b8be',
+    'editor.selectionBackground': '#2dd4bf3d',
+    'editor.inactiveSelectionBackground': '#2dd4bf26',
+    'editor.lineHighlightBackground': '#0e1920cc',
+    'editorCursor.foreground': '#35d3c0',
+    'editor.findMatchBackground': '#ffba5370',
+    'editor.findMatchHighlightBackground': '#ffba5342',
+    'editorIndentGuide.background1': '#a3b8be1a',
+    'editorIndentGuide.activeBackground1': '#a3b8be38',
   },
 })
 
@@ -551,6 +581,7 @@ export default class CodeEditor extends Vue {
   private get monacoTheme(): string {
     const themeStyleName = this.currentThemeStyleName
     if (themeStyleName === 'light-glass') return 'ozma-light-glass'
+    if (themeStyleName === 'light-glass-cool') return 'ozma-light-glass-cool'
     if (themeStyleName === 'dark-glass') return 'ozma-dark-glass'
     if (themeStyleName.endsWith('-glass')) {
       return this.isDarkTheme ? 'ozma-dark-glass' : 'ozma-light-glass'
@@ -686,6 +717,7 @@ export default class CodeEditor extends Vue {
     for (const themeName of [
       'ozma-light',
       'ozma-light-glass',
+      'ozma-light-glass-cool',
       'ozma-dark',
       'ozma-dark-glass',
     ]) {
@@ -1052,42 +1084,81 @@ export default class CodeEditor extends Vue {
 }
 
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-identifier {
-  color: #e0d69a !important;
+  color: #f1f7f7 !important;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-keyword {
-  color: #c9a0ff !important;
+  color: #4fc9e8 !important;
   font-weight: 600;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-type {
-  color: #59d6cf !important;
+  color: #2dd4bf !important;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-attribute {
-  color: #f6b941 !important;
+  color: #ffba53 !important;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-variable {
-  color: #ff6fae !important;
+  color: #b18cff !important;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-property {
-  color: #5fc7bc !important;
+  color: #8cf0e3 !important;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-function {
-  color: #9adca3 !important;
+  color: #45e3cf !important;
   font-weight: 600;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-number {
-  color: #e39b2e !important;
+  color: #ffba53 !important;
 }
 .code-editor.ozma-theme-ozma-dark-glass
   ::v-deep
   .ozma-token-relation-target {
-  color: #e0d69a !important;
+  color: #f1f7f7 !important;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-namespace {
-  color: #c9a0ff !important;
+  color: #4fc9e8 !important;
   font-weight: 600;
 }
 .code-editor.ozma-theme-ozma-dark-glass ::v-deep .ozma-token-dotted-tail {
-  color: #e0d69a !important;
+  color: #f1f7f7 !important;
+}
+
+.code-editor.ozma-theme-ozma-light-glass-cool ::v-deep .ozma-token-identifier {
+  color: #0b1b1e !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-cool ::v-deep .ozma-token-keyword {
+  color: #0b8577 !important;
+  font-weight: 600;
+}
+.code-editor.ozma-theme-ozma-light-glass-cool ::v-deep .ozma-token-type {
+  color: #8b5cf6 !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-cool ::v-deep .ozma-token-attribute {
+  color: #0e7fa8 !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-cool ::v-deep .ozma-token-variable {
+  color: #c2410c !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-cool ::v-deep .ozma-token-property {
+  color: #0e8f96 !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-cool ::v-deep .ozma-token-function {
+  color: #0b8577 !important;
+  font-weight: 600;
+}
+.code-editor.ozma-theme-ozma-light-glass-cool ::v-deep .ozma-token-number {
+  color: #b45309 !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-cool
+  ::v-deep
+  .ozma-token-relation-target {
+  color: #0b1b1e !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-cool ::v-deep .ozma-token-namespace {
+  color: #8b5cf6 !important;
+  font-weight: 600;
+}
+.code-editor.ozma-theme-ozma-light-glass-cool ::v-deep .ozma-token-dotted-tail {
+  color: #0b1b1e !important;
 }
 
 </style>
