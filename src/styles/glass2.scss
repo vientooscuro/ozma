@@ -1226,3 +1226,68 @@ html[data-theme-style='light-glass-cool'] {
     );
   }
 }
+
+/* ── Phase 2 §2 — table cell polish ── */
+@mixin glass2-table-polish {
+  /* §2.1 Main (first data) column: semibold, primary color. The two utility
+     cells (.select-row-cell, .add-entry-cell) are each optional, so cover
+     all four layouts with sibling combinators instead of nth-child. */
+  .custom-table tbody td.select-row-cell + td.add-entry-cell + td,
+  .custom-table tbody td.select-row-cell + td:not(.add-entry-cell),
+  .custom-table tbody tr > td.add-entry-cell:first-child + td,
+  .custom-table
+    tbody
+    tr
+    > td:first-child:not(.select-row-cell):not(.add-entry-cell) {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* §2.2 Boolean cells (TableCell renders <Checkbox class="checkbox_click-none">):
+     true = filled --success rounded square with dark check glyph,
+     false = bordered transparent square. Selection checkboxes (plain
+     .checkbox in .select-row-cell) are deliberately not matched. */
+  .custom-table .checkbox_click-none {
+    --checkbox-background: var(--success);
+    --checkbox-foreground: var(--text-on-accent);
+
+    justify-content: center;
+    padding-top: 0;
+  }
+
+  .custom-table .checkbox_click-none:hover,
+  .custom-table .checkbox_click-none:active {
+    background: transparent;
+  }
+
+  .custom-table .checkbox_click-none .checkbox-rect {
+    rx: 6px;
+    stroke: var(--border-default);
+  }
+
+  .custom-table .checkbox_click-none .checkbox-rect.checked {
+    fill: var(--success);
+    stroke: var(--success);
+  }
+
+  /* §2.3 Empty values: em dash in --text-disabled. Only cells whose
+     .td-content is genuinely empty (null booleans) match :empty; text cells
+     always render an &nbsp; placeholder (see plan appendix). */
+  .custom-table tbody td .td-content:empty::before {
+    content: '—';
+    color: var(--text-disabled);
+  }
+
+  /* §2.4 Phones in mono (emails/phones/telegram already use --link from
+     Phase 1). */
+  .custom-table .cell-text a[href^='tel:'] {
+    @include glass2-mono;
+
+    font-size: 12.5px;
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'] {
+  @include glass2-table-polish;
+}
