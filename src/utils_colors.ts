@@ -468,6 +468,7 @@ export const getPreferredTheme = (
     tryFindTheme('light') ??
     tryFindTheme('light-glass') ??
     tryFindTheme('light-glass-cool') ??
+    tryFindTheme('light-glass-warm') ??
     tryFindTheme('dark') ??
     tryFindTheme('dark-glass') ??
     null

@@ -129,10 +129,72 @@ html[data-theme-style='light-glass-cool'] {
   --overlay-bg: rgba(10, 20, 24, 0.35);
 }
 
+/* ── Tokens — light-glass-warm (Aivazovsky tones on the Glass 2.0 system) ── */
+html[data-theme-style='light-glass-warm'] {
+  --bg-app: #f3efe6;
+  --bg-shell: #faf7f0;
+  --surface-card: rgba(255, 253, 248, 0.78);
+  --surface-card-2: rgba(255, 254, 250, 0.92);
+  --surface-inset: rgba(60, 48, 30, 0.05);
+  --surface-row-alt: rgba(60, 48, 30, 0.03);
+  --surface-hover: rgba(60, 48, 30, 0.05);
+  --border-subtle: rgba(60, 48, 30, 0.08);
+  --border-default: rgba(60, 48, 30, 0.13);
+  --border-strong: rgba(60, 48, 30, 0.22);
+  --border-focus: #2185a0;
+  --text-primary: #241f18;
+  --text-secondary: #5b544a;
+  --text-muted: #8a8172;
+  --text-disabled: #c3bbac;
+  --text-on-accent: #06272e;
+  --accent-600: #1a5f7a;
+  --accent-500: #2185a0;
+  --accent-400: #3db8c8;
+  --accent-300: #1a768e;
+  --gradient-accent: linear-gradient(
+    135deg,
+    #1a5f7a 0%,
+    #2185a0 55%,
+    #5fd2d0 100%
+  );
+  --accent-tint: rgba(33, 133, 160, 0.1);
+  --accent-tint-border: rgba(33, 133, 160, 0.32);
+  --link: #16708f;
+  --info: #178a91;
+  --success: #1e8e5a;
+  --success-tint: rgba(30, 142, 90, 0.09);
+  --success-tint-border: rgba(30, 142, 90, 0.3);
+  --danger: #c94f43;
+  --danger-tint: rgba(201, 79, 67, 0.08);
+  --danger-tint-border: rgba(201, 79, 67, 0.28);
+  --warning: #b45309;
+  --warning-tint: rgba(245, 158, 11, 0.12);
+  --purple: #8b5cf6;
+  --glow-a: radial-gradient(
+    600px 420px at 12% -8%,
+    rgba(246, 185, 65, 0.16),
+    transparent 70%
+  );
+  --glow-b: radial-gradient(
+    700px 480px at 95% 8%,
+    rgba(33, 133, 160, 0.1),
+    transparent 70%
+  );
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 10px 28px rgba(60, 45, 20, 0.1);
+  --shadow-accent-glow: 0 8px 24px rgba(33, 133, 160, 0.28);
+  --shadow-accent-glow-hover: 0 12px 32px rgba(33, 133, 160, 0.38);
+  --focus-ring: 0 0 0 3px rgba(33, 133, 160, 0.2);
+  --glass-fixed-bg: #fbf8f1;
+  --scroll-thumb: rgba(60, 48, 30, 0.18);
+  --overlay-bg: rgba(35, 28, 16, 0.35);
+}
+
 /* ── Shared non-color tokens + consumer-var bridge (§3.3) ──
    html level so poppers/modals/toasts rendered outside #app inherit too. */
 html[data-theme-style='dark-glass'],
-html[data-theme-style='light-glass-cool'] {
+html[data-theme-style='light-glass-cool'],
+html[data-theme-style='light-glass-warm'] {
   --glass-blur: blur(24px) saturate(150%);
   --glass-blur-strong: blur(40px) saturate(160%);
   --radius-input: 12px;
@@ -233,7 +295,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-shell;
 }
 
@@ -261,7 +324,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 html[data-theme-style='dark-glass'],
-html[data-theme-style='light-glass-cool'] {
+html[data-theme-style='light-glass-cool'],
+html[data-theme-style='light-glass-warm'] {
   @include glass2-scrollbars;
 }
 
@@ -313,7 +377,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-header;
 }
 
@@ -416,7 +481,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-menu;
 }
 
@@ -511,7 +577,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-buttons;
 }
 
@@ -633,7 +700,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-inputs;
 }
 
@@ -793,7 +861,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-form;
 }
 
@@ -949,7 +1018,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-table;
 }
 
@@ -1008,7 +1078,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-table-fixed;
 }
 
@@ -1080,7 +1151,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-table-cells;
 }
 
@@ -1102,7 +1174,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-chips;
 }
 
@@ -1129,6 +1202,18 @@ html[data-theme-style='light-glass-cool'] {
 #app[data-theme-style='light-glass-cool'] .chip.rose   { background: rgba(226, 61, 80, 0.08);  color: #e23d50; border-color: rgba(226, 61, 80, 0.28); }
 #app[data-theme-style='light-glass-cool'] .chip.sky    { background: rgba(14, 165, 233, 0.1);  color: #0369a1; border-color: rgba(14, 165, 233, 0.28); }
 #app[data-theme-style='light-glass-cool'] .chip.lime   { background: rgba(132, 204, 22, 0.1);  color: #4d7c0f; border-color: rgba(132, 204, 22, 0.28); }
+
+/* Coloured chips — light-glass-warm (reuses cool tints on the warm surface) */
+#app[data-theme-style='light-glass-warm'] .chip.green  { background: rgba(15, 169, 104, 0.09); color: #0fa968; border-color: rgba(15, 169, 104, 0.3); }
+#app[data-theme-style='light-glass-warm'] .chip.teal   { background: rgba(15, 168, 149, 0.1);  color: #0b8577; border-color: rgba(15, 168, 149, 0.32); }
+#app[data-theme-style='light-glass-warm'] .chip.blue   { background: rgba(14, 127, 168, 0.1);  color: #0e7fa8; border-color: rgba(14, 127, 168, 0.3); }
+#app[data-theme-style='light-glass-warm'] .chip.indigo { background: rgba(99, 102, 241, 0.1);  color: #4f46e5; border-color: rgba(99, 102, 241, 0.28); }
+#app[data-theme-style='light-glass-warm'] .chip.purple { background: rgba(139, 92, 246, 0.1);  color: #8b5cf6; border-color: rgba(139, 92, 246, 0.28); }
+#app[data-theme-style='light-glass-warm'] .chip.amber  { background: rgba(245, 158, 11, 0.12); color: #b45309; border-color: rgba(245, 158, 11, 0.3); }
+#app[data-theme-style='light-glass-warm'] .chip.orange { background: rgba(249, 115, 22, 0.1);  color: #c2410c; border-color: rgba(249, 115, 22, 0.28); }
+#app[data-theme-style='light-glass-warm'] .chip.rose   { background: rgba(226, 61, 80, 0.08);  color: #e23d50; border-color: rgba(226, 61, 80, 0.28); }
+#app[data-theme-style='light-glass-warm'] .chip.sky    { background: rgba(14, 165, 233, 0.1);  color: #0369a1; border-color: rgba(14, 165, 233, 0.28); }
+#app[data-theme-style='light-glass-warm'] .chip.lime   { background: rgba(132, 204, 22, 0.1);  color: #4d7c0f; border-color: rgba(132, 204, 22, 0.28); }
 
 /* ── Dropdowns, poppers, modals (§6.6) ── */
 @mixin glass2-overlays {
@@ -1269,7 +1354,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 html[data-theme-style='dark-glass'],
-html[data-theme-style='light-glass-cool'] {
+html[data-theme-style='light-glass-cool'],
+html[data-theme-style='light-glass-warm'] {
   @include glass2-overlays;
 }
 
@@ -1347,7 +1433,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-pagination;
 }
 
@@ -1356,7 +1443,8 @@ html[data-theme-style='light-glass-cool'] {
    foregrounds, so light chips use the variant background directly (the dark
    currentcolor-derived tint reads as gray). Antialiasing thins dark-on-light
    text that otherwise renders too heavy. */
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   -webkit-font-smoothing: antialiased;
 
   .custom-table .option:not(.option-variant) {
@@ -1430,7 +1518,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-table-polish;
 }
 
@@ -1563,7 +1652,8 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-page-header;
 }
 
@@ -1722,6 +1812,7 @@ html[data-theme-style='light-glass-cool'] {
 }
 
 #app[data-theme-style='dark-glass'],
-#app[data-theme-style='light-glass-cool'] {
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
   @include glass2-brand-bar;
 }

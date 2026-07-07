@@ -6,5 +6,9 @@ import type { IThemeRef } from '@/utils_colors'
 // theme-name literals.
 export const isGlass2Theme = (themeRef: IThemeRef | null): boolean => {
   const name = themeRef?.name
-  return name === 'dark-glass' || name === 'light-glass-cool'
+  return (
+    name === 'dark-glass' ||
+    name === 'light-glass-cool' ||
+    name === 'light-glass-warm'
+  )
 }

@@ -379,6 +379,36 @@ monaco.editor.defineTheme('ozma-light-glass-cool', {
   },
 })
 
+monaco.editor.defineTheme('ozma-light-glass-warm', {
+  base: 'vs',
+  inherit: true,
+  rules: tokenRules(
+    '1a5f7a', // keyword (sea-teal)
+    '1e8e5a', // string (green)
+    '16708f', // number (link)
+    '8a8172', // comment
+    '8b5cf6', // type (purple)
+    '5b544a', // operator
+    '16708f', // @attr / .@attr
+    'c2410c', // $arg / $$arg
+    '241f18', // identifiers
+  ),
+  colors: {
+    'editor.background': '#faf7f0',
+    'editor.foreground': '#241f18',
+    'editorLineNumber.foreground': '#8a8172',
+    'editorLineNumber.activeForeground': '#5b544a',
+    'editor.selectionBackground': '#3db8c833',
+    'editor.inactiveSelectionBackground': '#3db8c81f',
+    'editor.lineHighlightBackground': '#3c301e08',
+    'editorCursor.foreground': '#2185a0',
+    'editor.findMatchBackground': '#3db8c84d',
+    'editor.findMatchHighlightBackground': '#3db8c826',
+    'editorIndentGuide.background1': '#3c301e12',
+    'editorIndentGuide.activeBackground1': '#3c301e30',
+  },
+})
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ;(monaco.editor.defineTheme as any)('ozma-dark', {
   base: 'vs-dark',
@@ -582,6 +612,7 @@ export default class CodeEditor extends Vue {
     const themeStyleName = this.currentThemeStyleName
     if (themeStyleName === 'light-glass') return 'ozma-light-glass'
     if (themeStyleName === 'light-glass-cool') return 'ozma-light-glass-cool'
+    if (themeStyleName === 'light-glass-warm') return 'ozma-light-glass-warm'
     if (themeStyleName === 'dark-glass') return 'ozma-dark-glass'
     if (themeStyleName.endsWith('-glass')) {
       return this.isDarkTheme ? 'ozma-dark-glass' : 'ozma-light-glass'
@@ -718,6 +749,7 @@ export default class CodeEditor extends Vue {
       'ozma-light',
       'ozma-light-glass',
       'ozma-light-glass-cool',
+      'ozma-light-glass-warm',
       'ozma-dark',
       'ozma-dark-glass',
     ]) {
@@ -1159,6 +1191,45 @@ export default class CodeEditor extends Vue {
 }
 .code-editor.ozma-theme-ozma-light-glass-cool ::v-deep .ozma-token-dotted-tail {
   color: #0b1b1e !important;
+}
+
+.code-editor.ozma-theme-ozma-light-glass-warm ::v-deep .ozma-token-identifier {
+  color: #241f18 !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-warm ::v-deep .ozma-token-keyword {
+  color: #1a5f7a !important;
+  font-weight: 600;
+}
+.code-editor.ozma-theme-ozma-light-glass-warm ::v-deep .ozma-token-type {
+  color: #8b5cf6 !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-warm ::v-deep .ozma-token-attribute {
+  color: #16708f !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-warm ::v-deep .ozma-token-variable {
+  color: #c2410c !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-warm ::v-deep .ozma-token-property {
+  color: #178a91 !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-warm ::v-deep .ozma-token-function {
+  color: #1a5f7a !important;
+  font-weight: 600;
+}
+.code-editor.ozma-theme-ozma-light-glass-warm ::v-deep .ozma-token-number {
+  color: #b45309 !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-warm
+  ::v-deep
+  .ozma-token-relation-target {
+  color: #241f18 !important;
+}
+.code-editor.ozma-theme-ozma-light-glass-warm ::v-deep .ozma-token-namespace {
+  color: #8b5cf6 !important;
+  font-weight: 600;
+}
+.code-editor.ozma-theme-ozma-light-glass-warm ::v-deep .ozma-token-dotted-tail {
+  color: #241f18 !important;
 }
 
 </style>

@@ -1841,9 +1841,17 @@ html[data-theme-style='light-glass-cool'] {
   --finish-toast-error-rgb: 226, 61, 80;
 }
 
+html[data-theme-style='light-glass-warm'] {
+  --status-error: #c94f43;
+  --finish-toast-success-rgb: 30, 142, 90;
+  --finish-toast-warning-rgb: 180, 83, 9;
+  --finish-toast-error-rgb: 201, 79, 67;
+}
+
 html[data-theme-style='light-glass'],
 html[data-theme-style='dark-glass'],
-html[data-theme-style='light-glass-cool'] {
+html[data-theme-style='light-glass-cool'],
+html[data-theme-style='light-glass-warm'] {
   /* Base glass structure — shared by all statuses.
      will-change: transform promotes the toast to its own GPU compositing layer,
      decoupling its repaint from the animated blobs inside #app. */

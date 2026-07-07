@@ -93,18 +93,18 @@ export default class ButtonsPanel extends Vue {
     content?.removeEventListener('mouseleave', this.onHoverLeave)
   }
 
-  private onHoverEnter() {
+  private onHoverEnter = () => {
     if (!this.hoverEnabled) return
     this.cancelScheduledClose()
     this.show = true
   }
 
-  private onContentEnter() {
+  private onContentEnter = () => {
     if (!this.hoverEnabled) return
     this.cancelScheduledClose()
   }
 
-  private onHoverLeave() {
+  private onHoverLeave = () => {
     if (!this.hoverEnabled) return
     this.cancelScheduledClose()
     this.closeTimer = window.setTimeout(() => {
