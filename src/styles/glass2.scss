@@ -329,6 +329,66 @@ html[data-theme-style='light-glass-warm'] {
   @include glass2-scrollbars;
 }
 
+/* ── Alert banner (AlertBanner.vue — DB-driven promo/notice) ──
+   Base component falls back to a flat light-blue box (#dde5f8, black text);
+   retheme it as a subtly accented glass callout. */
+@mixin glass2-banner {
+  .banner-wrapper {
+    background: transparent;
+    padding: 20px 24px 4px;
+
+    @include mobile {
+      padding: 14px 16px 0;
+    }
+  }
+
+  .custom-alert {
+    background: var(--surface-card) !important;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--accent-tint-border) !important;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    color: var(--text-secondary) !important;
+    padding: 16px 22px;
+    padding-right: 56px;
+
+    @include mobile {
+      padding: 16px 18px;
+      padding-right: 44px;
+    }
+
+    a {
+      color: var(--accent-500);
+      font-weight: 600;
+      text-decoration: none;
+
+      &:hover {
+        color: var(--accent-400);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .dismiss-button {
+    background: var(--surface-hover);
+    color: var(--text-secondary);
+    transition: background var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+
+    &:hover {
+      background: var(--surface-card-2);
+      color: var(--text-primary);
+    }
+  }
+}
+
+#app[data-theme-style='dark-glass'],
+#app[data-theme-style='light-glass-cool'],
+#app[data-theme-style='light-glass-warm'] {
+  @include glass2-banner;
+}
+
 /* ── Header panel (§6.2) ── */
 @mixin glass2-header {
   .header-panel {
@@ -860,6 +920,14 @@ html[data-theme-style='light-glass-warm'] {
   .first_level_grid_block .userview-wrapper {
     background-color: transparent !important;
   }
+
+  /* Single-block forms: stretch the lone glass card to fill the view height
+     so the surface spans the whole form instead of floating above a dark
+     void. Offset ≈ header (~64px) + .view-form vertical padding (2×30px).
+     Multi-block forms (.has-sub-blocks) keep their natural height. */
+  .view-form .first_level_grid_block:not(.has-sub-blocks) {
+    min-height: calc(100vh - 124px) !important;
+  }
 }
 
 #app[data-theme-style='dark-glass'],
@@ -1017,6 +1085,50 @@ html[data-theme-style='light-glass-warm'] {
     background: transparent;
     color: var(--text-muted);
   }
+
+  /* Select checkbox + row-link edit pencil: the interactive box itself is a
+     32px square, so the hover zone matches the visible highlight exactly —
+     it lights up only when the pointer is inside the square, not on row
+     hover. Centering comes from the parents (.cell-wrapper is a 100% flex
+     centering box; the pencil td centers via text-align + vertical-align). */
+  .custom-table td.select-row-cell .checkbox {
+    display: flex;
+    flex: 0 0 32px;
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .custom-table td.select-row-cell .checkbox:hover {
+    background-color: var(--surface-hover) !important;
+  }
+
+  .custom-table tbody tr.selected td.select-row-cell .checkbox {
+    background-color: var(--accent-tint);
+  }
+
+  .custom-table td.add-entry-cell {
+    text-align: center;
+  }
+
+  .custom-table td.add-entry-cell .icon-link {
+    display: inline-flex;
+    width: 38px !important;
+    height: 38px !important;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    border-radius: 10px;
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .custom-table td.add-entry-cell .icon-link:hover {
+    background-color: var(--surface-hover) !important;
+  }
 }
 
 #app[data-theme-style='dark-glass'],
@@ -1074,6 +1186,14 @@ html[data-theme-style='light-glass-warm'] {
     background-color: transparent !important;
   }
 
+  /* The narrow select/add action columns never carry a heavy dark sticky
+     fill — they read as part of the row, showing only the icon and its
+     square hover highlight (not a dark block). */
+  .custom-table tbody tr td.select-row-cell::before,
+  .custom-table tbody tr td.add-entry-cell::before {
+    background-color: transparent !important;
+  }
+
   .custom-table.show-fixed-column-border .last-fixed-cell {
     border-right: 1px solid var(--border-default) !important;
   }
@@ -1121,6 +1241,10 @@ html[data-theme-style='light-glass-warm'] {
 
   .custom-table .option.reference-option .reference-open-modal {
     color: var(--text-muted);
+
+    /* Base pulls the icon 4px left (margin-left: -0.25rem), which pushes it
+       past the cursor cell's inset focus outline. Keep it inside the cell. */
+    margin-left: 0 !important;
   }
 
   /* Explicitly coloured chips (statuses, sums) keep their DB capsules. */
@@ -1242,6 +1366,20 @@ html[data-theme-style='light-glass-warm'] {
   .popper .list-group-item-action:hover,
   .popper .list-group-item-action:focus {
     background-color: var(--surface-hover) !important;
+  }
+
+  /* Menu rows highlight the FULL row width. ButtonList wraps each entry in
+     a d-flex row wrapper whose inner link shrink-wraps to its text, so the
+     hover background only covered the caption — stretch the whole chain. */
+  .popper .list-group > * {
+    width: 100%;
+  }
+
+  .popper .list-group .ozmalink-wrapper > a,
+  .popper .list-group .ozmalink,
+  .popper .list-group-item {
+    flex: 1 1 auto;
+    width: 100%;
   }
 
   /* Modal per mockup: opaque shell surface with ambient glows inside,
