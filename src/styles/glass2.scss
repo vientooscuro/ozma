@@ -63,7 +63,7 @@ html[data-theme-style='dark-glass'] {
   --shadow-accent-glow: 0 8px 28px rgba(45, 212, 191, 0.32);
   --shadow-accent-glow-hover: 0 12px 36px rgba(45, 212, 191, 0.45);
   --focus-ring: 0 0 0 3px rgba(53, 211, 192, 0.26);
-  --glass-fixed-bg: #0c171d;
+  --glass-fixed-bg: var(--bg-shell);
   --scroll-thumb: rgba(255, 255, 255, 0.14);
   --overlay-bg: rgba(2, 8, 12, 0.6);
 }
@@ -124,7 +124,7 @@ html[data-theme-style='light-glass-cool'] {
   --shadow-accent-glow: 0 8px 24px rgba(20, 184, 166, 0.28);
   --shadow-accent-glow-hover: 0 12px 32px rgba(20, 184, 166, 0.38);
   --focus-ring: 0 0 0 3px rgba(20, 184, 166, 0.2);
-  --glass-fixed-bg: #fbfdfd;
+  --glass-fixed-bg: var(--bg-shell);
   --scroll-thumb: rgba(10, 35, 40, 0.18);
   --overlay-bg: rgba(10, 20, 24, 0.35);
 }
@@ -185,7 +185,7 @@ html[data-theme-style='light-glass-warm'] {
   --shadow-accent-glow: 0 8px 24px rgba(33, 133, 160, 0.28);
   --shadow-accent-glow-hover: 0 12px 32px rgba(33, 133, 160, 0.38);
   --focus-ring: 0 0 0 3px rgba(33, 133, 160, 0.2);
-  --glass-fixed-bg: #fbf8f1;
+  --glass-fixed-bg: var(--bg-shell);
   --scroll-thumb: rgba(60, 48, 30, 0.18);
   --overlay-bg: rgba(35, 28, 16, 0.35);
 }
@@ -983,8 +983,18 @@ html[data-theme-style='light-glass-warm'] {
     padding-left: 12px;
     padding-right: 12px;
     color: var(--text-primary);
-    vertical-align: middle;
+    /* !important overrides the per-cell inline vertical-align (views default
+       to top) so cell content is centred in tall/wrapping rows. */
+    vertical-align: middle !important;
     font-size: 13.5px;
+  }
+
+  /* Let the content box shrink to its natural height; combined with the
+     cell's vertical-align:middle this actually centres it. Otherwise
+     .td-content's height:inherit/min-height pins content to the cell top. */
+  .custom-table tbody td .td-content {
+    height: auto !important;
+    min-height: 0 !important;
   }
 
   /* Hover: full-row highlight. */
@@ -1184,14 +1194,6 @@ html[data-theme-style='light-glass-warm'] {
   .table-wrapper:not(.stick-fixed-columns) tbody td.fixed-cell.table-td::before,
   .table-wrapper:not(.stick-fixed-columns) tbody tr td.select-row-cell::before,
   .table-wrapper:not(.stick-fixed-columns) tbody tr td.add-entry-cell::before {
-    background-color: transparent !important;
-  }
-
-  /* The narrow select/add action columns never carry a heavy dark sticky
-     fill — they read as part of the row, showing only the icon and its
-     square hover highlight (not a dark block). */
-  .custom-table tbody tr td.select-row-cell::before,
-  .custom-table tbody tr td.add-entry-cell::before {
     background-color: transparent !important;
   }
 
