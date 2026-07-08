@@ -74,37 +74,52 @@ export default class ButtonsPanel extends Vue {
     return this.listItem && isGlass2Theme(this.currentThemeRef)
   }
 
+  /* Bound in mounted(): arrow class properties capture the wrong `this`
+     under vue-class-component, and raw method references trip
+     @typescript-eslint/unbound-method. */
+  private hoverListeners: {
+    enter: () => void
+    contentEnter: () => void
+    leave: () => void
+  } | null = null
+
   mounted() {
+    this.hoverListeners = {
+      enter: () => this.onHoverEnter(),
+      contentEnter: () => this.onContentEnter(),
+      leave: () => this.onHoverLeave(),
+    }
     const ref = (this.$refs.reference as Vue | undefined)?.$el
     const content = this.$refs.content as HTMLElement | undefined
-    ref?.addEventListener('mouseenter', this.onHoverEnter)
-    ref?.addEventListener('mouseleave', this.onHoverLeave)
-    content?.addEventListener('mouseenter', this.onContentEnter)
-    content?.addEventListener('mouseleave', this.onHoverLeave)
+    ref?.addEventListener('mouseenter', this.hoverListeners.enter)
+    ref?.addEventListener('mouseleave', this.hoverListeners.leave)
+    content?.addEventListener('mouseenter', this.hoverListeners.contentEnter)
+    content?.addEventListener('mouseleave', this.hoverListeners.leave)
   }
 
   beforeDestroy() {
     this.cancelScheduledClose()
+    if (!this.hoverListeners) return
     const ref = (this.$refs.reference as Vue | undefined)?.$el
     const content = this.$refs.content as HTMLElement | undefined
-    ref?.removeEventListener('mouseenter', this.onHoverEnter)
-    ref?.removeEventListener('mouseleave', this.onHoverLeave)
-    content?.removeEventListener('mouseenter', this.onContentEnter)
-    content?.removeEventListener('mouseleave', this.onHoverLeave)
+    ref?.removeEventListener('mouseenter', this.hoverListeners.enter)
+    ref?.removeEventListener('mouseleave', this.hoverListeners.leave)
+    content?.removeEventListener('mouseenter', this.hoverListeners.contentEnter)
+    content?.removeEventListener('mouseleave', this.hoverListeners.leave)
   }
 
-  private onHoverEnter = () => {
+  private onHoverEnter() {
     if (!this.hoverEnabled) return
     this.cancelScheduledClose()
     this.show = true
   }
 
-  private onContentEnter = () => {
+  private onContentEnter() {
     if (!this.hoverEnabled) return
     this.cancelScheduledClose()
   }
 
-  private onHoverLeave = () => {
+  private onHoverLeave() {
     if (!this.hoverEnabled) return
     this.cancelScheduledClose()
     this.closeTimer = window.setTimeout(() => {
