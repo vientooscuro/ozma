@@ -1111,17 +1111,18 @@ html[data-theme-style='light-glass-warm'] {
     background-color: var(--accent-tint);
   }
 
-  .custom-table td.add-entry-cell {
-    text-align: center;
-  }
-
+  /* Row-link edit pencil: a 38px square hover box centred in the cell. Kept as
+     a block flex box (NOT inline-flex, and the cell keeps default text-align):
+     an inline-flex link inside a text-align:center cell made the cell's empty
+     sticky ::before render as a stray ".." beside the pencil. */
   .custom-table td.add-entry-cell .icon-link {
-    display: inline-flex;
-    width: 38px !important;
-    height: 38px !important;
+    display: flex;
     align-items: center;
     justify-content: center;
-    vertical-align: middle;
+    width: 38px !important;
+    height: 38px !important;
+    margin: 0 auto;
+    overflow: hidden;
     border-radius: 10px;
     transition: background-color var(--dur-fast) var(--ease-out);
   }
