@@ -529,6 +529,28 @@ REMOTE_SCRIPT
 
 stage_seed_field_attributes
 
+stage_seed_base_themes() {
+  info "\n==> Stage 7a: Seed base color themes"
+
+  local seed_file
+  seed_file="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/ozmadb/seed_color_themes.sql"
+  [[ -f "$seed_file" ]] || fail "seed file not found: $seed_file"
+
+  # The baked catalog is applied from the local checkout (not the server's
+  # cloned copy), so any deploy ships the full theme set regardless of branch.
+  if [[ "$DEPLOY_MODE" == "remote" ]]; then
+    ssh "$DEPLOY_HOST" 'docker exec -i ozma-postgres-1 psql -U postgres -d ozmadb -v ON_ERROR_STOP=1' \
+      < "$seed_file" || fail "base theme seeding failed"
+  else
+    docker exec -i ozma-postgres-1 psql -U postgres -d ozmadb -v ON_ERROR_STOP=1 \
+      < "$seed_file" || fail "base theme seeding failed"
+  fi
+
+  ok "Base color themes seeded"
+}
+
+stage_seed_base_themes
+
 stage_seed_glass_cool_theme() {
   info "\n==> Stage 7b: Seed light-glass-cool theme"
 
