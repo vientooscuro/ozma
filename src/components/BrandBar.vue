@@ -211,6 +211,7 @@ export default class BrandBar extends Vue {
         caption: entry.name,
         variant: defaultVariantAttribute,
         link: entry.link,
+        icon: entry.icon ?? undefined,
       }),
     )
   }

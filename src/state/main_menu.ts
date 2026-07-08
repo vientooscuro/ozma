@@ -14,6 +14,7 @@ import { valueToPunnedText } from '@/user_views/combined'
 export interface IBrandBarEntry {
   name: UserString
   link: Link
+  icon: string | null
 }
 
 export interface IBrandBarTab {
@@ -44,7 +45,8 @@ const collectEntries = (content: unknown[]): IBrandBarEntry[] => {
     }
     const link = attrToLink(entry, linkOpts)
     if (link === null) return []
-    return [{ name, link }]
+    const icon = typeof entry.icon === 'string' ? entry.icon : null
+    return [{ name, link, icon }]
   })
 }
 
@@ -120,7 +122,15 @@ const parseOldMenu = (res: IViewExprResult): IBrandBarTab[] => {
     )
     const link = attrToLink(linkAttr, linkOpts)
     if (link === null) return
-    entries.push({ name: buttonName, link })
+    const iconAttr = tryDicts<string, unknown>(
+      'icon',
+      buttonCell.attributes,
+      buttonsColumnAttrs,
+      row.attributes,
+      viewAttrs,
+    )
+    const icon = typeof iconAttr === 'string' ? iconAttr : null
+    entries.push({ name: buttonName, link, icon })
   })
 
   return Array.from(categories.entries()).map(([name, entries]) => ({
