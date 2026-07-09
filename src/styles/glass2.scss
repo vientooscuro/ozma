@@ -924,8 +924,11 @@ html[data-theme-style='light-glass-warm'] {
   /* Single-block forms: stretch the lone glass card to fill the view height
      so the surface spans the whole form instead of floating above a dark
      void. Offset ≈ header (~64px) + .view-form vertical padding (2×30px).
-     Multi-block forms (.has-sub-blocks) keep their natural height. */
-  .view-form .first_level_grid_block:not(.has-sub-blocks) {
+     Scoped to a form with exactly ONE top-level block (its column is the
+     only child of the grid row) — multi-block forms like the user-view code
+     editor (metadata card + query card) keep each block's natural height. */
+  .view-form .form_grid_block__column:only-child
+    > .first_level_grid_block:not(.has-sub-blocks) {
     min-height: calc(100vh - 124px) !important;
   }
 }
