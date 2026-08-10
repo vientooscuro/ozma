@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Design — Final Mockup</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: #1a1a2e;
+        padding: 32px 24px;
+        min-height: 100vh;
+        color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI',
+          sans-serif;
+      }
+
+      h1 {
+        margin-bottom: 6px;
+        color: #e7ecef;
+        font-weight: 700;
+        font-size: 20px;
+      }
+      .subtitle {
+        margin-bottom: 32px;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 13px;
+      }
+
+      .themes-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-bottom: 40px;
+      }
+
+      .theme-label {
+        opacity: 0.5;
+        margin-bottom: 12px;
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      /* ── DARK GLASS ── */
+      .dark-glass {
+        position: relative;
+        border-radius: 20px;
+        background: linear-gradient(
+          145deg,
+          #060d18 0%,
+          #0d1f35 60%,
+          #071220 100%
+        );
+        padding: 28px;
+        overflow: hidden;
+      }
+      .dark-glass::before {
+        position: absolute;
+        top: -40px;
+        right: -20px;
+        filter: blur(40px);
+        border-radius: 50%;
+        background: rgba(89, 214, 207, 0.12);
+        width: 140px;
+        height: 140px;
+        content: '';
+      }
+      .dark-glass::after {
+        position: absolute;
+        bottom: -20px;
+        left: 10px;
+        filter: blur(30px);
+        border-radius: 50%;
+        background: rgba(15, 118, 110, 0.18);
+        width: 100px;
+        height: 100px;
+        content: '';
+      }
+      .dark-glass .form-card {
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        box-shadow:
+          0 16px 48px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 22px;
+      }
+      .dark-glass .section-title {
+        margin-bottom: 14px;
+        color: rgba(89, 214, 207, 0.6);
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .dark-glass .field {
+        position: relative;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 16px 12px 7px;
+      }
+      .dark-glass .field.focus {
+        box-shadow:
+          0 0 0 3px rgba(89, 214, 207, 0.12),
+          0 4px 16px rgba(0, 0, 0, 0.2);
+        border-color: rgba(89, 214, 207, 0.5);
+        background: rgba(255, 255, 255, 0.09);
+      }
+      .dark-glass .field-label {
+        margin-bottom: 3px;
+        color: rgba(89, 214, 207, 0.65);
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .dark-glass .field-label.muted {
+        color: rgba(255, 255, 255, 0.35);
+      }
+      .dark-glass .field-value {
+        color: rgba(255, 255, 255, 0.88);
+        font-size: 13px;
+      }
+      .dark-glass .field-value.placeholder {
+        color: rgba(255, 255, 255, 0.25);
+      }
+      .dark-glass .field-required {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        box-shadow: 0 0 6px rgba(255, 120, 100, 0.5);
+        border-radius: 50%;
+        background: rgba(255, 120, 100, 0.8);
+        width: 5px;
+        height: 5px;
+      }
+      .dark-glass .btn-primary {
+        cursor: pointer;
+        margin-top: 6px;
+        box-shadow:
+          0 0 20px rgba(89, 214, 207, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        border: 1.5px solid rgba(89, 214, 207, 0.5);
+        border-radius: 10px;
+        background: linear-gradient(
+          135deg,
+          rgba(89, 214, 207, 0.28),
+          rgba(15, 118, 110, 0.28)
+        );
+        padding: 9px 14px;
+        width: 100%;
+        color: #59d6cf;
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        text-align: center;
+      }
+      .dark-glass .btn-danger {
+        cursor: pointer;
+        margin-top: 6px;
+        border: 1px solid rgba(255, 80, 60, 0.3);
+        border-radius: 8px;
+        background: rgba(255, 80, 60, 0.1);
+        padding: 7px 14px;
+        width: 100%;
+        color: rgba(255, 120, 100, 0.8);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      /* ── WARM FROST ── */
+      .warm-frost {
+        position: relative;
+        border-radius: 20px;
+        background: linear-gradient(145deg, #f6f4ef 0%, #ede8e0 100%);
+        padding: 28px;
+        overflow: hidden;
+      }
+      .warm-frost::before {
+        position: absolute;
+        top: -30px;
+        right: -10px;
+        filter: blur(35px);
+        border-radius: 50%;
+        background: rgba(15, 118, 110, 0.1);
+        width: 120px;
+        height: 120px;
+        content: '';
+      }
+      .warm-frost::after {
+        position: absolute;
+        bottom: -10px;
+        left: 20px;
+        filter: blur(20px);
+        border-radius: 50%;
+        background: rgba(196, 182, 163, 0.4);
+        width: 80px;
+        height: 80px;
+        content: '';
+      }
+      .warm-frost .form-card {
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(20px) saturate(160%);
+        -webkit-backdrop-filter: blur(20px) saturate(160%);
+        box-shadow:
+          0 12px 40px rgba(28, 23, 15, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        border: 1.5px solid rgba(255, 255, 255, 0.82);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.55);
+        padding: 22px;
+      }
+      .warm-frost .section-title {
+        margin-bottom: 14px;
+        color: #9b8f80;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .warm-frost .field {
+        position: relative;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 8px rgba(28, 23, 15, 0.06);
+        border: 1.5px solid rgba(196, 182, 163, 0.5);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.62);
+        padding: 16px 12px 7px;
+      }
+      .warm-frost .field.focus {
+        box-shadow:
+          0 0 0 3px rgba(15, 118, 110, 0.1),
+          0 2px 8px rgba(28, 23, 15, 0.06);
+        border-color: rgba(15, 118, 110, 0.45);
+      }
+      .warm-frost .field-label {
+        margin-bottom: 3px;
+        color: #0f766e;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .warm-frost .field-label.muted {
+        color: #9b8f80;
+      }
+      .warm-frost .field-value {
+        color: #1f1f1f;
+        font-size: 13px;
+      }
+      .warm-frost .field-value.placeholder {
+        color: #bbb;
+      }
+      .warm-frost .field-required {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        box-shadow: 0 0 5px rgba(220, 80, 60, 0.3);
+        border-radius: 50%;
+        background: rgba(220, 80, 60, 0.7);
+        width: 5px;
+        height: 5px;
+      }
+      .warm-frost .btn-primary {
+        cursor: pointer;
+        margin-top: 6px;
+        box-shadow: 0 4px 16px rgba(15, 118, 110, 0.3);
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #0f766e, #0d6360);
+        padding: 9px 14px;
+        width: 100%;
+        color: #fff;
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 0.03em;
+        text-align: center;
+      }
+      .warm-frost .btn-danger {
+        cursor: pointer;
+        margin-top: 6px;
+        border: 1px solid rgba(220, 60, 40, 0.25);
+        border-radius: 8px;
+        background: rgba(220, 60, 40, 0.08);
+        padding: 7px 14px;
+        width: 100%;
+        color: rgba(200, 60, 40, 0.8);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      /* ── COOL FROST ── */
+      .cool-frost {
+        position: relative;
+        border-radius: 20px;
+        background: linear-gradient(145deg, #f0f4f8 0%, #e2eaf2 100%);
+        padding: 28px;
+        overflow: hidden;
+      }
+      .cool-frost::before {
+        position: absolute;
+        top: -30px;
+        right: -10px;
+        filter: blur(35px);
+        border-radius: 50%;
+        background: rgba(99, 102, 241, 0.1);
+        width: 130px;
+        height: 130px;
+        content: '';
+      }
+      .cool-frost::after {
+        position: absolute;
+        bottom: -15px;
+        left: 10px;
+        filter: blur(25px);
+        border-radius: 50%;
+        background: rgba(139, 92, 246, 0.08);
+        width: 90px;
+        height: 90px;
+        content: '';
+      }
+      .cool-frost .form-card {
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        box-shadow:
+          0 12px 40px rgba(0, 0, 0, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.98);
+        border: 1.5px solid rgba(255, 255, 255, 0.88);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.62);
+        padding: 22px;
+      }
+      .cool-frost .section-title {
+        margin-bottom: 14px;
+        color: #6366f1;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .cool-frost .field {
+        position: relative;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border: 1.5px solid rgba(99, 102, 241, 0.18);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.7);
+        padding: 16px 12px 7px;
+      }
+      .cool-frost .field.focus {
+        box-shadow:
+          0 0 0 3px rgba(99, 102, 241, 0.1),
+          0 2px 8px rgba(0, 0, 0, 0.05);
+        border-color: rgba(99, 102, 241, 0.5);
+      }
+      .cool-frost .field-label {
+        margin-bottom: 3px;
+        color: #6366f1;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .cool-frost .field-label.muted {
+        color: #94a3b8;
+      }
+      .cool-frost .field-value {
+        color: #1e293b;
+        font-size: 13px;
+      }
+      .cool-frost .field-value.placeholder {
+        color: #bbb;
+      }
+      .cool-frost .field-required {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        box-shadow: 0 0 5px rgba(239, 68, 68, 0.3);
+        border-radius: 50%;
+        background: rgba(239, 68, 68, 0.7);
+        width: 5px;
+        height: 5px;
+      }
+      .cool-frost .btn-primary {
+        cursor: pointer;
+        margin-top: 6px;
+        box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #6366f1, #818cf8);
+        padding: 9px 14px;
+        width: 100%;
+        color: #fff;
+        font-weight: 700;
+        font-size: 12px;
+        text-align: center;
+      }
+      .cool-frost .btn-danger {
+        cursor: pointer;
+        margin-top: 6px;
+        border: 1px solid rgba(239, 68, 68, 0.22);
+        border-radius: 8px;
+        background: rgba(239, 68, 68, 0.07);
+        padding: 7px 14px;
+        width: 100%;
+        color: rgba(239, 68, 68, 0.75);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      .note {
+        margin-top: 8px;
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 11px;
+        text-align: center;
+      }
+      .approve-bar {
+        margin-top: 32px;
+        text-align: center;
+      }
+      .approve-btn {
+        display: inline-block;
+        cursor: pointer;
+        border: 1.5px solid rgba(89, 214, 207, 0.4);
+        border-radius: 10px;
+        background: rgba(89, 214, 207, 0.18);
+        padding: 10px 28px;
+        color: #59d6cf;
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Итоговый дизайн форм — 3 темы</h1>
+    <p class="subtitle">Все три темы с полным набором элементов</p>
+
+    <div class="themes-grid">
+      <!-- DARK GLASS -->
+      <div>
+        <div class="theme-label" style="color: rgba(89, 214, 207, 0.5)">
+          Dark Glass — Intense
+        </div>
+        <div class="dark-glass">
+          <div class="form-card">
+            <div class="section-title">Personal Info</div>
+
+            <div class="field focus">
+              <div class="field-label">First Name</div>
+              <div class="field-value">Daniil</div>
+            </div>
+
+            <div class="field">
+              <div class="field-label muted">Email</div>
+              <div class="field-value">daniil@example.com</div>
+              <div class="field-required"></div>
+            </div>
+
+            <div class="field">
+              <div class="field-label muted">Notes</div>
+              <div class="field-value placeholder">Add a note...</div>
+            </div>
+
+            <div class="btn-primary">Save Changes</div>
+            <div class="btn-danger">Delete Record</div>
+          </div>
+        </div>
+        <div class="note">backdrop-filter: blur(24px) saturate(180%)</div>
+      </div>
+
+      <!-- WARM FROST -->
+      <div>
+        <div class="theme-label" style="color: #9b8f80">
+          Light Glass — Warm Frost
+        </div>
+        <div class="warm-frost">
+          <div class="form-card">
+            <div class="section-title">Personal Info</div>
+
+            <div class="field focus">
+              <div class="field-label">First Name</div>
+              <div class="field-value">Daniil</div>
+            </div>
+
+            <div class="field">
+              <div class="field-label muted">Email</div>
+              <div class="field-value">daniil@example.com</div>
+              <div class="field-required"></div>
+            </div>
+
+            <div class="field">
+              <div class="field-label muted">Notes</div>
+              <div class="field-value placeholder">Add a note...</div>
+            </div>
+
+            <div class="btn-primary">Save Changes</div>
+            <div class="btn-danger">Delete Record</div>
+          </div>
+        </div>
+        <div class="note" style="color: rgba(0, 0, 0, 0.2)">
+          backdrop-filter: blur(20px) saturate(160%)
+        </div>
+      </div>
+
+      <!-- COOL FROST -->
+      <div>
+        <div class="theme-label" style="color: #6366f1">
+          Light Glass — Cool Frost
+        </div>
+        <div class="cool-frost">
+          <div class="form-card">
+            <div class="section-title">Personal Info</div>
+
+            <div class="field focus">
+              <div class="field-label">First Name</div>
+              <div class="field-value">Daniil</div>
+            </div>
+
+            <div class="field">
+              <div class="field-label muted">Email</div>
+              <div class="field-value">daniil@example.com</div>
+              <div class="field-required"></div>
+            </div>
+
+            <div class="field">
+              <div class="field-label muted">Notes</div>
+              <div class="field-value placeholder">Add a note...</div>
+            </div>
+
+            <div class="btn-primary">Save Changes</div>
+            <div class="btn-danger">Delete Record</div>
+          </div>
+        </div>
+        <div class="note" style="color: rgba(0, 0, 0, 0.2)">
+          backdrop-filter: blur(20px) saturate(180%)
+        </div>
+      </div>
+    </div>
+
+    <div class="approve-bar">
+      <div class="approve-btn" onclick="this.textContent='✓ Approved!'">
+        Approve this direction →
+      </div>
+    </div>
+  </body>
+</html>

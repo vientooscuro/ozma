@@ -1,0 +1,5 @@
+# Local development overrides — not committed to git
+services:
+  keycloak:
+    environment:
+      KC_COOKIE_SECURE: "false"

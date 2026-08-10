@@ -1,0 +1,704 @@
+<h2>Floating rows — уточнённый дизайн</h2>
+<p class="subtitle">
+  Бо́льшие скругления · вертикальные разделители · интерактивные заголовки
+</p>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap');
+
+  .section {
+    margin-bottom: 2.5rem;
+  }
+  .section-title {
+    margin-bottom: 0.6rem;
+    padding: 0 0.25rem;
+    font-weight: 700;
+    font-size: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ══ Shared table shell ══ */
+  table.ft {
+    border-collapse: separate;
+    border-spacing: 0 6px;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  /* ── Dark theme shell ── */
+  .dark-shell {
+    position: relative;
+    border: 1px solid rgba(89, 214, 207, 0.1);
+    border-radius: 18px;
+    background: linear-gradient(145deg, #020810 0%, #07121f 60%, #040c14 100%);
+    padding: 1.25rem 1.25rem 1rem;
+    overflow: hidden;
+  }
+  .dark-shell::before {
+    position: absolute;
+    top: -60px;
+    right: -50px;
+    filter: blur(65px);
+    border-radius: 999px;
+    background: rgba(89, 214, 207, 0.07);
+    width: 200px;
+    height: 200px;
+    pointer-events: none;
+    content: '';
+  }
+
+  /* ── Dark TH ── */
+  .dark-shell th {
+    position: relative;
+    border: none;
+    background: transparent;
+    padding: 4px 14px 10px;
+    color: rgba(89, 214, 207, 0.52);
+    font-weight: 700;
+    font-size: 9.5px;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: 0.12em;
+    user-select: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  /* drag handle on TH */
+  .dark-shell th .th-inner {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: grab;
+  }
+  .drag-grip {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .dark-shell th:hover .drag-grip {
+    opacity: 1;
+  }
+  .drag-grip span {
+    display: block;
+    border-radius: 1px;
+    background: rgba(89, 214, 207, 0.45);
+    width: 12px;
+    height: 1.5px;
+  }
+  /* resize handle */
+  .resize-handle {
+    position: absolute;
+    top: 20%;
+    right: 0;
+    transition: background 0.15s;
+    cursor: col-resize;
+    border-radius: 2px;
+    background: rgba(89, 214, 207, 0);
+    width: 3px;
+    height: 60%;
+  }
+  .dark-shell th:hover .resize-handle {
+    background: rgba(89, 214, 207, 0.35);
+  }
+
+  /* ── Dark TD ── */
+  .dark-shell td {
+    border-top: 1px solid rgba(255, 255, 255, 0.055);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+    background: rgba(255, 255, 255, 0.045);
+    padding: 11px 14px;
+    overflow: hidden;
+    color: #e7ecef;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .dark-shell td:first-child {
+    border-left: 1px solid rgba(255, 255, 255, 0.055);
+    border-radius: 14px 0 0 14px;
+  }
+  .dark-shell td:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.055);
+    border-radius: 0 14px 14px 0;
+  }
+  .dark-shell tr:hover td {
+    border-color: rgba(89, 214, 207, 0.17);
+    background: rgba(89, 214, 207, 0.075);
+  }
+
+  /* vertical dividers variant */
+  .dark-shell.with-vlines td + td {
+    border-left: 1px solid rgba(255, 255, 255, 0.07);
+  }
+  .dark-shell.with-vlines td:first-child {
+    border-radius: 14px 0 0 14px;
+  }
+  .dark-shell.with-vlines td:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.055);
+    border-radius: 0 14px 14px 0;
+  }
+  .dark-shell.with-vlines tr:hover td + td {
+    border-left-color: rgba(89, 214, 207, 0.13);
+  }
+
+  .d-amt {
+    display: inline-block;
+    border: 1px solid rgba(89, 214, 207, 0.26);
+    border-radius: 999px;
+    background: rgba(89, 214, 207, 0.12);
+    padding: 3px 11px;
+    color: #59d6cf;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .d-muted {
+    color: rgba(149, 167, 182, 0.6);
+    font-size: 12px;
+  }
+  .d-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    width: 28px;
+    height: 28px;
+    color: rgba(149, 167, 182, 0.55);
+    font-size: 15px;
+  }
+
+  /* ══ Light shell ══ */
+  .light-shell {
+    border: 1px solid rgba(196, 182, 163, 0.3);
+    border-radius: 18px;
+    background: #f6f4ef;
+    background-image: radial-gradient(
+        ellipse 55% 38% at 8% 0%,
+        rgba(255, 249, 226, 0.9) 0%,
+        transparent 65%
+      ),
+      radial-gradient(
+        ellipse 40% 30% at 75% 5%,
+        rgba(219, 248, 240, 0.7) 0%,
+        transparent 60%
+      );
+    padding: 1.25rem 1.25rem 1rem;
+    overflow: hidden;
+  }
+  .light-shell th {
+    position: relative;
+    border: none;
+    background: transparent;
+    padding: 4px 14px 10px;
+    color: #2185a0;
+    font-weight: 700;
+    font-size: 9.5px;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: 0.12em;
+    user-select: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .light-shell th .th-inner {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: grab;
+  }
+  .light-shell th:hover .drag-grip {
+    opacity: 1;
+  }
+  .light-shell .drag-grip span {
+    background: rgba(33, 133, 160, 0.5);
+  }
+  .light-shell th:hover .resize-handle {
+    background: rgba(33, 133, 160, 0.35);
+  }
+
+  .light-shell td {
+    border-top: 1px solid rgba(196, 182, 163, 0.22);
+    border-bottom: 1px solid rgba(196, 182, 163, 0.22);
+    background: rgba(255, 255, 255, 0.55);
+    padding: 11px 14px;
+    overflow: hidden;
+    color: #1f1f1f;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .light-shell td:first-child {
+    border-left: 1px solid rgba(196, 182, 163, 0.22);
+    border-radius: 14px 0 0 14px;
+  }
+  .light-shell td:last-child {
+    border-right: 1px solid rgba(196, 182, 163, 0.22);
+    border-radius: 0 14px 14px 0;
+  }
+  .light-shell tr:hover td {
+    box-shadow: 0 2px 12px rgba(28, 23, 15, 0.07);
+    border-color: rgba(33, 133, 160, 0.22);
+    background: rgba(255, 255, 255, 0.85);
+  }
+  .light-shell.with-vlines td + td {
+    border-left: 1px solid rgba(196, 182, 163, 0.18);
+  }
+  .light-shell.with-vlines tr:hover td + td {
+    border-left-color: rgba(33, 133, 160, 0.15);
+  }
+
+  .l-amt {
+    display: inline-block;
+    border: 1px solid rgba(33, 133, 160, 0.22);
+    border-radius: 999px;
+    background: rgba(33, 133, 160, 0.1);
+    padding: 3px 11px;
+    color: #1a5f7a;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .l-muted {
+    color: rgba(111, 106, 98, 0.65);
+    font-size: 12px;
+  }
+  .l-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(196, 182, 163, 0.3);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.65);
+    width: 28px;
+    height: 28px;
+    color: rgba(111, 106, 98, 0.6);
+    font-size: 15px;
+  }
+
+  /* ── TH drag-active state ── */
+  .th-dragging {
+    opacity: 0.45 !important;
+    background: rgba(89, 214, 207, 0.08) !important;
+  }
+  .th-drop-target::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -2px;
+    border-radius: 2px;
+    background: rgba(89, 214, 207, 0.8);
+    width: 2px;
+    content: '';
+  }
+
+  .note {
+    margin-top: 0.4rem;
+    padding: 0 0.25rem;
+    color: rgba(149, 167, 182, 0.7);
+    font-size: 11px;
+  }
+</style>
+
+<div>
+  <!-- ── 1. DARK — без вертикальных разделителей ── -->
+  <div class="section">
+    <div class="section-title" style="color: rgba(89, 214, 207, 0.5)">
+      Dark Glass — без вертикальных разделителей
+    </div>
+    <div class="dark-shell">
+      <table class="ft">
+        <colgroup>
+          <col style="width: 44px" />
+          <col style="width: 110px" />
+          <col style="width: 60px" />
+          <col style="width: 200px" />
+          <col style="width: 230px" />
+          <col style="width: 145px" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th></th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Сумма
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                id
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Счёт отправителя
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Счёт получателя
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Дата транзакции
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="d-icon">✏</span></td>
+            <td><span class="d-amt">25 000</span></td>
+            <td class="d-muted">36328</td>
+            <td>Гвоздев Руслан</td>
+            <td>GOGOL School · Яндекс-сплит</td>
+            <td class="d-muted">02.04.2026 0:46</td>
+          </tr>
+          <tr>
+            <td><span class="d-icon">✏</span></td>
+            <td><span class="d-amt">2 660</span></td>
+            <td class="d-muted">36326</td>
+            <td>Смирнов Илья Николаевич</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="d-muted">01.04.2026 21:54</td>
+          </tr>
+          <tr>
+            <td><span class="d-icon">✏</span></td>
+            <td><span class="d-amt">2 800</span></td>
+            <td class="d-muted">36325</td>
+            <td>Антоневич Катерина</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="d-muted">01.04.2026 21:21</td>
+          </tr>
+          <tr>
+            <td><span class="d-icon">✏</span></td>
+            <td><span class="d-amt">9 000</span></td>
+            <td class="d-muted">36323</td>
+            <td>Козуб Денис Владимирович</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="d-muted">01.04.2026 18:25</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      Hover на заголовке → появляется grip для перетаскивания и handle для
+      resize
+    </div>
+  </div>
+
+  <!-- ── 2. DARK — с вертикальными разделителями ── -->
+  <div class="section">
+    <div class="section-title" style="color: rgba(89, 214, 207, 0.5)">
+      Dark Glass — с вертикальными разделителями
+    </div>
+    <div class="dark-shell with-vlines">
+      <table class="ft">
+        <colgroup>
+          <col style="width: 44px" />
+          <col style="width: 110px" />
+          <col style="width: 60px" />
+          <col style="width: 200px" />
+          <col style="width: 230px" />
+          <col style="width: 145px" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th></th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Сумма
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                id
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Счёт отправителя
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Счёт получателя
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Дата транзакции
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="d-icon">✏</span></td>
+            <td><span class="d-amt">25 000</span></td>
+            <td class="d-muted">36328</td>
+            <td>Гвоздев Руслан</td>
+            <td>GOGOL School · Яндекс-сплит</td>
+            <td class="d-muted">02.04.2026 0:46</td>
+          </tr>
+          <tr>
+            <td><span class="d-icon">✏</span></td>
+            <td><span class="d-amt">2 660</span></td>
+            <td class="d-muted">36326</td>
+            <td>Смирнов Илья Николаевич</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="d-muted">01.04.2026 21:54</td>
+          </tr>
+          <tr>
+            <td><span class="d-icon">✏</span></td>
+            <td><span class="d-amt">2 800</span></td>
+            <td class="d-muted">36325</td>
+            <td>Антоневич Катерина</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="d-muted">01.04.2026 21:21</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── 3. LIGHT — без вертикальных разделителей ── -->
+  <div class="section">
+    <div class="section-title" style="color: #1a5f7a">
+      Light Glass Warm — без вертикальных разделителей
+    </div>
+    <div class="light-shell">
+      <table class="ft">
+        <colgroup>
+          <col style="width: 44px" />
+          <col style="width: 110px" />
+          <col style="width: 60px" />
+          <col style="width: 200px" />
+          <col style="width: 230px" />
+          <col style="width: 145px" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th></th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Сумма
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                id
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Счёт отправителя
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Счёт получателя
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Дата транзакции
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="l-icon">✏</span></td>
+            <td><span class="l-amt">25 000</span></td>
+            <td class="l-muted">36328</td>
+            <td>Гвоздев Руслан</td>
+            <td>GOGOL School · Яндекс-сплит</td>
+            <td class="l-muted">02.04.2026 0:46</td>
+          </tr>
+          <tr>
+            <td><span class="l-icon">✏</span></td>
+            <td><span class="l-amt">2 660</span></td>
+            <td class="l-muted">36326</td>
+            <td>Смирнов Илья Николаевич</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="l-muted">01.04.2026 21:54</td>
+          </tr>
+          <tr>
+            <td><span class="l-icon">✏</span></td>
+            <td><span class="l-amt">2 800</span></td>
+            <td class="l-muted">36325</td>
+            <td>Антоневич Катерина</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="l-muted">01.04.2026 21:21</td>
+          </tr>
+          <tr>
+            <td><span class="l-icon">✏</span></td>
+            <td><span class="l-amt">9 000</span></td>
+            <td class="l-muted">36323</td>
+            <td>Козуб Денис Владимирович</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="l-muted">01.04.2026 18:25</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── 4. LIGHT — с вертикальными разделителями ── -->
+  <div class="section">
+    <div class="section-title" style="color: #1a5f7a">
+      Light Glass Warm — с вертикальными разделителями
+    </div>
+    <div class="light-shell with-vlines">
+      <table class="ft">
+        <colgroup>
+          <col style="width: 44px" />
+          <col style="width: 110px" />
+          <col style="width: 60px" />
+          <col style="width: 200px" />
+          <col style="width: 230px" />
+          <col style="width: 145px" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th></th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Сумма
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                id
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Счёт отправителя
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Счёт получателя
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+            <th>
+              <div class="th-inner">
+                <div class="drag-grip">
+                  <span></span><span></span><span></span>
+                </div>
+                Дата транзакции
+              </div>
+              <div class="resize-handle"></div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="l-icon">✏</span></td>
+            <td><span class="l-amt">25 000</span></td>
+            <td class="l-muted">36328</td>
+            <td>Гвоздев Руслан</td>
+            <td>GOGOL School · Яндекс-сплит</td>
+            <td class="l-muted">02.04.2026 0:46</td>
+          </tr>
+          <tr>
+            <td><span class="l-icon">✏</span></td>
+            <td><span class="l-amt">2 660</span></td>
+            <td class="l-muted">36326</td>
+            <td>Смирнов Илья Николаевич</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="l-muted">01.04.2026 21:54</td>
+          </tr>
+          <tr>
+            <td><span class="l-icon">✏</span></td>
+            <td><span class="l-amt">2 800</span></td>
+            <td class="l-muted">36325</td>
+            <td>Антоневич Катерина</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="l-muted">01.04.2026 21:21</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

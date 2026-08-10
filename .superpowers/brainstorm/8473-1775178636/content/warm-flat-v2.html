@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warm Frost — Flat variants</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: #d8d2c8;
+        padding: 32px 24px;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI',
+          sans-serif;
+      }
+      h1 {
+        margin-bottom: 6px;
+        color: #2a2318;
+        font-weight: 700;
+        font-size: 18px;
+      }
+      .sub {
+        margin-bottom: 28px;
+        color: rgba(0, 0, 0, 0.4);
+        font-size: 12px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      .label {
+        margin-bottom: 10px;
+        color: rgba(0, 0, 0, 0.3);
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      /* ── A: Flat Matte ── */
+      .A {
+        border-radius: 20px;
+        background: #f0ece5;
+        padding: 24px;
+      }
+      .A .card {
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.45);
+        padding: 20px;
+        /* NO backdrop-filter, NO box-shadow */
+      }
+      .A .sec {
+        margin-bottom: 12px;
+        color: #9b8f80;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+      .A .field {
+        position: relative;
+        margin-bottom: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.6);
+        padding: 15px 11px 6px;
+      }
+      .A .field.focus {
+        border-color: rgba(15, 118, 110, 0.4);
+        background: rgba(255, 255, 255, 0.8);
+      }
+      .A .fl {
+        margin-bottom: 2px;
+        color: #0f766e;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      .A .fl.m {
+        color: #9b8f80;
+      }
+      .A .fv {
+        color: #1f1f1f;
+        font-size: 13px;
+      }
+      .A .fv.p {
+        color: #c0b8ae;
+      }
+      .A .req {
+        position: absolute;
+        top: 9px;
+        right: 9px;
+        border-radius: 50%;
+        background: rgba(220, 80, 60, 0.65);
+        width: 5px;
+        height: 5px;
+      }
+      .A .btn {
+        margin-top: 8px;
+        border-radius: 8px;
+        background: #0f766e;
+        padding: 8px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 12px;
+        text-align: center;
+      }
+      .A .del {
+        margin-top: 5px;
+        border: 1px solid rgba(220, 60, 40, 0.2);
+        border-radius: 7px;
+        background: transparent;
+        padding: 6px;
+        color: rgba(200, 60, 40, 0.65);
+        font-weight: 500;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      /* ── B: Flat Translucent ── */
+      .B {
+        border-radius: 20px;
+        background: #ede8df;
+        padding: 24px;
+      }
+      .B .card {
+        backdrop-filter: blur(8px) saturate(120%);
+        -webkit-backdrop-filter: blur(8px) saturate(120%);
+        border: 1.5px solid rgba(255, 255, 255, 0.55);
+        border-radius: 16px;
+        background: rgba(255, 253, 248, 0.35);
+        padding: 20px;
+        /* minimal blur — mostly flat feel */
+      }
+      .B .sec {
+        margin-bottom: 12px;
+        color: #a09282;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+      .B .field {
+        position: relative;
+        margin-bottom: 8px;
+        border: 1px solid rgba(196, 182, 163, 0.45);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.5);
+        padding: 15px 11px 6px;
+      }
+      .B .field.focus {
+        border-color: #0f766e;
+        background: rgba(255, 255, 255, 0.65);
+      }
+      .B .fl {
+        margin-bottom: 2px;
+        color: #0f766e;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      .B .fl.m {
+        color: #a09282;
+      }
+      .B .fv {
+        color: #1f1f1f;
+        font-size: 13px;
+      }
+      .B .fv.p {
+        color: #c0b8ae;
+      }
+      .B .req {
+        position: absolute;
+        top: 9px;
+        right: 9px;
+        border-radius: 50%;
+        background: rgba(220, 80, 60, 0.65);
+        width: 5px;
+        height: 5px;
+      }
+      .B .btn {
+        margin-top: 8px;
+        border-radius: 8px;
+        background: #0f766e;
+        padding: 8px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 12px;
+        text-align: center;
+      }
+      .B .del {
+        margin-top: 5px;
+        border: 1px solid rgba(220, 60, 40, 0.2);
+        border-radius: 7px;
+        background: transparent;
+        padding: 6px;
+        color: rgba(200, 60, 40, 0.65);
+        font-weight: 500;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      /* ── C: Borderless Flat ── */
+      .C {
+        border-radius: 20px;
+        background: #f2ede6;
+        padding: 24px;
+      }
+      .C .card {
+        border: none;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.3);
+        padding: 20px;
+        /* no border, no shadow — pure flat */
+      }
+      .C .sec {
+        margin-bottom: 12px;
+        color: #9b8f80;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+      .C .field {
+        position: relative;
+        margin-bottom: 6px;
+        border: none;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.55);
+        padding: 15px 11px 6px;
+      }
+      .C .field.focus {
+        outline: none;
+        background: rgba(255, 255, 255, 0.78);
+      }
+      .C .fl {
+        margin-bottom: 2px;
+        color: #0f766e;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      .C .fl.m {
+        color: #9b8f80;
+      }
+      .C .fv {
+        color: #1f1f1f;
+        font-size: 13px;
+      }
+      .C .fv.p {
+        color: #c0b8ae;
+      }
+      .C .req {
+        position: absolute;
+        top: 9px;
+        right: 9px;
+        border-radius: 50%;
+        background: rgba(220, 80, 60, 0.65);
+        width: 5px;
+        height: 5px;
+      }
+      .C .btn {
+        margin-top: 8px;
+        border-radius: 8px;
+        background: #0f766e;
+        padding: 8px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 12px;
+        text-align: center;
+      }
+      .C .del {
+        margin-top: 5px;
+        border: none;
+        border-radius: 7px;
+        background: transparent;
+        padding: 6px;
+        color: rgba(200, 60, 40, 0.55);
+        font-weight: 500;
+        font-size: 11px;
+        text-align: center;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Light Glass Warm — Flat варианты</h1>
+    <p class="sub">Без объёмных теней и градиентов — три степени "плоскости"</p>
+
+    <div class="grid">
+      <div>
+        <div class="label">A — Flat Matte (без blur)</div>
+        <div class="A">
+          <div class="card">
+            <div class="sec">Personal Info</div>
+            <div class="field focus">
+              <div class="fl">First Name</div>
+              <div class="fv">Daniil</div>
+            </div>
+            <div class="field">
+              <div class="fl m">Email</div>
+              <div class="fv">daniil@example.com</div>
+              <div class="req"></div>
+            </div>
+            <div class="field">
+              <div class="fl m">Notes</div>
+              <div class="fv p">Add a note...</div>
+            </div>
+            <div class="btn">Save Changes</div>
+            <div class="del">Delete Record</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="label">B — Flat + лёгкий blur (8px)</div>
+        <div class="B">
+          <div class="card">
+            <div class="sec">Personal Info</div>
+            <div class="field focus">
+              <div class="fl">First Name</div>
+              <div class="fv">Daniil</div>
+            </div>
+            <div class="field">
+              <div class="fl m">Email</div>
+              <div class="fv">daniil@example.com</div>
+              <div class="req"></div>
+            </div>
+            <div class="field">
+              <div class="fl m">Notes</div>
+              <div class="fv p">Add a note...</div>
+            </div>
+            <div class="btn">Save Changes</div>
+            <div class="del">Delete Record</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="label">C — Borderless Flat (без рамок)</div>
+        <div class="C">
+          <div class="card">
+            <div class="sec">Personal Info</div>
+            <div class="field focus">
+              <div class="fl">First Name</div>
+              <div class="fv">Daniil</div>
+            </div>
+            <div class="field">
+              <div class="fl m">Email</div>
+              <div class="fv">daniil@example.com</div>
+              <div class="req"></div>
+            </div>
+            <div class="field">
+              <div class="fl m">Notes</div>
+              <div class="fv p">Add a note...</div>
+            </div>
+            <div class="btn">Save Changes</div>
+            <div class="del">Delete Record</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

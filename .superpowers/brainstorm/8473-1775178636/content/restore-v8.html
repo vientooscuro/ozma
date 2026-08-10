@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Full Form — Glass Themes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&family=Material+Icons&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* ── THEME SWITCHER ── */
+      body {
+        transition: background 0.4s ease;
+        min-height: 100vh;
+        font-family: 'Manrope', sans-serif;
+      }
+      .theme-bar {
+        display: flex;
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        align-items: center;
+        gap: 10px;
+        z-index: 100;
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.15);
+        padding: 10px 20px;
+      }
+      .theme-btn {
+        transition: all 0.2s;
+        cursor: pointer;
+        border: 1.5px solid rgba(255, 255, 255, 0.3);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 5px 14px;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 700;
+        font-size: 11px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.04em;
+      }
+      .theme-btn.active {
+        border-color: rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.25);
+        color: #fff;
+      }
+
+      /* ── PAGE CHROME ── */
+      .page-chrome {
+        padding-top: 48px;
+        min-height: 100vh;
+      }
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--chrome-line);
+        padding: 14px 24px;
+      }
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .back-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border: 1px solid var(--chrome-line);
+        border-radius: 999px;
+        background: var(--btn-bg);
+        width: 32px;
+        height: 32px;
+        color: var(--ink);
+        font-size: 18px;
+      }
+      .page-title {
+        color: var(--ink);
+        font-weight: 700;
+        font-size: 17px;
+        font-family: 'Space Grotesk', sans-serif;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .topbar-action {
+        cursor: pointer;
+        border: 1px solid var(--chrome-line);
+        border-radius: 999px;
+        background: var(--btn-bg);
+        padding: 5px 14px;
+        color: var(--muted);
+        font-weight: 600;
+        font-size: 11px;
+        font-family: 'Space Grotesk', sans-serif;
+      }
+
+      /* ── FORM LAYOUT ── */
+      .form-layout {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        align-items: start;
+        gap: 16px;
+        padding: 20px 24px;
+      }
+      .form-left {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .form-right {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      /* ── SECTION CARD ── */
+      .section-card {
+        position: relative;
+        backdrop-filter: var(--card-blur);
+        -webkit-backdrop-filter: var(--card-blur);
+        box-shadow: var(--card-shadow);
+        border: var(--card-border);
+        border-radius: var(--card-radius);
+        background: var(--card-bg);
+        overflow: hidden;
+      }
+      .section-card::before {
+        content: var(--card-orb-content, none);
+      }
+
+      .section-header {
+        padding: 12px 16px 0;
+      }
+      .section-label {
+        margin-bottom: 10px;
+        color: var(--section-color);
+        font-weight: 700;
+        font-size: 9px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .fields-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 0 12px 12px;
+      }
+
+      /* ── FIELD ROW ── */
+      .field-row {
+        position: relative;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s,
+          background 0.15s;
+        box-shadow: var(--field-shadow);
+        border: var(--field-border);
+        border-radius: var(--field-radius);
+        background: var(--field-bg);
+        padding: 8px 12px 6px;
+      }
+      .field-row.highlighted {
+        border-color: var(--field-highlight-border);
+        background: var(--field-highlight-bg);
+      }
+      .field-row.focus {
+        box-shadow: var(--focus-ring);
+        border-color: var(--focus-color);
+        background: var(--focus-bg);
+      }
+
+      .field-label-top {
+        margin-bottom: 2px;
+        color: var(--label-color);
+        font-weight: 700;
+        font-size: 9px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      .field-label-top.accent {
+        color: var(--label-accent);
+      }
+      .field-value-text {
+        color: var(--ink);
+        font-weight: 500;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .field-value-text.muted {
+        color: var(--muted);
+      }
+      .field-value-text.placeholder {
+        color: var(--placeholder-color);
+      }
+      .field-value-text.link {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: var(--link-color);
+      }
+      .field-value-text.link::before {
+        opacity: 0.7;
+        content: '↗';
+        font-size: 11px;
+      }
+
+      .field-right {
+        display: flex;
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        align-items: center;
+        gap: 6px;
+        transform: translateY(-50%);
+      }
+      .field-icon {
+        opacity: 0.6;
+        color: var(--muted);
+        font-size: 16px;
+      }
+      .req-dot {
+        box-shadow: var(--req-shadow);
+        border-radius: 50%;
+        background: var(--req-color);
+        width: 5px;
+        height: 5px;
+      }
+
+      /* ── BUTTONS ── */
+      .form-actions {
+        display: flex;
+        gap: 8px;
+        padding: 12px 16px;
+      }
+      .btn-save {
+        cursor: pointer;
+        box-shadow: var(--btn-save-shadow);
+        border: var(--btn-save-border);
+        border-radius: 999px;
+        background: var(--btn-save-bg);
+        padding: 8px 20px;
+        color: var(--btn-save-color);
+        font-weight: 700;
+        font-size: 12px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.03em;
+      }
+      .btn-del {
+        cursor: pointer;
+        border: var(--btn-del-border);
+        border-radius: 999px;
+        background: transparent;
+        padding: 8px 16px;
+        color: var(--btn-del-color);
+        font-weight: 600;
+        font-size: 11px;
+      }
+
+      /* ══════════════════════════════════════════════
+   DARK GLASS THEME
+══════════════════════════════════════════════ */
+      body.dark-glass {
+        background: linear-gradient(
+          145deg,
+          #020810 0%,
+          #07121f 60%,
+          #040c14 100%
+        );
+        background-attachment: fixed;
+        color: #e7ecef;
+
+        --ink: #e7ecef;
+        --muted: #95a7b6;
+        --placeholder-color: rgba(255, 255, 255, 0.22);
+        --link-color: #59d6cf;
+        --chrome-line: rgba(255, 255, 255, 0.08);
+        --btn-bg: rgba(255, 255, 255, 0.06);
+        --section-color: rgba(89, 214, 207, 0.6);
+        --label-color: rgba(255, 255, 255, 0.35);
+        --label-accent: rgba(89, 214, 207, 0.7);
+
+        --card-bg: rgba(255, 255, 255, 0.07);
+        --card-blur: blur(24px) saturate(180%);
+        --card-border: 1px solid rgba(255, 255, 255, 0.14);
+        --card-radius: 18px;
+        --card-shadow: 0 16px 48px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+        --field-bg: rgba(255, 255, 255, 0.05);
+        --field-border: 1px solid rgba(255, 255, 255, 0.1);
+        --field-radius: 10px;
+        --field-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        --field-highlight-bg: rgba(89, 214, 207, 0.04);
+        --field-highlight-border: rgba(89, 214, 207, 0.15);
+        --focus-color: rgba(89, 214, 207, 0.5);
+        --focus-ring: 0 0 0 3px rgba(89, 214, 207, 0.12),
+          0 2px 8px rgba(0, 0, 0, 0.15);
+        --focus-bg: rgba(255, 255, 255, 0.08);
+
+        --req-color: rgba(255, 120, 100, 0.8);
+        --req-shadow: 0 0 6px rgba(255, 120, 100, 0.5);
+
+        --btn-save-bg: linear-gradient(
+          135deg,
+          rgba(89, 214, 207, 0.25),
+          rgba(15, 118, 110, 0.25)
+        );
+        --btn-save-color: #59d6cf;
+        --btn-save-border: 1.5px solid rgba(89, 214, 207, 0.5);
+        --btn-save-shadow: 0 0 20px rgba(89, 214, 207, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        --btn-del-color: rgba(255, 120, 100, 0.7);
+        --btn-del-border: 1px solid rgba(255, 80, 60, 0.25);
+      }
+      body.dark-glass .topbar {
+        border-color: rgba(255, 255, 255, 0.07);
+      }
+
+      /* ambient orbs on page */
+      body.dark-glass::before {
+        position: fixed;
+        top: -80px;
+        right: 10%;
+        z-index: 0;
+        filter: blur(80px);
+        border-radius: 50%;
+        background: rgba(89, 214, 207, 0.07);
+        width: 300px;
+        height: 300px;
+        pointer-events: none;
+        content: '';
+      }
+      body.dark-glass::after {
+        position: fixed;
+        bottom: -60px;
+        left: 5%;
+        z-index: 0;
+        filter: blur(70px);
+        border-radius: 50%;
+        background: rgba(15, 118, 110, 0.09);
+        width: 250px;
+        height: 250px;
+        pointer-events: none;
+        content: '';
+      }
+
+      /* ══════════════════════════════════════════════
+   LIGHT GLASS WARM (Aivazovsky)
+══════════════════════════════════════════════ */
+      body.light-warm {
+        background: #f6f4ef;
+        background-image: radial-gradient(
+            ellipse 55% 38% at 8% 0%,
+            rgba(255, 249, 226, 0.9) 0%,
+            transparent 65%
+          ),
+          radial-gradient(
+            ellipse 40% 30% at 75% 5%,
+            rgba(219, 248, 240, 0.7) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 35% 25% at 40% 80%,
+            rgba(243, 234, 214, 0.5) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse 30% 20% at 95% 70%,
+            rgba(232, 249, 255, 0.42) 0%,
+            transparent 50%
+          );
+        background-attachment: fixed;
+        color: #1f1f1f;
+
+        --ink: #1f1f1f;
+        --muted: #6f6a62;
+        --placeholder-color: rgba(111, 106, 98, 0.38);
+        --link-color: #1a5f7a;
+        --chrome-line: rgba(196, 182, 163, 0.46);
+        --btn-bg: rgba(255, 255, 255, 0.5);
+        --section-color: #1a5f7a;
+        --label-color: #6f6a62;
+        --label-accent: #1a5f7a;
+
+        /* card — liquid glass на тёплом фоне */
+        --card-bg: rgba(255, 255, 255, 0.42);
+        --card-blur: blur(40px) saturate(180%) brightness(1.03);
+        --card-border: 1px solid rgba(255, 255, 255, 0.75);
+        --card-radius: 20px;
+        --card-shadow: 0 16px 48px rgba(28, 23, 15, 0.09),
+          0 0 40px rgba(246, 185, 65, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+        /* fields — Айвазовский бирюза */
+        --field-bg: rgba(255, 255, 255, 0.38);
+        --field-border: 1px solid rgba(143, 214, 228, 0.45);
+        --field-radius: 12px;
+        --field-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85),
+          0 1px 4px rgba(28, 23, 15, 0.05);
+        --field-highlight-bg: rgba(220, 244, 248, 0.4);
+        --field-highlight-border: rgba(61, 184, 200, 0.28);
+        --focus-color: rgba(33, 133, 160, 0.5);
+        --focus-ring: 0 0 0 3px rgba(61, 184, 200, 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        --focus-bg: rgba(220, 244, 248, 0.55);
+
+        --req-color: rgba(220, 80, 60, 0.7);
+        --req-shadow: 0 0 5px rgba(220, 80, 60, 0.28);
+
+        /* кнопка — Айвазовский deep→bright */
+        --btn-save-bg: linear-gradient(
+          135deg,
+          #3db8c8 0%,
+          #2185a0 50%,
+          #1a5f7a 100%
+        );
+        --btn-save-color: #fff;
+        --btn-save-border: none;
+        --btn-save-shadow: 0 4px 18px rgba(33, 133, 160, 0.35),
+          0 0 24px rgba(61, 184, 200, 0.15);
+        --btn-del-color: rgba(200, 60, 40, 0.6);
+        --btn-del-border: 1px solid rgba(220, 60, 40, 0.2);
+      }
+      body.light-warm::before {
+        position: fixed;
+        top: -90px;
+        left: -50px;
+        z-index: 0;
+        filter: blur(90px);
+        border-radius: 50%;
+        background: rgba(255, 249, 226, 0.75);
+        width: 340px;
+        height: 340px;
+        pointer-events: none;
+        content: '';
+      }
+      body.light-warm::after {
+        position: fixed;
+        right: 4%;
+        bottom: -70px;
+        z-index: 0;
+        filter: blur(80px);
+        border-radius: 50%;
+        background: rgba(219, 248, 240, 0.6);
+        width: 280px;
+        height: 280px;
+        pointer-events: none;
+        content: '';
+      }
+
+      /* ══════════════════════════════════════════════
+   LIGHT GLASS COOL
+══════════════════════════════════════════════ */
+      body.light-cool {
+        background: linear-gradient(145deg, #f0f4f8 0%, #e2eaf2 100%);
+        background-attachment: fixed;
+        color: #1e293b;
+
+        --ink: #1e293b;
+        --muted: #94a3b8;
+        --placeholder-color: rgba(148, 163, 184, 0.5);
+        --link-color: #6366f1;
+        --chrome-line: rgba(99, 102, 241, 0.12);
+        --btn-bg: rgba(255, 255, 255, 0.5);
+        --section-color: #6366f1;
+        --label-color: #94a3b8;
+        --label-accent: #6366f1;
+
+        --card-bg: rgba(255, 255, 255, 0.62);
+        --card-blur: blur(20px) saturate(180%);
+        --card-border: 1.5px solid rgba(255, 255, 255, 0.88);
+        --card-radius: 16px;
+        --card-shadow: 0 12px 40px rgba(0, 0, 0, 0.07),
+          inset 0 1px 0 rgba(255, 255, 255, 0.98);
+
+        --field-bg: rgba(255, 255, 255, 0.7);
+        --field-border: 1px solid rgba(99, 102, 241, 0.15);
+        --field-radius: 9px;
+        --field-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        --field-highlight-bg: rgba(99, 102, 241, 0.04);
+        --field-highlight-border: rgba(99, 102, 241, 0.2);
+        --focus-color: rgba(99, 102, 241, 0.5);
+        --focus-ring: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        --focus-bg: rgba(238, 242, 255, 0.7);
+
+        --req-color: rgba(239, 68, 68, 0.7);
+        --req-shadow: 0 0 5px rgba(239, 68, 68, 0.3);
+
+        --btn-save-bg: linear-gradient(135deg, #6366f1, #818cf8);
+        --btn-save-color: #fff;
+        --btn-save-border: none;
+        --btn-save-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        --btn-del-color: rgba(239, 68, 68, 0.7);
+        --btn-del-border: 1px solid rgba(239, 68, 68, 0.2);
+      }
+      body.light-cool::before {
+        position: fixed;
+        top: -50px;
+        right: 5%;
+        z-index: 0;
+        filter: blur(70px);
+        border-radius: 50%;
+        background: rgba(99, 102, 241, 0.09);
+        width: 250px;
+        height: 250px;
+        pointer-events: none;
+        content: '';
+      }
+      body.light-cool::after {
+        position: fixed;
+        bottom: -40px;
+        left: 10%;
+        z-index: 0;
+        filter: blur(60px);
+        border-radius: 50%;
+        background: rgba(139, 92, 246, 0.07);
+        width: 200px;
+        height: 200px;
+        pointer-events: none;
+        content: '';
+      }
+
+      /* relative stacking above orbs */
+      .page-chrome,
+      .theme-bar {
+        position: relative;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body class="dark-glass">
+    <!-- Theme switcher -->
+    <div class="theme-bar">
+      <span
+        style="
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          color: rgba(255, 255, 255, 0.5);
+          text-transform: uppercase;
+          margin-right: 4px;
+        "
+        >Тема:</span
+      >
+      <button class="theme-btn active" data-theme="dark-glass">
+        Dark Glass
+      </button>
+      <button class="theme-btn" data-theme="light-warm">Light Warm</button>
+    </div>
+
+    <div class="page-chrome">
+      <!-- Top bar -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="back-btn">←</div>
+          <div
+            style="width: 1px; height: 20px; background: var(--chrome-line)"
+          ></div>
+          <div class="page-title">Транзакция</div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-action">⊞ Фильтры</div>
+          <div class="topbar-action">⛶</div>
+          <div class="topbar-action">⋮</div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="form-layout">
+        <!-- LEFT COLUMN -->
+        <div class="form-left">
+          <!-- ОСНОВНОЕ 1 -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-label">Основное</div>
+            </div>
+            <div class="fields-wrap">
+              <div class="field-row">
+                <div class="field-label-top">id</div>
+                <div class="field-value-text" style="text-align: right">
+                  36326
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">t: № заказа</div>
+                <div class="field-value-text">39119</div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Тема</div>
+                <div class="field-value-text">
+                  Покупатель: Смирнов Илья Продукт: Абонемент02
+                </div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <div class="btn-save">Сохранить</div>
+              <div class="btn-del">Удалить</div>
+            </div>
+          </div>
+
+          <!-- КОНТРАГЕНТ -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-label">Контрагент</div>
+            </div>
+            <div class="fields-wrap">
+              <div class="field-row">
+                <div class="field-label-top">Покупатель</div>
+                <div class="field-value-text link">Смирнов Илья Николаевич</div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ОСНОВНОЕ 2 -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-label">Основное</div>
+            </div>
+            <div class="fields-wrap">
+              <div class="field-row">
+                <div class="field-label-top">Счёт отправителя</div>
+                <div class="field-value-text link">
+                  Смирнов Илья Николаевич (Банковский счёт)
+                </div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Счёт получателя</div>
+                <div class="field-value-text link">
+                  "GOGOL School" Tinkoff ООО эквайринг (Банковский счёт)
+                </div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+              <div class="field-row highlighted focus">
+                <div class="field-label-top accent">Система оплаты</div>
+                <div class="field-value-text">Тинькофф</div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Сумма</div>
+                <div class="field-value-text">2660</div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">amount_text</div>
+                <div class="field-value-text">
+                  две тысячи шестьсот шестьдесят
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Дата транзакции</div>
+                <div class="field-value-text">01.04.2026 21:54</div>
+                <div class="field-right">
+                  <span class="field-icon">📅</span>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Дата возмещения</div>
+                <div class="field-value-text placeholder">—</div>
+                <div class="field-right">
+                  <span class="field-icon">📅</span>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Продукт</div>
+                <div class="field-value-text link">Абонемент02</div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Заявка</div>
+                <div class="field-value-text link">
+                  Смирнов Илья Николаевич | Абонемент02
+                </div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Статус отмены</div>
+                <div class="field-value-text placeholder">—</div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- КОНТРАГЕНТ 2 -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-label">Контрагент</div>
+            </div>
+            <div class="fields-wrap">
+              <div class="field-row">
+                <div class="field-label-top">Контакт</div>
+                <div class="field-value-text link">Смирнов Илья Николаевич</div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">ФИО</div>
+                <div class="field-value-text">Смирнов Илья Николаевич</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="form-right">
+          <!-- СТАТУС -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-label">Статус</div>
+            </div>
+            <div class="fields-wrap">
+              <div class="field-row highlighted">
+                <div class="field-label-top accent">t: Статус операции</div>
+                <div class="field-value-text" style="font-weight: 700">
+                  AUTHORIZED
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Выслано подтверждение</div>
+                <div class="field-value-text placeholder">—</div>
+                <div class="field-right">
+                  <span class="field-icon">📅</span>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Кто уведомил</div>
+                <div class="field-value-text placeholder">—</div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Менеджер ОП</div>
+                <div class="field-value-text placeholder">—</div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Дата продажи ОП</div>
+                <div class="field-value-text placeholder">—</div>
+                <div class="field-right">
+                  <span class="field-icon">📅</span>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Комментарий</div>
+                <div class="field-value-text muted">+</div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Промокод</div>
+                <div class="field-value-text placeholder">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ПОДАРОК -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-label">Подарок</div>
+            </div>
+            <div class="fields-wrap">
+              <div class="field-row">
+                <div class="field-label-top">Подарок для</div>
+                <div class="field-value-text placeholder">—</div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Подарок почта</div>
+                <div class="field-value-text placeholder">—</div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Подарок телефон</div>
+                <div class="field-value-text placeholder">—</div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Подарок</div>
+                <div class="field-value-text">Нет</div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Сертификат подарка</div>
+                <div class="field-value-text">Нет</div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- СЛУЖЕБНОЕ -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-label">Служебное</div>
+            </div>
+            <div class="fields-wrap">
+              <div class="field-row">
+                <div class="field-label-top">Номер сертификата</div>
+                <div class="field-value-text placeholder">—</div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Внешний номер сертификата</div>
+                <div class="field-value-text placeholder">—</div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">clientID Метрики</div>
+                <div class="field-value-text placeholder">—</div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">clientID Roistat</div>
+                <div class="field-value-text placeholder">—</div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">linked_transaction</div>
+                <div class="field-value-text placeholder">—</div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+              <div class="field-row">
+                <div class="field-label-top">Сертификат на продукт</div>
+                <div class="field-value-text placeholder">—</div>
+                <div class="field-right"><span class="field-icon">▾</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.theme-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var theme = btn.getAttribute('data-theme')
+            document.body.className = theme
+            document.querySelectorAll('.theme-btn').forEach(function (b) {
+              b.classList.remove('active')
+            })
+            btn.classList.add('active')
+          })
+        })
+      })
+    </script>
+  </body>
+</html>

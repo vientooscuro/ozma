@@ -1,0 +1,412 @@
+<h2>Направление дизайна таблицы</h2>
+<p class="subtitle">
+  Три подхода к glass-таблице — одинаковые данные, разная визуальная философия
+</p>
+
+<style>
+  .preview-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  /* ── Shared table shell ── */
+  .demo-table-wrap {
+    border-radius: 16px;
+    overflow: hidden;
+    font-size: 13px;
+    font-family: 'Inter', 'Manrope', system-ui, sans-serif;
+  }
+  .demo-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  /* ══════════════════════════════════════════
+     A — Floating rows (строки-карточки)
+  ══════════════════════════════════════════ */
+  .a-wrap {
+    border: 1px solid rgba(89, 214, 207, 0.1);
+    border-radius: 16px;
+    background: linear-gradient(145deg, #020810 0%, #07121f 60%, #040c14 100%);
+    padding: 1rem;
+  }
+  .a-table {
+    border-collapse: separate;
+    border-spacing: 0 6px;
+  }
+  .a-table thead th {
+    border: none;
+    background: transparent;
+    padding: 6px 14px;
+    color: rgba(89, 214, 207, 0.55);
+    font-weight: 700;
+    font-size: 10px;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .a-table tbody tr td {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.045);
+    padding: 11px 14px;
+    color: #e7ecef;
+  }
+  .a-table tbody tr td:first-child {
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px 0 0 10px;
+  }
+  .a-table tbody tr td:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0 10px 10px 0;
+  }
+  .a-table tbody tr:hover td {
+    border-color: rgba(89, 214, 207, 0.15);
+    background: rgba(89, 214, 207, 0.07);
+  }
+  .a-amount {
+    display: inline-block;
+    border: 1px solid rgba(89, 214, 207, 0.25);
+    border-radius: 999px;
+    background: rgba(89, 214, 207, 0.12);
+    padding: 3px 10px;
+    color: #59d6cf;
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  /* ══════════════════════════════════════════
+     B — Horizontal dividers (минимализм)
+  ══════════════════════════════════════════ */
+  .b-wrap {
+    border: 1px solid rgba(140, 176, 200, 0.12);
+    border-radius: 16px;
+    background: rgba(7, 18, 31, 0.92);
+    overflow: hidden;
+  }
+  .b-table {
+    border-collapse: collapse;
+  }
+  .b-table thead th {
+    border-bottom: 1px solid rgba(140, 176, 200, 0.14);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px 16px;
+    color: rgba(149, 167, 182, 0.8);
+    font-weight: 700;
+    font-size: 10px;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .b-table tbody tr td {
+    border-bottom: 1px solid rgba(140, 176, 200, 0.07);
+    background: transparent;
+    padding: 12px 16px;
+    color: #e7ecef;
+  }
+  .b-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .b-table tbody tr:hover td {
+    background: rgba(89, 214, 207, 0.04);
+  }
+  .b-amount {
+    color: #e7ecef;
+    font-weight: 600;
+  }
+  .b-badge {
+    display: inline-block;
+    border-radius: 6px;
+    background: rgba(89, 214, 207, 0.1);
+    padding: 2px 8px;
+    color: rgba(89, 214, 207, 0.85);
+    font-weight: 600;
+    font-size: 11px;
+  }
+
+  /* ══════════════════════════════════════════
+     C — Frosted-glass panel (полный glassmorphism)
+  ══════════════════════════════════════════ */
+  .c-outer {
+    position: relative;
+    border: 1px solid rgba(89, 214, 207, 0.08);
+    border-radius: 20px;
+    background: linear-gradient(135deg, #020810 0%, #07121f 60%, #040c14 100%);
+    padding: 1.25rem;
+    overflow: hidden;
+  }
+  .c-outer::before {
+    position: absolute;
+    top: -80px;
+    right: -60px;
+    filter: blur(70px);
+    border-radius: 999px;
+    background: rgba(89, 214, 207, 0.07);
+    width: 240px;
+    height: 240px;
+    pointer-events: none;
+    content: '';
+  }
+  .c-outer::after {
+    position: absolute;
+    bottom: -60px;
+    left: -40px;
+    filter: blur(60px);
+    border-radius: 999px;
+    background: rgba(15, 118, 110, 0.09);
+    width: 200px;
+    height: 200px;
+    pointer-events: none;
+    content: '';
+  }
+  .c-glass-panel {
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+  }
+  .c-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  .c-table thead th {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 10px 14px;
+    color: rgba(89, 214, 207, 0.6);
+    font-weight: 700;
+    font-size: 9.5px;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+  .c-table tbody tr td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: transparent;
+    padding: 11px 14px;
+    color: #e7ecef;
+  }
+  .c-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .c-table tbody tr:hover td {
+    background: rgba(89, 214, 207, 0.055);
+  }
+  .c-table tbody tr.c-row-sel td {
+    background: rgba(89, 214, 207, 0.09);
+  }
+  .c-amount {
+    display: inline-block;
+    border: 1px solid rgba(89, 214, 207, 0.28);
+    border-radius: 999px;
+    background: rgba(89, 214, 207, 0.13);
+    padding: 3px 10px;
+    color: #59d6cf;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .c-muted {
+    color: rgba(149, 167, 182, 0.7);
+    font-size: 12px;
+  }
+</style>
+
+<div class="preview-wrap">
+  <!-- Option A -->
+  <div
+    class="option"
+    data-choice="a"
+    onclick="toggleSelect(this)"
+    style="
+      padding: 0;
+      overflow: hidden;
+      background: transparent;
+      border: 2px solid transparent;
+    "
+  >
+    <div style="padding: 1rem 1.25rem 0.5rem; background: rgba(0, 0, 0, 0.2)">
+      <div class="letter">A</div>
+      <div class="content" style="margin-top: 0.25rem">
+        <h3>Floating rows</h3>
+        <p>
+          Каждая строка — отдельная карточка с закруглёнными углами. Строки
+          "плавают" над фоном.
+        </p>
+      </div>
+    </div>
+    <div style="padding: 0.75rem 1rem 1rem; pointer-events: none">
+      <div class="a-wrap">
+        <table class="demo-table a-table">
+          <thead>
+            <tr>
+              <th>Сумма</th>
+              <th>id</th>
+              <th>Счёт отправителя</th>
+              <th>Счёт получателя</th>
+              <th>Дата</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="a-amount">25 000</span></td>
+              <td style="color: rgba(149, 167, 182, 0.6)">36328</td>
+              <td>Гвоздев Руслан</td>
+              <td>GOGOL School · Яндекс-сплит</td>
+              <td style="color: rgba(149, 167, 182, 0.6)">02.04.2026</td>
+            </tr>
+            <tr>
+              <td><span class="a-amount">2 660</span></td>
+              <td style="color: rgba(149, 167, 182, 0.6)">36326</td>
+              <td>Смирнов Илья Николаевич</td>
+              <td>GOGOL School · Tinkoff OOO</td>
+              <td style="color: rgba(149, 167, 182, 0.6)">01.04.2026</td>
+            </tr>
+            <tr>
+              <td><span class="a-amount">2 800</span></td>
+              <td style="color: rgba(149, 167, 182, 0.6)">36325</td>
+              <td>Антоневич Катерина</td>
+              <td>GOGOL School · Tinkoff OOO</td>
+              <td style="color: rgba(149, 167, 182, 0.6)">01.04.2026</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div
+    class="option"
+    data-choice="b"
+    onclick="toggleSelect(this)"
+    style="
+      padding: 0;
+      overflow: hidden;
+      background: transparent;
+      border: 2px solid transparent;
+    "
+  >
+    <div style="padding: 1rem 1.25rem 0.5rem; background: rgba(0, 0, 0, 0.2)">
+      <div class="letter">B</div>
+      <div class="content" style="margin-top: 0.25rem">
+        <h3>Horizontal dividers</h3>
+        <p>
+          Строгий минимализм: только горизонтальные линии-разделители. Максимум
+          данных, ноль лишнего.
+        </p>
+      </div>
+    </div>
+    <div style="padding: 0.75rem 1rem 1rem; pointer-events: none">
+      <div class="b-wrap">
+        <table class="demo-table b-table">
+          <thead>
+            <tr>
+              <th>Сумма</th>
+              <th>id</th>
+              <th>Счёт отправителя</th>
+              <th>Счёт получателя</th>
+              <th>Дата</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="b-amount">25 000 ₽</span></td>
+              <td><span class="b-badge">36328</span></td>
+              <td>Гвоздев Руслан</td>
+              <td>GOGOL School · Яндекс-сплит</td>
+              <td style="color: rgba(149, 167, 182, 0.6)">02.04.2026</td>
+            </tr>
+            <tr>
+              <td><span class="b-amount">2 660 ₽</span></td>
+              <td><span class="b-badge">36326</span></td>
+              <td>Смирнов Илья Николаевич</td>
+              <td>GOGOL School · Tinkoff OOO</td>
+              <td style="color: rgba(149, 167, 182, 0.6)">01.04.2026</td>
+            </tr>
+            <tr>
+              <td><span class="b-amount">2 800 ₽</span></td>
+              <td><span class="b-badge">36325</span></td>
+              <td>Антоневич Катерина</td>
+              <td>GOGOL School · Tinkoff OOO</td>
+              <td style="color: rgba(149, 167, 182, 0.6)">01.04.2026</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div
+    class="option"
+    data-choice="c"
+    onclick="toggleSelect(this)"
+    style="
+      padding: 0;
+      overflow: hidden;
+      background: transparent;
+      border: 2px solid transparent;
+    "
+  >
+    <div style="padding: 1rem 1.25rem 0.5rem; background: rgba(0, 0, 0, 0.2)">
+      <div class="letter">C</div>
+      <div class="content" style="margin-top: 0.25rem">
+        <h3>Frosted glass panel</h3>
+        <p>
+          Вся таблица — один glassmorphism-контейнер с backdrop-blur. Строки
+          прозрачны, highlight при ховере.
+        </p>
+      </div>
+    </div>
+    <div style="padding: 0.75rem 1rem 1rem; pointer-events: none">
+      <div class="c-outer">
+        <div class="c-glass-panel">
+          <table class="demo-table c-table">
+            <thead>
+              <tr>
+                <th>Сумма</th>
+                <th>id</th>
+                <th>Счёт отправителя</th>
+                <th>Счёт получателя</th>
+                <th>Дата</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="c-row-sel">
+                <td><span class="c-amount">25 000</span></td>
+                <td class="c-muted">36328</td>
+                <td>Гвоздев Руслан</td>
+                <td>GOGOL School · Яндекс-сплит</td>
+                <td class="c-muted">02.04.2026</td>
+              </tr>
+              <tr>
+                <td><span class="c-amount">2 660</span></td>
+                <td class="c-muted">36326</td>
+                <td>Смирнов Илья Николаевич</td>
+                <td>GOGOL School · Tinkoff OOO</td>
+                <td class="c-muted">01.04.2026</td>
+              </tr>
+              <tr>
+                <td><span class="c-amount">2 800</span></td>
+                <td class="c-muted">36325</td>
+                <td>Антоневич Катерина</td>
+                <td>GOGOL School · Tinkoff OOO</td>
+                <td class="c-muted">01.04.2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

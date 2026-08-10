@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warm — Dark Glass Analog</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: #c8c0b2;
+        padding: 32px 24px;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI',
+          sans-serif;
+      }
+      h1 {
+        margin-bottom: 6px;
+        color: #2a2318;
+        font-weight: 700;
+        font-size: 18px;
+      }
+      .sub {
+        margin-bottom: 28px;
+        color: rgba(0, 0, 0, 0.4);
+        font-size: 12px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        max-width: 820px;
+      }
+      .col-label {
+        margin-bottom: 10px;
+        color: rgba(0, 0, 0, 0.3);
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      /* ── DARK GLASS (reference) ── */
+      .dark-wrap {
+        position: relative;
+        border-radius: 20px;
+        background: linear-gradient(
+          145deg,
+          #060d18 0%,
+          #0d1f35 60%,
+          #071220 100%
+        );
+        padding: 28px;
+        overflow: hidden;
+      }
+      .dark-wrap::before {
+        position: absolute;
+        top: -40px;
+        right: -20px;
+        filter: blur(40px);
+        border-radius: 50%;
+        background: rgba(89, 214, 207, 0.12);
+        width: 140px;
+        height: 140px;
+        content: '';
+      }
+      .dark-wrap::after {
+        position: absolute;
+        bottom: -20px;
+        left: 10px;
+        filter: blur(30px);
+        border-radius: 50%;
+        background: rgba(15, 118, 110, 0.18);
+        width: 100px;
+        height: 100px;
+        content: '';
+      }
+      .dark-card {
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        box-shadow:
+          0 16px 48px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 22px;
+      }
+      .dark-card .sec {
+        margin-bottom: 14px;
+        color: rgba(89, 214, 207, 0.6);
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .dark-card .field {
+        position: relative;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 16px 12px 7px;
+      }
+      .dark-card .field.focus {
+        box-shadow:
+          0 0 0 3px rgba(89, 214, 207, 0.12),
+          0 4px 16px rgba(0, 0, 0, 0.2);
+        border-color: rgba(89, 214, 207, 0.5);
+        background: rgba(255, 255, 255, 0.09);
+      }
+      .dark-card .fl {
+        margin-bottom: 3px;
+        color: rgba(89, 214, 207, 0.65);
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .dark-card .fl.m {
+        color: rgba(255, 255, 255, 0.35);
+      }
+      .dark-card .fv {
+        color: rgba(255, 255, 255, 0.88);
+        font-size: 13px;
+      }
+      .dark-card .fv.p {
+        color: rgba(255, 255, 255, 0.25);
+      }
+      .dark-card .req {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        box-shadow: 0 0 6px rgba(255, 120, 100, 0.5);
+        border-radius: 50%;
+        background: rgba(255, 120, 100, 0.8);
+        width: 5px;
+        height: 5px;
+      }
+      .dark-card .btn {
+        margin-top: 6px;
+        box-shadow:
+          0 0 20px rgba(89, 214, 207, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        border: 1.5px solid rgba(89, 214, 207, 0.5);
+        border-radius: 10px;
+        background: linear-gradient(
+          135deg,
+          rgba(89, 214, 207, 0.28),
+          rgba(15, 118, 110, 0.28)
+        );
+        padding: 9px 14px;
+        color: #59d6cf;
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        text-align: center;
+      }
+      .dark-card .del {
+        margin-top: 6px;
+        border: 1px solid rgba(255, 80, 60, 0.3);
+        border-radius: 8px;
+        background: rgba(255, 80, 60, 0.1);
+        padding: 7px 14px;
+        color: rgba(255, 120, 100, 0.8);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      /* ── WARM GLASS ANALOG ── */
+      .warm-wrap {
+        position: relative;
+        border-radius: 20px;
+        background: linear-gradient(
+          145deg,
+          #f2ede4 0%,
+          #e8e0d2 60%,
+          #ede4d6 100%
+        );
+        padding: 28px;
+        overflow: hidden;
+      }
+      /* тёплые орбы, аналог dark-glass орбов */
+      .warm-wrap::before {
+        position: absolute;
+        top: -40px;
+        right: -20px;
+        filter: blur(40px);
+        border-radius: 50%;
+        background: rgba(15, 118, 110, 0.14);
+        width: 140px;
+        height: 140px;
+        content: '';
+      }
+      .warm-wrap::after {
+        position: absolute;
+        bottom: -20px;
+        left: 10px;
+        filter: blur(30px);
+        border-radius: 50%;
+        background: rgba(196, 158, 100, 0.18);
+        width: 100px;
+        height: 100px;
+        content: '';
+      }
+      .warm-card {
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        box-shadow:
+          0 16px 48px rgba(28, 23, 15, 0.12),
+          inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.22);
+        padding: 22px;
+      }
+      .warm-card .sec {
+        margin-bottom: 14px;
+        color: rgba(15, 118, 110, 0.65);
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .warm-card .field {
+        position: relative;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 16px rgba(28, 23, 15, 0.07);
+        border: 1.5px solid rgba(0, 0, 0, 0.08);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.28);
+        padding: 16px 12px 7px;
+      }
+      .warm-card .field.focus {
+        box-shadow:
+          0 0 0 3px rgba(15, 118, 110, 0.1),
+          0 4px 16px rgba(28, 23, 15, 0.07);
+        border-color: rgba(15, 118, 110, 0.4);
+        background: rgba(255, 255, 255, 0.38);
+      }
+      .warm-card .fl {
+        margin-bottom: 3px;
+        color: rgba(15, 118, 110, 0.75);
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .warm-card .fl.m {
+        color: rgba(0, 0, 0, 0.35);
+      }
+      .warm-card .fv {
+        color: rgba(20, 16, 10, 0.88);
+        font-size: 13px;
+      }
+      .warm-card .fv.p {
+        color: rgba(0, 0, 0, 0.22);
+      }
+      .warm-card .req {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        box-shadow: 0 0 6px rgba(220, 80, 60, 0.35);
+        border-radius: 50%;
+        background: rgba(220, 80, 60, 0.75);
+        width: 5px;
+        height: 5px;
+      }
+      .warm-card .btn {
+        margin-top: 6px;
+        box-shadow:
+          0 0 20px rgba(15, 118, 110, 0.14),
+          inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        border: 1.5px solid rgba(15, 118, 110, 0.45);
+        border-radius: 10px;
+        background: linear-gradient(
+          135deg,
+          rgba(15, 118, 110, 0.22),
+          rgba(15, 118, 110, 0.16)
+        );
+        padding: 9px 14px;
+        color: #0f766e;
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        text-align: center;
+      }
+      .warm-card .del {
+        margin-top: 6px;
+        border: 1px solid rgba(220, 60, 40, 0.22);
+        border-radius: 8px;
+        background: rgba(220, 60, 40, 0.06);
+        padding: 7px 14px;
+        color: rgba(200, 60, 40, 0.7);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Light Glass Warm — аналог Dark Glass</h1>
+    <p class="sub">
+      Те же эффекты (blur 24px, saturate 180%, glow, orbs, inset), только на
+      тёплом светлом фоне
+    </p>
+
+    <div class="grid">
+      <div>
+        <div class="col-label">Dark Glass (для сравнения)</div>
+        <div class="dark-wrap">
+          <div class="dark-card">
+            <div class="sec">Personal Info</div>
+            <div class="field focus">
+              <div class="fl">First Name</div>
+              <div class="fv">Daniil</div>
+            </div>
+            <div class="field">
+              <div class="fl m">Email</div>
+              <div class="fv">daniil@example.com</div>
+              <div class="req"></div>
+            </div>
+            <div class="field">
+              <div class="fl m">Notes</div>
+              <div class="fv p">Add a note...</div>
+            </div>
+            <div class="btn">Save Changes</div>
+            <div class="del">Delete Record</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="col-label">Light Glass Warm — новый вариант</div>
+        <div class="warm-wrap">
+          <div class="warm-card">
+            <div class="sec">Personal Info</div>
+            <div class="field focus">
+              <div class="fl">First Name</div>
+              <div class="fv">Daniil</div>
+            </div>
+            <div class="field">
+              <div class="fl m">Email</div>
+              <div class="fv">daniil@example.com</div>
+              <div class="req"></div>
+            </div>
+            <div class="field">
+              <div class="fl m">Notes</div>
+              <div class="fv p">Add a note...</div>
+            </div>
+            <div class="btn">Save Changes</div>
+            <div class="del">Delete Record</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

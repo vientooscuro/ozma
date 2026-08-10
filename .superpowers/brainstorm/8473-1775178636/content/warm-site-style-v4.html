@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warm Glass — site style variants</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f6f4ef;
+        --card: #fffdf8;
+        --ink: #1f1f1f;
+        --muted: #6f6a62;
+        --accent: #0f766e;
+        --accent-2: #f6b941;
+        --line: rgba(196, 182, 163, 0.46);
+        --shadow: 0 14px 40px rgba(28, 23, 15, 0.08);
+        --panel-bg: rgba(255, 253, 248, 0.62);
+        --panel-border: rgba(196, 182, 163, 0.38);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        background-image: radial-gradient(
+            ellipse 60% 40% at 10% 0%,
+            rgba(246, 185, 65, 0.13) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            ellipse 50% 40% at 90% 0%,
+            rgba(15, 118, 110, 0.1) 0%,
+            transparent 70%
+          );
+        padding: 32px 24px;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family:
+          'Manrope',
+          -apple-system,
+          sans-serif;
+      }
+      h1 {
+        margin-bottom: 6px;
+        font-weight: 700;
+        font-size: 20px;
+        font-family: 'Space Grotesk', sans-serif;
+      }
+      .sub {
+        margin-bottom: 32px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .col-label {
+        margin-bottom: 10px;
+        color: var(--muted);
+        font-weight: 700;
+        font-size: 9px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      /* ── SHARED FIELD STYLES ── */
+      .field-label {
+        margin-bottom: 3px;
+        font-weight: 700;
+        font-size: 9px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .field-value {
+        font-weight: 500;
+        font-size: 13px;
+      }
+      .field-value.placeholder {
+        color: rgba(111, 106, 98, 0.45);
+      }
+      .req-dot {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        box-shadow: 0 0 5px rgba(220, 80, 60, 0.3);
+        border-radius: 50%;
+        background: rgba(220, 80, 60, 0.7);
+        width: 5px;
+        height: 5px;
+      }
+      .section-title {
+        margin-bottom: 14px;
+        font-weight: 700;
+        font-size: 9px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      /* ══════════════════════════════
+     A — Panel style (как панели сайта)
+     blur(22px) sat(135%), border-radius 20px
+  ══════════════════════════════ */
+      .wrap-a {
+        border-radius: 20px;
+        background: var(--bg);
+        background-image: radial-gradient(
+            ellipse 80% 60% at 20% -10%,
+            rgba(246, 185, 65, 0.15) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 60% 50% at 80% 5%,
+            rgba(15, 118, 110, 0.1) 0%,
+            transparent 60%
+          );
+        padding: 24px;
+      }
+      .card-a {
+        backdrop-filter: blur(22px) saturate(135%);
+        -webkit-backdrop-filter: blur(22px) saturate(135%);
+        box-shadow: var(--shadow);
+        border: 1px solid var(--panel-border);
+        border-radius: 20px;
+        background: var(--panel-bg);
+        padding: 22px;
+      }
+      .card-a .section-title {
+        color: var(--accent);
+      }
+      .card-a .field {
+        position: relative;
+        margin-bottom: 8px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(255, 253, 248, 0.55);
+        padding: 15px 12px 7px;
+      }
+      .card-a .field.focus {
+        box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+        border-color: rgba(15, 118, 110, 0.35);
+        background: rgba(255, 253, 248, 0.75);
+      }
+      .card-a .field-label {
+        color: var(--accent);
+      }
+      .card-a .field-label.m {
+        color: var(--muted);
+      }
+      .card-a .field-value {
+        color: var(--ink);
+      }
+      .card-a .btn-primary {
+        margin-top: 10px;
+        box-shadow: 0 4px 16px rgba(15, 118, 110, 0.22);
+        border-radius: 999px;
+        background: var(--accent);
+        padding: 9px 16px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 12px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.03em;
+        text-align: center;
+      }
+      .card-a .btn-danger {
+        margin-top: 5px;
+        border: 1px solid rgba(220, 60, 40, 0.2);
+        border-radius: 999px;
+        background: transparent;
+        padding: 7px 16px;
+        color: rgba(200, 60, 40, 0.65);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      /* ══════════════════════════════
+     B — Card style (как карточки приложений)
+     blur(16px) sat(130%), 14px radius, amber glow
+  ══════════════════════════════ */
+      .wrap-b {
+        border-radius: 20px;
+        background: var(--bg);
+        background-image: radial-gradient(
+          ellipse 70% 50% at 50% -5%,
+          rgba(246, 185, 65, 0.18) 0%,
+          transparent 65%
+        );
+        padding: 24px;
+      }
+      .card-b {
+        backdrop-filter: blur(16px) saturate(130%);
+        -webkit-backdrop-filter: blur(16px) saturate(130%);
+        box-shadow:
+          var(--shadow),
+          0 0 44px rgba(246, 185, 65, 0.1);
+        border: 1px solid var(--panel-border);
+        border-radius: 14px;
+        background: linear-gradient(
+          160deg,
+          rgba(255, 253, 248, 0.78) 0%,
+          rgba(255, 250, 238, 0.65) 100%
+        );
+        padding: 22px;
+      }
+      .card-b .section-title {
+        color: var(--muted);
+      }
+      .card-b .field {
+        position: relative;
+        margin-bottom: 8px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 253, 248, 0.6);
+        padding: 15px 12px 7px;
+      }
+      .card-b .field.focus {
+        box-shadow: 0 0 0 3px rgba(246, 185, 65, 0.12);
+        border-color: rgba(246, 185, 65, 0.5);
+        background: rgba(255, 253, 248, 0.82);
+      }
+      .card-b .field-label {
+        color: rgba(246, 185, 65, 0.8);
+      }
+      .card-b .field-label.m {
+        color: var(--muted);
+      }
+      .card-b .field-value {
+        color: var(--ink);
+      }
+      .card-b .btn-primary {
+        margin-top: 10px;
+        box-shadow: 0 4px 16px rgba(246, 185, 65, 0.3);
+        border-radius: 999px;
+        background: linear-gradient(
+          135deg,
+          rgba(246, 185, 65, 0.9),
+          rgba(230, 160, 30, 0.85)
+        );
+        padding: 9px 16px;
+        color: #1f1f1f;
+        font-weight: 700;
+        font-size: 12px;
+        font-family: 'Space Grotesk', sans-serif;
+        text-align: center;
+      }
+      .card-b .btn-danger {
+        margin-top: 5px;
+        border: 1px solid rgba(220, 60, 40, 0.2);
+        border-radius: 999px;
+        background: transparent;
+        padding: 7px 16px;
+        color: rgba(200, 60, 40, 0.65);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      /* ══════════════════════════════
+     C — Contact-button style
+     Animated orbs, per-field glow (teal+amber), inset highlight
+  ══════════════════════════════ */
+      .wrap-c {
+        position: relative;
+        border-radius: 20px;
+        background: var(--bg);
+        background-image: radial-gradient(
+            ellipse 80% 60% at 15% 5%,
+            rgba(246, 185, 65, 0.16) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 60% 50% at 85% 10%,
+            rgba(15, 118, 110, 0.12) 0%,
+            transparent 60%
+          );
+        padding: 24px;
+        overflow: hidden;
+      }
+      .wrap-c::before {
+        position: absolute;
+        top: -20px;
+        right: 10px;
+        z-index: 0;
+        filter: blur(30px);
+        border-radius: 50%;
+        background: rgba(246, 185, 65, 0.2);
+        width: 100px;
+        height: 100px;
+        content: '';
+      }
+      .wrap-c::after {
+        position: absolute;
+        bottom: -15px;
+        left: 15px;
+        z-index: 0;
+        filter: blur(25px);
+        border-radius: 50%;
+        background: rgba(15, 118, 110, 0.15);
+        width: 80px;
+        height: 80px;
+        content: '';
+      }
+      .card-c {
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(22px) saturate(140%);
+        -webkit-backdrop-filter: blur(22px) saturate(140%);
+        box-shadow:
+          var(--shadow),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 20px;
+        background: rgba(255, 253, 248, 0.52);
+        padding: 22px;
+      }
+      .card-c .section-title {
+        color: var(--accent);
+      }
+      .card-c .field {
+        position: relative;
+        margin-bottom: 8px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(255, 253, 248, 0.5);
+        padding: 15px 12px 7px;
+      }
+      .card-c .field.focus {
+        box-shadow:
+          0 0 0 3px rgba(15, 118, 110, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        border-color: rgba(15, 118, 110, 0.4);
+        background: rgba(255, 253, 248, 0.72);
+      }
+      .card-c .field.amber {
+        box-shadow:
+          0 0 0 2px rgba(246, 185, 65, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        border-color: rgba(246, 185, 65, 0.35);
+      }
+      .card-c .field-label {
+        color: var(--accent);
+      }
+      .card-c .field-label.amber-l {
+        color: rgba(200, 145, 20, 0.9);
+      }
+      .card-c .field-label.m {
+        color: var(--muted);
+      }
+      .card-c .field-value {
+        color: var(--ink);
+      }
+      .card-c .btn-primary {
+        margin-top: 10px;
+        box-shadow:
+          0 4px 16px rgba(15, 118, 110, 0.22),
+          0 0 24px rgba(15, 118, 110, 0.1);
+        border-radius: 999px;
+        background: var(--accent);
+        padding: 9px 16px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 12px;
+        font-family: 'Space Grotesk', sans-serif;
+        text-align: center;
+      }
+      .card-c .btn-danger {
+        margin-top: 5px;
+        border: 1px solid rgba(220, 60, 40, 0.2);
+        border-radius: 999px;
+        background: transparent;
+        padding: 7px 16px;
+        color: rgba(200, 60, 40, 0.65);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Light Glass Warm — в стиле сайта</h1>
+    <p class="sub">
+      Manrope + Space Grotesk, тёплый #f6f4ef, amber+teal акценты, три
+      интерпретации
+    </p>
+
+    <div class="grid">
+      <!-- A -->
+      <div>
+        <div class="col-label">A — Panel (blur 22px, sat 135%)</div>
+        <div class="wrap-a">
+          <div class="card-a">
+            <div class="section-title">Personal Info</div>
+            <div class="field focus">
+              <div class="field-label">First Name</div>
+              <div class="field-value">Daniil</div>
+            </div>
+            <div class="field">
+              <div class="field-label m">Email</div>
+              <div class="field-value">daniil@example.com</div>
+              <div class="req-dot"></div>
+            </div>
+            <div class="field">
+              <div class="field-label m">Notes</div>
+              <div class="field-value placeholder">Add a note...</div>
+            </div>
+            <div class="btn-primary">Save Changes</div>
+            <div class="btn-danger">Delete Record</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B -->
+      <div>
+        <div class="col-label">B — Card + amber glow</div>
+        <div class="wrap-b">
+          <div class="card-b">
+            <div class="section-title">Personal Info</div>
+            <div class="field focus">
+              <div class="field-label">First Name</div>
+              <div class="field-value">Daniil</div>
+            </div>
+            <div class="field">
+              <div class="field-label m">Email</div>
+              <div class="field-value">daniil@example.com</div>
+              <div class="req-dot"></div>
+            </div>
+            <div class="field">
+              <div class="field-label m">Notes</div>
+              <div class="field-value placeholder">Add a note...</div>
+            </div>
+            <div class="btn-primary">Save Changes</div>
+            <div class="btn-danger">Delete Record</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C -->
+      <div>
+        <div class="col-label">C — Orbs + inset + dual glow ★</div>
+        <div class="wrap-c">
+          <div class="card-c">
+            <div class="section-title">Personal Info</div>
+            <div class="field focus">
+              <div class="field-label">First Name</div>
+              <div class="field-value">Daniil</div>
+            </div>
+            <div class="field amber">
+              <div class="field-label amber-l">Email</div>
+              <div class="field-value">daniil@example.com</div>
+              <div class="req-dot"></div>
+            </div>
+            <div class="field">
+              <div class="field-label m">Notes</div>
+              <div class="field-value placeholder">Add a note...</div>
+            </div>
+            <div class="btn-primary">Save Changes</div>
+            <div class="btn-danger">Delete Record</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

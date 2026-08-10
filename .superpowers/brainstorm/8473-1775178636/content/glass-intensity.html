@@ -1,0 +1,333 @@
+<h2>Насколько выраженный glass-эффект?</h2>
+<p class="subtitle">От тонкого намёка до полного glassmorphism</p>
+
+<div class="cards">
+  <div class="card" data-choice="subtle" onclick="toggleSelect(this)">
+    <div
+      class="card-image"
+      style="
+        background: linear-gradient(135deg, #0b1623 0%, #0f2540 100%);
+        padding: 24px;
+        border-radius: 8px;
+      "
+    >
+      <div
+        style="
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 14px;
+          padding: 20px;
+        "
+      >
+        <div style="position: relative; margin-bottom: 12px">
+          <div
+            style="
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: 10px;
+              padding: 16px 12px 6px;
+              background: rgba(255, 255, 255, 0.03);
+            "
+          >
+            <div
+              style="
+                font-size: 9px;
+                color: rgba(255, 255, 255, 0.35);
+                font-weight: 600;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                margin-bottom: 2px;
+              "
+            >
+              Email
+            </div>
+            <div style="font-size: 13px; color: rgba(255, 255, 255, 0.7)">
+              user@example.com
+            </div>
+          </div>
+        </div>
+        <div style="position: relative; margin-bottom: 14px">
+          <div
+            style="
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: 10px;
+              padding: 16px 12px 6px;
+              background: rgba(255, 255, 255, 0.03);
+            "
+          >
+            <div
+              style="
+                font-size: 9px;
+                color: rgba(255, 255, 255, 0.35);
+                font-weight: 600;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                margin-bottom: 2px;
+              "
+            >
+              Password
+            </div>
+            <div style="font-size: 13px; color: rgba(255, 255, 255, 0.25)">
+              ••••••••
+            </div>
+          </div>
+        </div>
+        <div
+          style="
+            background: rgba(89, 214, 207, 0.15);
+            border: 1px solid rgba(89, 214, 207, 0.25);
+            color: #59d6cf;
+            border-radius: 8px;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            font-weight: 600;
+          "
+        >
+          Save
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Subtle — Тонкий</h3>
+      <p>
+        Едва заметная прозрачность, минимальный blur. Сдержанно и
+        профессионально.
+      </p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="balanced" onclick="toggleSelect(this)">
+    <div
+      class="card-image"
+      style="
+        background: linear-gradient(135deg, #0b1623 0%, #132035 100%);
+        padding: 24px;
+        border-radius: 8px;
+      "
+    >
+      <div
+        style="
+          background: rgba(255, 255, 255, 0.07);
+          backdrop-filter: blur(16px);
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          border-radius: 16px;
+          padding: 20px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        "
+      >
+        <div style="position: relative; margin-bottom: 12px">
+          <div
+            style="
+              border: 1.5px solid rgba(255, 255, 255, 0.15);
+              border-radius: 12px;
+              padding: 18px 12px 7px;
+              background: rgba(255, 255, 255, 0.06);
+            "
+          >
+            <div
+              style="
+                font-size: 9px;
+                color: rgba(255, 255, 255, 0.4);
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                margin-bottom: 2px;
+              "
+            >
+              Email
+            </div>
+            <div style="font-size: 13px; color: rgba(255, 255, 255, 0.82)">
+              user@example.com
+            </div>
+          </div>
+        </div>
+        <div style="position: relative; margin-bottom: 14px">
+          <div
+            style="
+              border: 1.5px solid rgba(255, 255, 255, 0.15);
+              border-radius: 12px;
+              padding: 18px 12px 7px;
+              background: rgba(255, 255, 255, 0.06);
+            "
+          >
+            <div
+              style="
+                font-size: 9px;
+                color: rgba(255, 255, 255, 0.4);
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                margin-bottom: 2px;
+              "
+            >
+              Password
+            </div>
+            <div style="font-size: 13px; color: rgba(255, 255, 255, 0.3)">
+              ••••••••
+            </div>
+          </div>
+        </div>
+        <div
+          style="
+            background: rgba(89, 214, 207, 0.2);
+            border: 1.5px solid rgba(89, 214, 207, 0.4);
+            color: #59d6cf;
+            border-radius: 10px;
+            text-align: center;
+            padding: 9px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 0 12px rgba(89, 214, 207, 0.1);
+          "
+        >
+          Save
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Balanced — Сбалансированный ★</h3>
+      <p>
+        Заметный blur и прозрачность, чёткие границы, мягкие тени. Рекомендую.
+      </p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="intense" onclick="toggleSelect(this)">
+    <div
+      class="card-image"
+      style="
+        background: linear-gradient(
+          135deg,
+          #060d18 0%,
+          #0d1f35 50%,
+          #071220 100%
+        );
+        padding: 24px;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+      "
+    >
+      <div
+        style="
+          position: absolute;
+          width: 80px;
+          height: 80px;
+          background: rgba(89, 214, 207, 0.15);
+          border-radius: 50%;
+          top: -10px;
+          right: 10px;
+          filter: blur(20px);
+        "
+      ></div>
+      <div
+        style="
+          position: absolute;
+          width: 60px;
+          height: 60px;
+          background: rgba(15, 118, 110, 0.2);
+          border-radius: 50%;
+          bottom: 10px;
+          left: 20px;
+          filter: blur(15px);
+        "
+      ></div>
+      <div
+        style="
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(24px) saturate(180%);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 18px;
+          padding: 20px;
+          box-shadow:
+            0 16px 48px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+          position: relative;
+        "
+      >
+        <div style="position: relative; margin-bottom: 12px">
+          <div
+            style="
+              border: 1.5px solid rgba(89, 214, 207, 0.25);
+              border-radius: 12px;
+              padding: 18px 12px 7px;
+              background: rgba(255, 255, 255, 0.08);
+              box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            "
+          >
+            <div
+              style="
+                font-size: 9px;
+                color: rgba(89, 214, 207, 0.7);
+                font-weight: 700;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                margin-bottom: 2px;
+              "
+            >
+              Email
+            </div>
+            <div style="font-size: 13px; color: rgba(255, 255, 255, 0.9)">
+              user@example.com
+            </div>
+          </div>
+        </div>
+        <div style="position: relative; margin-bottom: 14px">
+          <div
+            style="
+              border: 1.5px solid rgba(255, 255, 255, 0.12);
+              border-radius: 12px;
+              padding: 18px 12px 7px;
+              background: rgba(255, 255, 255, 0.06);
+              box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            "
+          >
+            <div
+              style="
+                font-size: 9px;
+                color: rgba(255, 255, 255, 0.4);
+                font-weight: 700;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                margin-bottom: 2px;
+              "
+            >
+              Password
+            </div>
+            <div style="font-size: 13px; color: rgba(255, 255, 255, 0.3)">
+              ••••••••
+            </div>
+          </div>
+        </div>
+        <div
+          style="
+            background: linear-gradient(
+              135deg,
+              rgba(89, 214, 207, 0.3),
+              rgba(15, 118, 110, 0.3)
+            );
+            border: 1.5px solid rgba(89, 214, 207, 0.5);
+            color: #59d6cf;
+            border-radius: 10px;
+            text-align: center;
+            padding: 9px;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow:
+              0 0 20px rgba(89, 214, 207, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          "
+        >
+          Save
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Intense — Насыщенный</h3>
+      <p>
+        Максимальный blur, saturate, glow-эффекты, inset highlights. Эффектно и
+        смело.
+      </p>
+    </div>
+  </div>
+</div>

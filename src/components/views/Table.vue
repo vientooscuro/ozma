@@ -4602,12 +4602,11 @@ th.column-drop-target {
     .page-select {
       border-color: var(--default-backgroundColor);
       background-color: var(--default-backgroundColor);
-      width: 3.5rem; /* To fit any option text */
+      /* Auto width so multi-digit values (50, 100, 500) plus the native
+         dropdown caret are never clipped; floor keeps two digits comfortable. */
+      width: auto;
+      min-width: 4rem;
       font-size: 0.75rem;
-
-      ::v-deep select {
-        padding-right: 1rem;
-      }
     }
   }
 }

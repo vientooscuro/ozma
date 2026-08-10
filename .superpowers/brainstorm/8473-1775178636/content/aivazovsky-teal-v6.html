@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aivazovsky Sea — gradient variants</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f6f4ef;
+        --ink: #1f1f1f;
+        --muted: #6f6a62;
+        --line: rgba(196, 182, 163, 0.46);
+        --shadow: 0 14px 40px rgba(28, 23, 15, 0.08);
+
+        /* Айвазовский: цвета морской волны */
+        /* Глубокий сине-зелёный → бирюза → светлая пена */
+        --sea-deep: #1a6b6b; /* тёмная глубина */
+        --sea-mid: #2a9d8f; /* основная волна */
+        --sea-bright: #48c9b0; /* гребень волны */
+        --sea-foam: #a8e6d8; /* пена */
+        --sea-sky: #5ba3c9; /* небо над морем */
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        background-image: radial-gradient(
+            ellipse 60% 40% at 10% 0%,
+            rgba(72, 201, 176, 0.12) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            ellipse 50% 40% at 90% 0%,
+            rgba(91, 163, 201, 0.1) 0%,
+            transparent 70%
+          );
+        padding: 32px 24px;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: 'Manrope', sans-serif;
+      }
+      h1 {
+        margin-bottom: 6px;
+        font-weight: 700;
+        font-size: 20px;
+        font-family: 'Space Grotesk', sans-serif;
+      }
+      .sub {
+        margin-bottom: 32px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .col-label {
+        margin-bottom: 10px;
+        color: var(--muted);
+        font-weight: 700;
+        font-size: 9px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .section-title {
+        margin-bottom: 14px;
+        font-weight: 700;
+        font-size: 9px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .fl {
+        margin-bottom: 3px;
+        font-weight: 700;
+        font-size: 9px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .fv {
+        color: var(--ink);
+        font-weight: 500;
+        font-size: 13px;
+      }
+      .fv.p {
+        color: rgba(111, 106, 98, 0.4);
+      }
+      .req {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        box-shadow: 0 0 5px rgba(220, 80, 60, 0.3);
+        border-radius: 50%;
+        background: rgba(220, 80, 60, 0.7);
+        width: 5px;
+        height: 5px;
+      }
+
+      /* ══ 1: Глубина — deep to bright gradient ══ */
+      .wrap-1 {
+        position: relative;
+        border-radius: 20px;
+        background: var(--bg);
+        padding: 24px;
+        overflow: hidden;
+      }
+      .wrap-1::before {
+        position: absolute;
+        top: -30px;
+        right: 5px;
+        z-index: 0;
+        filter: blur(36px);
+        border-radius: 50%;
+        background: rgba(42, 157, 143, 0.16);
+        width: 130px;
+        height: 130px;
+        content: '';
+      }
+      .wrap-1::after {
+        position: absolute;
+        bottom: -15px;
+        left: 10px;
+        z-index: 0;
+        filter: blur(26px);
+        border-radius: 50%;
+        background: rgba(91, 163, 201, 0.12);
+        width: 90px;
+        height: 90px;
+        content: '';
+      }
+      .card-1 {
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(18px) saturate(138%);
+        -webkit-backdrop-filter: blur(18px) saturate(138%);
+        box-shadow:
+          var(--shadow),
+          0 0 40px rgba(42, 157, 143, 0.09),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.68);
+        border-radius: 14px;
+        background: linear-gradient(
+          155deg,
+          rgba(255, 253, 248, 0.74) 0%,
+          rgba(232, 248, 245, 0.62) 100%
+        );
+        padding: 22px;
+      }
+      .card-1 .section-title {
+        color: var(--sea-mid);
+      }
+      .card-1 .field {
+        position: relative;
+        margin-bottom: 8px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 253, 248, 0.52);
+        padding: 15px 12px 7px;
+      }
+      .card-1 .field.focus {
+        box-shadow:
+          0 0 0 3px rgba(42, 157, 143, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        border-color: rgba(42, 157, 143, 0.4);
+        background: rgba(232, 248, 245, 0.68);
+      }
+      .card-1 .fl {
+        color: var(--sea-mid);
+      }
+      .card-1 .fl.m {
+        color: var(--muted);
+      }
+      .card-1 .btn {
+        margin-top: 10px;
+        box-shadow:
+          0 4px 16px rgba(42, 157, 143, 0.28),
+          0 0 24px rgba(72, 201, 176, 0.14);
+        border-radius: 999px;
+        background: linear-gradient(
+          135deg,
+          var(--sea-deep),
+          var(--sea-mid),
+          var(--sea-bright)
+        );
+        padding: 9px 16px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 12px;
+        font-family: 'Space Grotesk', sans-serif;
+        text-align: center;
+      }
+      .card-1 .del {
+        margin-top: 5px;
+        border: 1px solid rgba(220, 60, 40, 0.2);
+        border-radius: 999px;
+        background: transparent;
+        padding: 7px 16px;
+        color: rgba(200, 60, 40, 0.6);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      /* ══ 2: Волна — морская волна + небо (горизонталь) ══ */
+      .wrap-2 {
+        position: relative;
+        border-radius: 20px;
+        background: var(--bg);
+        padding: 24px;
+        overflow: hidden;
+      }
+      .wrap-2::before {
+        position: absolute;
+        top: -25px;
+        right: 0;
+        z-index: 0;
+        filter: blur(32px);
+        border-radius: 50%;
+        background: rgba(91, 163, 201, 0.18);
+        width: 120px;
+        height: 120px;
+        content: '';
+      }
+      .wrap-2::after {
+        position: absolute;
+        bottom: -20px;
+        left: 5px;
+        z-index: 0;
+        filter: blur(28px);
+        border-radius: 50%;
+        background: rgba(42, 157, 143, 0.15);
+        width: 100px;
+        height: 100px;
+        content: '';
+      }
+      .card-2 {
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(18px) saturate(140%);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        box-shadow:
+          var(--shadow),
+          0 0 36px rgba(91, 163, 201, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 14px;
+        background: linear-gradient(
+          120deg,
+          rgba(232, 246, 252, 0.68) 0%,
+          rgba(232, 248, 245, 0.64) 50%,
+          rgba(255, 253, 248, 0.72) 100%
+        );
+        padding: 22px;
+      }
+      .card-2 .section-title {
+        color: var(--sea-sky);
+      }
+      .card-2 .field {
+        position: relative;
+        margin-bottom: 8px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 253, 248, 0.5);
+        padding: 15px 12px 7px;
+      }
+      .card-2 .field.focus-teal {
+        box-shadow:
+          0 0 0 3px rgba(42, 157, 143, 0.09),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        border-color: rgba(42, 157, 143, 0.38);
+        background: rgba(232, 248, 245, 0.65);
+      }
+      .card-2 .field.focus-sky {
+        box-shadow:
+          0 0 0 3px rgba(91, 163, 201, 0.09),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        border-color: rgba(91, 163, 201, 0.38);
+        background: rgba(232, 246, 252, 0.65);
+      }
+      .card-2 .fl.t {
+        color: var(--sea-mid);
+      }
+      .card-2 .fl.s {
+        color: var(--sea-sky);
+      }
+      .card-2 .fl.m {
+        color: var(--muted);
+      }
+      .card-2 .btn {
+        margin-top: 10px;
+        box-shadow:
+          0 4px 16px rgba(91, 163, 201, 0.3),
+          0 0 24px rgba(42, 157, 143, 0.12);
+        border-radius: 999px;
+        background: linear-gradient(120deg, var(--sea-sky), var(--sea-mid));
+        padding: 9px 16px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 12px;
+        font-family: 'Space Grotesk', sans-serif;
+        text-align: center;
+      }
+      .card-2 .del {
+        margin-top: 5px;
+        border: 1px solid rgba(220, 60, 40, 0.2);
+        border-radius: 999px;
+        background: transparent;
+        padding: 7px 16px;
+        color: rgba(200, 60, 40, 0.6);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      /* ══ 3: Пена — светлая, яркая, foam accent ══ */
+      .wrap-3 {
+        position: relative;
+        border-radius: 20px;
+        background: linear-gradient(155deg, #f4f2ed 0%, #edf5f3 100%);
+        padding: 24px;
+        overflow: hidden;
+      }
+      .wrap-3::before {
+        position: absolute;
+        top: -35px;
+        right: -10px;
+        z-index: 0;
+        filter: blur(40px);
+        border-radius: 50%;
+        background: rgba(72, 201, 176, 0.18);
+        width: 140px;
+        height: 140px;
+        content: '';
+      }
+      .wrap-3::after {
+        position: absolute;
+        bottom: -20px;
+        left: 5px;
+        z-index: 0;
+        filter: blur(30px);
+        border-radius: 50%;
+        background: rgba(26, 107, 107, 0.12);
+        width: 100px;
+        height: 100px;
+        content: '';
+      }
+      .card-3 {
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(20px) saturate(145%);
+        -webkit-backdrop-filter: blur(20px) saturate(145%);
+        box-shadow:
+          var(--shadow),
+          0 0 44px rgba(72, 201, 176, 0.12),
+          0 0 28px rgba(26, 107, 107, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: 14px;
+        background: linear-gradient(
+          155deg,
+          rgba(255, 253, 248, 0.68) 0%,
+          rgba(224, 248, 242, 0.58) 100%
+        );
+        padding: 22px;
+      }
+      .card-3 .section-title {
+        color: var(--sea-deep);
+      }
+      .card-3 .field {
+        position: relative;
+        margin-bottom: 8px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(168, 230, 216, 0.5);
+        border-radius: 10px;
+        background: rgba(255, 253, 248, 0.5);
+        padding: 15px 12px 7px;
+      }
+      .card-3 .field.focus {
+        box-shadow:
+          0 0 0 3px rgba(72, 201, 176, 0.12),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        border-color: rgba(72, 201, 176, 0.5);
+        background: rgba(220, 248, 240, 0.6);
+      }
+      .card-3 .fl {
+        color: var(--sea-deep);
+      }
+      .card-3 .fl.b {
+        color: var(--sea-bright);
+      }
+      .card-3 .fl.m {
+        color: var(--muted);
+      }
+      .card-3 .btn {
+        margin-top: 10px;
+        box-shadow:
+          0 4px 18px rgba(72, 201, 176, 0.32),
+          0 0 28px rgba(72, 201, 176, 0.16);
+        border-radius: 999px;
+        background: linear-gradient(
+          135deg,
+          var(--sea-bright),
+          var(--sea-mid),
+          var(--sea-deep)
+        );
+        padding: 9px 16px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 12px;
+        font-family: 'Space Grotesk', sans-serif;
+        text-align: center;
+      }
+      .card-3 .del {
+        margin-top: 5px;
+        border: 1px solid rgba(220, 60, 40, 0.2);
+        border-radius: 999px;
+        background: transparent;
+        padding: 7px 16px;
+        color: rgba(200, 60, 40, 0.6);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      /* colour swatches */
+      .swatches {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 20px;
+      }
+      .swatch {
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+      }
+      .swatch-label {
+        margin-left: 4px;
+        color: var(--muted);
+        font-size: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Морская волна Айвазовского</h1>
+    <p class="sub">
+      Глубокий сине-зелёный (#1a6b6b) → основная волна (#2a9d8f) → гребень
+      (#48c9b0) → пена (#a8e6d8) — с градиентом
+    </p>
+
+    <div class="swatches">
+      <div class="swatch" style="background: #1a6b6b"></div>
+      <div class="swatch" style="background: #2a9d8f"></div>
+      <div class="swatch" style="background: #48c9b0"></div>
+      <div class="swatch" style="background: #a8e6d8"></div>
+      <div class="swatch" style="background: #5ba3c9"></div>
+      <span class="swatch-label">глубина → волна → гребень → пена → небо</span>
+    </div>
+
+    <br />
+
+    <div class="grid">
+      <div>
+        <div class="col-label">1 — Глубина (deep→bright по вертикали)</div>
+        <div class="wrap-1">
+          <div class="card-1">
+            <div class="section-title">Personal Info</div>
+            <div class="field focus">
+              <div class="fl">First Name</div>
+              <div class="fv">Daniil</div>
+            </div>
+            <div class="field">
+              <div class="fl m">Email</div>
+              <div class="fv">daniil@example.com</div>
+              <div class="req"></div>
+            </div>
+            <div class="field">
+              <div class="fl m">Notes</div>
+              <div class="fv p">Add a note...</div>
+            </div>
+            <div class="btn">Save Changes</div>
+            <div class="del">Delete Record</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="col-label">2 — Волна+небо (sea↔sky по горизонт.)</div>
+        <div class="wrap-2">
+          <div class="card-2">
+            <div class="section-title">Personal Info</div>
+            <div class="field focus-teal">
+              <div class="fl t">First Name</div>
+              <div class="fv">Daniil</div>
+            </div>
+            <div class="field focus-sky">
+              <div class="fl s">Email</div>
+              <div class="fv">daniil@example.com</div>
+              <div class="req"></div>
+            </div>
+            <div class="field">
+              <div class="fl m">Notes</div>
+              <div class="fv p">Add a note...</div>
+            </div>
+            <div class="btn">Save Changes</div>
+            <div class="del">Delete Record</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="col-label">3 — Пена (bright→deep, foam borders)</div>
+        <div class="wrap-3">
+          <div class="card-3">
+            <div class="section-title">Personal Info</div>
+            <div class="field focus">
+              <div class="fl b">First Name</div>
+              <div class="fv">Daniil</div>
+            </div>
+            <div class="field">
+              <div class="fl m">Email</div>
+              <div class="fv">daniil@example.com</div>
+              <div class="req"></div>
+            </div>
+            <div class="field">
+              <div class="fl m">Notes</div>
+              <div class="fv p">Add a note...</div>
+            </div>
+            <div class="btn">Save Changes</div>
+            <div class="del">Delete Record</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

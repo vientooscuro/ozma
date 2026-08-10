@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warm Glass — B+C mix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f6f4ef;
+        --ink: #1f1f1f;
+        --muted: #6f6a62;
+        --accent: #0f766e;
+        --accent-2: #f6b941;
+        --line: rgba(196, 182, 163, 0.46);
+        --shadow: 0 14px 40px rgba(28, 23, 15, 0.08);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        background-image: radial-gradient(
+            ellipse 60% 40% at 10% 0%,
+            rgba(246, 185, 65, 0.13) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            ellipse 50% 40% at 90% 0%,
+            rgba(15, 118, 110, 0.1) 0%,
+            transparent 70%
+          );
+        padding: 32px 24px;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: 'Manrope', sans-serif;
+      }
+      h1 {
+        margin-bottom: 6px;
+        font-weight: 700;
+        font-size: 20px;
+        font-family: 'Space Grotesk', sans-serif;
+      }
+      .sub {
+        margin-bottom: 32px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .col-label {
+        margin-bottom: 10px;
+        color: var(--muted);
+        font-weight: 700;
+        font-size: 9px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .section-title {
+        margin-bottom: 14px;
+        font-weight: 700;
+        font-size: 9px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .fl {
+        margin-bottom: 3px;
+        font-weight: 700;
+        font-size: 9px;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .fv {
+        color: var(--ink);
+        font-weight: 500;
+        font-size: 13px;
+      }
+      .fv.p {
+        color: rgba(111, 106, 98, 0.4);
+      }
+      .req {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        box-shadow: 0 0 5px rgba(220, 80, 60, 0.3);
+        border-radius: 50%;
+        background: rgba(220, 80, 60, 0.7);
+        width: 5px;
+        height: 5px;
+      }
+
+      /* ══ VARIANT 1: B card gradient + C orbs ══ */
+      .wrap-1 {
+        position: relative;
+        border-radius: 20px;
+        background: var(--bg);
+        padding: 24px;
+        overflow: hidden;
+      }
+      .wrap-1::before {
+        position: absolute;
+        top: -25px;
+        right: 5px;
+        z-index: 0;
+        filter: blur(32px);
+        border-radius: 50%;
+        background: rgba(246, 185, 65, 0.2);
+        width: 120px;
+        height: 120px;
+        content: '';
+      }
+      .wrap-1::after {
+        position: absolute;
+        bottom: -15px;
+        left: 10px;
+        z-index: 0;
+        filter: blur(24px);
+        border-radius: 50%;
+        background: rgba(15, 118, 110, 0.14);
+        width: 90px;
+        height: 90px;
+        content: '';
+      }
+      .card-1 {
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(16px) saturate(130%);
+        -webkit-backdrop-filter: blur(16px) saturate(130%);
+        box-shadow:
+          var(--shadow),
+          0 0 44px rgba(246, 185, 65, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        border-radius: 14px;
+        background: linear-gradient(
+          160deg,
+          rgba(255, 253, 248, 0.75) 0%,
+          rgba(255, 248, 230, 0.62) 100%
+        );
+        padding: 22px;
+      }
+      .card-1 .section-title {
+        color: var(--muted);
+      }
+      .card-1 .field {
+        position: relative;
+        margin-bottom: 8px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 253, 248, 0.55);
+        padding: 15px 12px 7px;
+      }
+      .card-1 .field.focus {
+        box-shadow:
+          0 0 0 3px rgba(246, 185, 65, 0.12),
+          inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        border-color: rgba(246, 185, 65, 0.5);
+        background: rgba(255, 252, 240, 0.78);
+      }
+      .card-1 .fl {
+        color: rgba(200, 145, 20, 0.85);
+      }
+      .card-1 .fl.t {
+        color: var(--accent);
+      }
+      .card-1 .fl.m {
+        color: var(--muted);
+      }
+      .card-1 .btn {
+        margin-top: 10px;
+        box-shadow:
+          0 4px 16px rgba(246, 185, 65, 0.28),
+          0 0 24px rgba(246, 185, 65, 0.12);
+        border-radius: 999px;
+        background: linear-gradient(
+          135deg,
+          rgba(246, 185, 65, 0.88),
+          rgba(225, 155, 25, 0.82)
+        );
+        padding: 9px 16px;
+        color: #1f1f1f;
+        font-weight: 700;
+        font-size: 12px;
+        font-family: 'Space Grotesk', sans-serif;
+        text-align: center;
+      }
+      .card-1 .del {
+        margin-top: 5px;
+        border: 1px solid rgba(220, 60, 40, 0.2);
+        border-radius: 999px;
+        background: transparent;
+        padding: 7px 16px;
+        color: rgba(200, 60, 40, 0.6);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      /* ══ VARIANT 2: C orbs + B gradient card, teal primary ══ */
+      .wrap-2 {
+        position: relative;
+        border-radius: 20px;
+        background: var(--bg);
+        padding: 24px;
+        overflow: hidden;
+      }
+      .wrap-2::before {
+        position: absolute;
+        top: -30px;
+        right: 0;
+        z-index: 0;
+        filter: blur(36px);
+        border-radius: 50%;
+        background: rgba(15, 118, 110, 0.16);
+        width: 130px;
+        height: 130px;
+        content: '';
+      }
+      .wrap-2::after {
+        position: absolute;
+        bottom: -20px;
+        left: 5px;
+        z-index: 0;
+        filter: blur(28px);
+        border-radius: 50%;
+        background: rgba(246, 185, 65, 0.16);
+        width: 100px;
+        height: 100px;
+        content: '';
+      }
+      .card-2 {
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(18px) saturate(135%);
+        -webkit-backdrop-filter: blur(18px) saturate(135%);
+        box-shadow:
+          var(--shadow),
+          0 0 44px rgba(15, 118, 110, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.68);
+        border-radius: 14px;
+        background: linear-gradient(
+          155deg,
+          rgba(255, 253, 248, 0.72) 0%,
+          rgba(240, 252, 250, 0.58) 100%
+        );
+        padding: 22px;
+      }
+      .card-2 .section-title {
+        color: var(--accent);
+      }
+      .card-2 .field {
+        position: relative;
+        margin-bottom: 8px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 253, 248, 0.52);
+        padding: 15px 12px 7px;
+      }
+      .card-2 .field.focus {
+        box-shadow:
+          0 0 0 3px rgba(15, 118, 110, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        border-color: rgba(15, 118, 110, 0.38);
+        background: rgba(240, 252, 250, 0.72);
+      }
+      .card-2 .field.amber-focus {
+        box-shadow:
+          0 0 0 2px rgba(246, 185, 65, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.72);
+        border-color: rgba(246, 185, 65, 0.38);
+      }
+      .card-2 .fl {
+        color: var(--accent);
+      }
+      .card-2 .fl.a {
+        color: rgba(200, 145, 20, 0.8);
+      }
+      .card-2 .fl.m {
+        color: var(--muted);
+      }
+      .card-2 .btn {
+        margin-top: 10px;
+        box-shadow:
+          0 4px 16px rgba(15, 118, 110, 0.25),
+          0 0 24px rgba(15, 118, 110, 0.1);
+        border-radius: 999px;
+        background: var(--accent);
+        padding: 9px 16px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 12px;
+        font-family: 'Space Grotesk', sans-serif;
+        text-align: center;
+      }
+      .card-2 .del {
+        margin-top: 5px;
+        border: 1px solid rgba(220, 60, 40, 0.2);
+        border-radius: 999px;
+        background: transparent;
+        padding: 7px 16px;
+        color: rgba(200, 60, 40, 0.6);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      /* ══ VARIANT 3: Full B+C — amber+teal dual orbs, gradient card, both glows ══ */
+      .wrap-3 {
+        position: relative;
+        border-radius: 20px;
+        background: linear-gradient(155deg, #f8f5ee 0%, #f2ede2 100%);
+        padding: 24px;
+        overflow: hidden;
+      }
+      .wrap-3::before {
+        position: absolute;
+        top: -20px;
+        right: 10px;
+        z-index: 0;
+        filter: blur(30px);
+        border-radius: 50%;
+        background: rgba(246, 185, 65, 0.22);
+        width: 110px;
+        height: 110px;
+        content: '';
+      }
+      .wrap-3::after {
+        position: absolute;
+        bottom: -15px;
+        left: 15px;
+        z-index: 0;
+        filter: blur(26px);
+        border-radius: 50%;
+        background: rgba(15, 118, 110, 0.16);
+        width: 90px;
+        height: 90px;
+        content: '';
+      }
+      /* extra teal orb top-left */
+      .wrap-3 .orb3 {
+        position: absolute;
+        top: 30%;
+        left: -15px;
+        z-index: 0;
+        filter: blur(20px);
+        border-radius: 50%;
+        background: rgba(15, 118, 110, 0.1);
+        width: 70px;
+        height: 70px;
+      }
+      .card-3 {
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(18px) saturate(138%);
+        -webkit-backdrop-filter: blur(18px) saturate(138%);
+        box-shadow:
+          var(--shadow),
+          0 0 40px rgba(246, 185, 65, 0.09),
+          0 0 32px rgba(15, 118, 110, 0.07),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.68);
+        border-radius: 14px;
+        background: linear-gradient(
+          155deg,
+          rgba(255, 253, 248, 0.7) 0%,
+          rgba(255, 249, 235, 0.6) 50%,
+          rgba(240, 252, 250, 0.55) 100%
+        );
+        padding: 22px;
+      }
+      .card-3 .section-title {
+        color: var(--muted);
+      }
+      .card-3 .field {
+        position: relative;
+        transition: all 0.2s ease;
+        margin-bottom: 8px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 253, 248, 0.5);
+        padding: 15px 12px 7px;
+      }
+      .card-3 .field.teal-focus {
+        box-shadow:
+          0 0 0 3px rgba(15, 118, 110, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        border-color: rgba(15, 118, 110, 0.4);
+        background: rgba(240, 252, 250, 0.65);
+      }
+      .card-3 .field.amber-focus {
+        box-shadow:
+          0 0 0 3px rgba(246, 185, 65, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        border-color: rgba(246, 185, 65, 0.45);
+        background: rgba(255, 251, 235, 0.68);
+      }
+      .card-3 .fl.t {
+        color: var(--accent);
+      }
+      .card-3 .fl.a {
+        color: rgba(196, 140, 15, 0.85);
+      }
+      .card-3 .fl.m {
+        color: var(--muted);
+      }
+      .card-3 .btn {
+        margin-top: 10px;
+        box-shadow:
+          0 4px 16px rgba(15, 118, 110, 0.26),
+          0 0 28px rgba(15, 118, 110, 0.12);
+        border-radius: 999px;
+        background: linear-gradient(
+          135deg,
+          rgba(15, 118, 110, 0.9),
+          rgba(11, 96, 89, 0.85)
+        );
+        padding: 9px 16px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 12px;
+        font-family: 'Space Grotesk', sans-serif;
+        text-align: center;
+      }
+      .card-3 .btn-amber {
+        margin-top: 6px;
+        box-shadow:
+          0 4px 14px rgba(246, 185, 65, 0.28),
+          0 0 20px rgba(246, 185, 65, 0.1);
+        border-radius: 999px;
+        background: linear-gradient(
+          135deg,
+          rgba(246, 185, 65, 0.85),
+          rgba(220, 155, 20, 0.8)
+        );
+        padding: 9px 16px;
+        color: #1f1f1f;
+        font-weight: 700;
+        font-size: 12px;
+        font-family: 'Space Grotesk', sans-serif;
+        text-align: center;
+      }
+      .card-3 .del {
+        margin-top: 5px;
+        border: 1px solid rgba(220, 60, 40, 0.2);
+        border-radius: 999px;
+        background: transparent;
+        padding: 7px 16px;
+        color: rgba(200, 60, 40, 0.6);
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>B+C Mix — три интерпретации</h1>
+    <p class="sub">
+      Gradient card из B + orbs/inset из C — в разных пропорциях
+    </p>
+
+    <div class="grid">
+      <div>
+        <div class="col-label">1 — Amber primary, teal accent</div>
+        <div class="wrap-1">
+          <div class="card-1">
+            <div class="section-title">Personal Info</div>
+            <div class="field focus">
+              <div class="fl">First Name</div>
+              <div class="fv">Daniil</div>
+            </div>
+            <div class="field">
+              <div class="fl t">Email</div>
+              <div class="fv">daniil@example.com</div>
+              <div class="req"></div>
+            </div>
+            <div class="field">
+              <div class="fl m">Notes</div>
+              <div class="fv p">Add a note...</div>
+            </div>
+            <div class="btn">Save Changes</div>
+            <div class="del">Delete Record</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="col-label">2 — Teal primary, amber hint</div>
+        <div class="wrap-2">
+          <div class="card-2">
+            <div class="section-title">Personal Info</div>
+            <div class="field focus">
+              <div class="fl">First Name</div>
+              <div class="fv">Daniil</div>
+            </div>
+            <div class="field amber-focus">
+              <div class="fl a">Email</div>
+              <div class="fv">daniil@example.com</div>
+              <div class="req"></div>
+            </div>
+            <div class="field">
+              <div class="fl m">Notes</div>
+              <div class="fv p">Add a note...</div>
+            </div>
+            <div class="btn">Save Changes</div>
+            <div class="del">Delete Record</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="col-label">3 — Dual glow, teal+amber buttons ★</div>
+        <div class="wrap-3">
+          <div class="orb3"></div>
+          <div class="card-3">
+            <div class="section-title">Personal Info</div>
+            <div class="field teal-focus">
+              <div class="fl t">First Name</div>
+              <div class="fv">Daniil</div>
+            </div>
+            <div class="field amber-focus">
+              <div class="fl a">Email</div>
+              <div class="fv">daniil@example.com</div>
+              <div class="req"></div>
+            </div>
+            <div class="field">
+              <div class="fl m">Notes</div>
+              <div class="fv p">Add a note...</div>
+            </div>
+            <div class="btn">Save Changes</div>
+            <div class="btn-amber">New Record</div>
+            <div class="del">Delete Record</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

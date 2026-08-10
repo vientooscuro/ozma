@@ -1,0 +1,326 @@
+<h2>Floating rows — обе темы</h2>
+<p class="subtitle">Убедись что обе цветовые схемы выглядят правильно</p>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap');
+
+  .themes-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .theme-label {
+    margin-bottom: 0.75rem;
+    padding: 0 0.25rem;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ══ DARK GLASS ══ */
+  .dark-wrap {
+    position: relative;
+    border: 1px solid rgba(89, 214, 207, 0.1);
+    border-radius: 18px;
+    background: linear-gradient(145deg, #020810 0%, #07121f 60%, #040c14 100%);
+    padding: 1.25rem;
+    overflow: hidden;
+  }
+  .dark-wrap::before {
+    position: absolute;
+    top: -60px;
+    right: -50px;
+    filter: blur(65px);
+    border-radius: 999px;
+    background: rgba(89, 214, 207, 0.07);
+    width: 200px;
+    height: 200px;
+    pointer-events: none;
+    content: '';
+  }
+  .dark-wrap .theme-label {
+    color: rgba(89, 214, 207, 0.5);
+  }
+
+  .dark-table {
+    border-collapse: separate;
+    border-spacing: 0 5px;
+    width: 100%;
+  }
+  .dark-table thead th {
+    border: none;
+    background: transparent;
+    padding: 4px 14px 8px;
+    color: rgba(89, 214, 207, 0.5);
+    font-weight: 700;
+    font-size: 9.5px;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .dark-table tbody tr td {
+    border-top: 1px solid rgba(255, 255, 255, 0.055);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+    background: rgba(255, 255, 255, 0.045);
+    padding: 11px 14px;
+    color: #e7ecef;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .dark-table tbody tr td:first-child {
+    border-left: 1px solid rgba(255, 255, 255, 0.055);
+    border-radius: 10px 0 0 10px;
+  }
+  .dark-table tbody tr td:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.055);
+    border-radius: 0 10px 10px 0;
+  }
+  .dark-table tbody tr:hover td {
+    border-color: rgba(89, 214, 207, 0.16);
+    background: rgba(89, 214, 207, 0.075);
+  }
+  .dark-amount {
+    display: inline-block;
+    border: 1px solid rgba(89, 214, 207, 0.26);
+    border-radius: 999px;
+    background: rgba(89, 214, 207, 0.12);
+    padding: 3px 10px;
+    color: #59d6cf;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .dark-muted {
+    color: rgba(149, 167, 182, 0.6);
+    font-size: 12px;
+  }
+  .dark-edit-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    width: 28px;
+    height: 28px;
+    color: rgba(149, 167, 182, 0.55);
+    font-size: 15px;
+  }
+
+  /* ══ LIGHT GLASS WARM ══ */
+  .light-wrap {
+    position: relative;
+    border: 1px solid rgba(196, 182, 163, 0.3);
+    border-radius: 18px;
+    background: #f6f4ef;
+    background-image: radial-gradient(
+        ellipse 55% 38% at 8% 0%,
+        rgba(255, 249, 226, 0.9) 0%,
+        transparent 65%
+      ),
+      radial-gradient(
+        ellipse 40% 30% at 75% 5%,
+        rgba(219, 248, 240, 0.7) 0%,
+        transparent 60%
+      );
+    padding: 1.25rem;
+    overflow: hidden;
+  }
+  .light-wrap .theme-label {
+    color: #1a5f7a;
+  }
+
+  .light-table {
+    border-collapse: separate;
+    border-spacing: 0 5px;
+    width: 100%;
+  }
+  .light-table thead th {
+    border: none;
+    background: transparent;
+    padding: 4px 14px 8px;
+    color: #2185a0;
+    font-weight: 700;
+    font-size: 9.5px;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .light-table tbody tr td {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-top: 1px solid rgba(196, 182, 163, 0.22);
+    border-bottom: 1px solid rgba(196, 182, 163, 0.22);
+    background: rgba(255, 255, 255, 0.55);
+    padding: 11px 14px;
+    color: #1f1f1f;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .light-table tbody tr td:first-child {
+    border-left: 1px solid rgba(196, 182, 163, 0.22);
+    border-radius: 10px 0 0 10px;
+  }
+  .light-table tbody tr td:last-child {
+    border-right: 1px solid rgba(196, 182, 163, 0.22);
+    border-radius: 0 10px 10px 0;
+  }
+  .light-table tbody tr:hover td {
+    box-shadow: 0 2px 12px rgba(28, 23, 15, 0.06);
+    border-color: rgba(33, 133, 160, 0.22);
+    background: rgba(255, 255, 255, 0.78);
+  }
+  .light-amount {
+    display: inline-block;
+    border: 1px solid rgba(33, 133, 160, 0.22);
+    border-radius: 999px;
+    background: rgba(33, 133, 160, 0.1);
+    padding: 3px 10px;
+    color: #1a5f7a;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .light-muted {
+    color: rgba(111, 106, 98, 0.65);
+    font-size: 12px;
+  }
+  .light-edit-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid rgba(196, 182, 163, 0.3);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.6);
+    width: 28px;
+    height: 28px;
+    color: rgba(111, 106, 98, 0.6);
+    font-size: 15px;
+  }
+</style>
+
+<div class="themes-wrap">
+  <!-- DARK -->
+  <div>
+    <div
+      class="theme-label"
+      style="
+        color: rgba(89, 214, 207, 0.5);
+        font-family: 'Space Grotesk', sans-serif;
+      "
+    >
+      Dark Glass
+    </div>
+    <div class="dark-wrap">
+      <table class="dark-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Сумма</th>
+            <th>id</th>
+            <th>Счёт отправителя</th>
+            <th>Счёт получателя</th>
+            <th>Дата транзакции</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="dark-edit-icon">✏</span></td>
+            <td><span class="dark-amount">25 000</span></td>
+            <td class="dark-muted">36328</td>
+            <td>Гвоздев Руслан</td>
+            <td>GOGOL School · Яндекс-сплит</td>
+            <td class="dark-muted">02.04.2026 0:46</td>
+          </tr>
+          <tr>
+            <td><span class="dark-edit-icon">✏</span></td>
+            <td><span class="dark-amount">2 660</span></td>
+            <td class="dark-muted">36326</td>
+            <td>Смирнов Илья Николаевич</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="dark-muted">01.04.2026 21:54</td>
+          </tr>
+          <tr>
+            <td><span class="dark-edit-icon">✏</span></td>
+            <td><span class="dark-amount">2 800</span></td>
+            <td class="dark-muted">36325</td>
+            <td>Антоневич Катерина</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="dark-muted">01.04.2026 21:21</td>
+          </tr>
+          <tr>
+            <td><span class="dark-edit-icon">✏</span></td>
+            <td><span class="dark-amount">9 000</span></td>
+            <td class="dark-muted">36323</td>
+            <td>Козуб Денис Владимирович</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="dark-muted">01.04.2026 18:25</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LIGHT -->
+  <div>
+    <div
+      class="theme-label"
+      style="color: #1a5f7a; font-family: 'Space Grotesk', sans-serif"
+    >
+      Light Glass Warm
+    </div>
+    <div class="light-wrap">
+      <table class="light-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Сумма</th>
+            <th>id</th>
+            <th>Счёт отправителя</th>
+            <th>Счёт получателя</th>
+            <th>Дата транзакции</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="light-edit-icon">✏</span></td>
+            <td><span class="light-amount">25 000</span></td>
+            <td class="light-muted">36328</td>
+            <td>Гвоздев Руслан</td>
+            <td>GOGOL School · Яндекс-сплит</td>
+            <td class="light-muted">02.04.2026 0:46</td>
+          </tr>
+          <tr>
+            <td><span class="light-edit-icon">✏</span></td>
+            <td><span class="light-amount">2 660</span></td>
+            <td class="light-muted">36326</td>
+            <td>Смирнов Илья Николаевич</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="light-muted">01.04.2026 21:54</td>
+          </tr>
+          <tr>
+            <td><span class="light-edit-icon">✏</span></td>
+            <td><span class="light-amount">2 800</span></td>
+            <td class="light-muted">36325</td>
+            <td>Антоневич Катерина</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="light-muted">01.04.2026 21:21</td>
+          </tr>
+          <tr>
+            <td><span class="light-edit-icon">✏</span></td>
+            <td><span class="light-amount">9 000</span></td>
+            <td class="light-muted">36323</td>
+            <td>Козуб Денис Владимирович</td>
+            <td>GOGOL School · Tinkoff OOO</td>
+            <td class="light-muted">01.04.2026 18:25</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
