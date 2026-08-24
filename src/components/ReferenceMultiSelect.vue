@@ -163,7 +163,10 @@ import type { EntriesRef } from '@/state/entries'
 import type { ScopeName } from '@/state/staging_changes'
 import QRCodeScannerModal from '@/components/qrcode/QRCodeScannerModal.vue'
 import type { ColorVariantAttribute } from '@/utils_colors'
-import { colorVariantFromAttribute } from '@/utils_colors'
+import {
+  colorVariantFromAttribute,
+  extractOptionVariantCase,
+} from '@/utils_colors'
 import type { IConvertedBoundMapping } from '@/user_views/combined'
 import { UserString, isOptionalUserString } from '@/state/translations'
 
@@ -275,8 +278,8 @@ export default class ReferenceMultiSelect extends mixins(BaseEntriesView) {
     this.fallbackVariantByPunContains = []
     this.fallbackVariantDefault = undefined
 
-    const caseMatch = attributesText.match(/option_variant\s*=\s*CASE([\s\S]*?)END/im)
-    if (!caseMatch) {
+    const caseBody = extractOptionVariantCase(attributesText)
+    if (caseBody === null) {
       const staticMatch = attributesText.match(/option_variant\s*=\s*'([^']+)'/im)
       if (staticMatch) {
         this.fallbackVariantDefault = staticMatch[1]
@@ -284,7 +287,6 @@ export default class ReferenceMultiSelect extends mixins(BaseEntriesView) {
       return
     }
 
-    const caseBody = caseMatch[1]
     const inMatches = caseBody.matchAll(
       /WHEN[\s\S]*?\bIN\s*\(([^)]*)\)\s*THEN\s*'([^']+)'/gim,
     )
@@ -395,11 +397,9 @@ ORDER BY priority DESC
   private extractOptionVariantExpression(
     attributesText: string,
   ): string | null {
-    const caseMatch = attributesText.match(
-      /option_variant\s*=\s*(CASE[\s\S]*?END)/im,
-    )
-    if (caseMatch) {
-      return caseMatch[1].trim()
+    const caseExpression = extractOptionVariantCase(attributesText)
+    if (caseExpression !== null) {
+      return caseExpression
     }
 
     const simpleStringMatch = attributesText.match(
