@@ -101,7 +101,7 @@ export default class SearchPanel extends Vue {
     }
   }
 
-  @Debounce(2000)
+  @Debounce(400)
   private debouncedUpdateInput() {
     this.updateInput()
   }
