@@ -952,8 +952,18 @@ html[data-theme-style='light-glass'] .tabbed-modal .header-panel {
     0 1px 4px rgba(28, 23, 15, 0.05) !important;
   border: 1px solid rgba(143, 214, 228, 0.45) !important;
   border-radius: var(--radius-input, 12px) !important;
-  background: var(--cell-backgroundColor) !important;
+  background-color: var(--cell-backgroundColor) !important;
   color: var(--ink) !important;
+}
+
+/* Bootstrap paints the dropdown caret as a background image; the rules here set
+   `background-color` only so it survives, but it needs an on-theme tint. */
+#app[data-theme-style='light-glass'] .custom-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3e%3cpath fill='none' stroke='%232185a0' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='M1 1l4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position: right 0.75rem center !important;
+  background-repeat: no-repeat !important;
+  background-size: 10px 6px !important;
+  padding-right: 1.75rem !important;
 }
 
 /* ── Input focus — light-glass-warm ── */
@@ -1124,7 +1134,7 @@ html[data-theme-style='light-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .form_inline_block .custom-select {
   border-color: rgba(143, 214, 228, 0.45) !important;
   border-radius: var(--radius-input, 12px) !important;
-  background: var(--cell-backgroundColor) !important;
+  background-color: var(--cell-backgroundColor) !important;
 }
 
 /* ── Form sub-blocks — light-glass-warm ── */
@@ -1169,7 +1179,7 @@ html[data-theme-style='light-glass'] .vm--overlay {
 #app[data-theme-style='light-glass'] .form_sub_block .custom-select {
   border-color: rgba(143, 214, 228, 0.45) !important;
   border-radius: var(--radius-input, 12px) !important;
-  background: var(--cell-backgroundColor) !important;
+  background-color: var(--cell-backgroundColor) !important;
 }
 
 /* ── Nested user-views inside sub-blocks: remove extra borders ── */
