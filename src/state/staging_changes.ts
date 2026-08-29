@@ -32,6 +32,7 @@ import { findErrorUserData } from '@/api'
 import { i18n } from '@/modules'
 import { eventBus } from '@/main'
 import { attrToLink, linkHandler } from '@/links'
+import type { IButtonConfirm } from '@/components/buttons/buttons'
 
 export type ScopeName = string
 
@@ -238,6 +239,12 @@ export interface IStagingState {
   lastAutoSaveLock: AutoSaveLock
   autoSaveLocks: Record<AutoSaveLock, null>
   handlers: Record<StagingKey, IStagingEventHandler>
+  // Pending confirmations from fields marked with the `save_confirm` attribute.
+  // Keyed by field and row, so editing the same cell twice asks only once.
+  saveConfirms: Record<string, IButtonConfirm>
+  // Auto-save is held back while a confirmation is pending: a dialog popping up
+  // on its own a few seconds after the value was typed is the worst possible moment.
+  saveConfirmLock: AutoSaveLock | null
 }
 
 const askOnClose = (e: BeforeUnloadEvent) => {
@@ -455,6 +462,20 @@ const internalOpToTransactionOp = (
 
 const errorKey = 'staging'
 
+// The store has no access to `$bvModal`, so the dialog is shown by App.vue.
+// If nobody listens (a stray context without the app shell), saving proceeds:
+// hanging forever on an unanswered promise would lose the user's changes.
+const askSaveConfirmation = (confirms: IButtonConfirm[]): Promise<boolean> => {
+  const listeners = eventBus.all.get('confirm-save')
+  if (!listeners || listeners.length === 0) {
+    return Promise.resolve(true)
+  }
+
+  return new Promise((resolve) => {
+    eventBus.emit('confirm-save', { confirms, resolve })
+  })
+}
+
 const stagingModule: Module<IStagingState, {}> = {
   namespaced: true,
   state: {
@@ -466,9 +487,13 @@ const stagingModule: Module<IStagingState, {}> = {
     autoSaveTimeoutId: null,
     autoSaveLocks: {},
     handlers: {},
+    saveConfirms: {},
+    saveConfirmLock: null,
   },
   mutations: {
     clear: (state) => {
+      state.saveConfirms = {}
+      state.saveConfirmLock = null
       state.current = new CurrentChanges()
     },
     setAutoSaveHandler: (state, timeoutId: NodeJS.Timeout) => {
@@ -486,6 +511,18 @@ const stagingModule: Module<IStagingState, {}> = {
     },
     removeAutoSaveLock: (state, lock: AutoSaveLock) => {
       Vue.delete(state.autoSaveLocks, lock)
+    },
+    addSaveConfirm: (
+      state,
+      params: { key: string; confirm: IButtonConfirm },
+    ) => {
+      Vue.set(state.saveConfirms, params.key, params.confirm)
+    },
+    clearSaveConfirms: (state) => {
+      state.saveConfirms = {}
+    },
+    setSaveConfirmLock: (state, lock: AutoSaveLock | null) => {
+      state.saveConfirmLock = lock
     },
     startSubmit: (state, submit: Promise<ISubmitResult>) => {
       state.currentSubmit = submit
@@ -965,6 +1002,30 @@ const stagingModule: Module<IStagingState, {}> = {
       )
     },
 
+    registerSaveConfirm: async (
+      context,
+      params: { key: string; confirm: IButtonConfirm },
+    ) => {
+      const { state, commit, dispatch } = context
+      if (state.saveConfirms[params.key] !== undefined) {
+        return
+      }
+
+      commit('addSaveConfirm', params)
+      if (state.saveConfirmLock === null) {
+        const lock = (await dispatch('addAutoSaveLock')) as AutoSaveLock
+        commit('setSaveConfirmLock', lock)
+      }
+    },
+    releaseSaveConfirms: async (context) => {
+      const { state, commit, dispatch } = context
+      commit('clearSaveConfirms')
+      if (state.saveConfirmLock !== null) {
+        const lock = state.saveConfirmLock
+        commit('setSaveConfirmLock', null)
+        await dispatch('removeAutoSaveLock', lock)
+      }
+    },
     addAutoSaveLock: (context) => {
       const id = context.state.lastAutoSaveLock
       context.commit('addAutoSaveLock')
@@ -1038,6 +1099,19 @@ const stagingModule: Module<IStagingState, {}> = {
         }
         return { autoSave, results: [] }
       }
+
+      // Fields marked with `save_confirm` ask before the transaction goes out.
+      // Declining keeps the changes in the form: the user can fix the value
+      // instead of losing what was typed.
+      const saveConfirms = Object.values(state.saveConfirms)
+      if (saveConfirms.length > 0) {
+        const confirmed = await askSaveConfirmation(saveConfirms)
+        if (!confirmed) {
+          return { autoSave, results: [] }
+        }
+        await dispatch('releaseSaveConfirms')
+      }
+
       const action: ITransaction = {
         operations: ops.map(internalOpToTransactionOp),
       }

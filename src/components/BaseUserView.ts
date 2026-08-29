@@ -30,7 +30,11 @@ import { NeverError, ObjectSet, tryDicts } from '@/utils'
 import { IAttrToQueryOpts } from '@/state/query'
 
 import { attrToLink } from '@/links'
-import { attrToButtons } from '@/components/buttons/buttons'
+import {
+  attrToButtons,
+  attrToConfirm,
+  type IButtonConfirm,
+} from '@/components/buttons/buttons'
 import { emptyUserViewHandlerFunctions } from '@/user_views/trivial'
 import { eventBus } from '@/main'
 import { CurrentSettings } from '@/state/settings'
@@ -277,6 +281,10 @@ export default class BaseUserView<
     id: RowId
     value: unknown
   }) => Promise<void>
+  @staging.Action('registerSaveConfirm') registerSaveConfirm!: (args: {
+    key: string
+    confirm: IButtonConfirm
+  }) => Promise<void>
   @errors.Mutation('setError') setError!: (args: {
     key: ErrorKey
     error: string
@@ -492,6 +500,36 @@ export default class BaseUserView<
     return id
   }
 
+  // Registers a pending confirmation when the edited cell carries `save_confirm`.
+  // The dialog itself is shown once, right before the changes are submitted.
+  private async checkSaveConfirm(ref: ValueRef): Promise<void> {
+    const value = this.uv.getValueByRef(ref)
+    if (value === undefined) {
+      return
+    }
+
+    const confirm = attrToConfirm(
+      tryDicts<string, unknown>(
+        'save_confirm',
+        value.value.attributes,
+        this.uv.columnAttributes[ref.column],
+        value.row.attributes,
+        this.uv.attributes,
+      ),
+    )
+    if (confirm === undefined) {
+      return
+    }
+
+    const info = value.value.info
+    const key =
+      info !== undefined
+        ? `${info.fieldRef.entity.schema}.${info.fieldRef.entity.name}.${info.fieldRef.name}.${String(info.id)}`
+        : `new.${JSON.stringify(ref)}`
+
+    await this.registerSaveConfirm({ key, confirm })
+  }
+
   async updateValue(ref: ValueRef, rawValue: unknown): Promise<ValueRef> {
     if (this.isReadonlyDemoInstance) {
       eventBus.emit('show-readonly-demo-modal')
@@ -499,6 +537,7 @@ export default class BaseUserView<
     }
 
     const value = this.uv.getValueByRef(ref)!
+    await this.checkSaveConfirm(ref)
     switch (ref.type) {
       case 'added': {
         // FIXME: throws error `updateInfo is undefined` when user tries to edit disabled cell.

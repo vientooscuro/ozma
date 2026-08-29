@@ -1,13 +1,25 @@
 <i18n>
     {
         "en": {
-            "auth_error": "Error during authentication: {msg}"
+            "auth_error": "Error during authentication: {msg}",
+            "save_confirm_default_title": "Confirm saving",
+            "save_confirm_default_message": "Save the changes?",
+            "save_confirm_default_ok": "Save",
+            "save_confirm_default_cancel": "Cancel"
         },
         "ru": {
-            "auth_error": "Ошибка аутентификации: {msg}"
+            "auth_error": "Ошибка аутентификации: {msg}",
+            "save_confirm_default_title": "Подтвердите сохранение",
+            "save_confirm_default_message": "Сохранить изменения?",
+            "save_confirm_default_ok": "Сохранить",
+            "save_confirm_default_cancel": "Отмена"
         },
         "es": {
-            "auth_error": "El error durante la autenticación: {msg}"
+            "auth_error": "El error durante la autenticación: {msg}",
+            "save_confirm_default_title": "Confirmar el guardado",
+            "save_confirm_default_message": "¿Guardar los cambios?",
+            "save_confirm_default_ok": "Guardar",
+            "save_confirm_default_cancel": "Cancelar"
         }
     }
 </i18n>
@@ -86,7 +98,12 @@ import {
   IThemeRef,
   ITheme,
 } from '@/utils_colors'
-import { eventBus, IShowHelpModalArgs, ISelectionPanelArgs } from '@/main'
+import {
+  eventBus,
+  IShowHelpModalArgs,
+  ISelectionPanelArgs,
+  IConfirmSaveArgs,
+} from '@/main'
 import ButtonsPanel from '@/components/panels/ButtonsPanel.vue'
 import InviteUserModal from '@/components/InviteUserModal.vue'
 import { EntityRef } from '@/links'
@@ -103,6 +120,7 @@ const windows = namespace('windows')
 const query = namespace('query')
 const translations = namespace('translations')
 import { type UserString } from '@/state/translations'
+import type { BvMsgBoxOptions } from 'bootstrap-vue'
 import { setHeadMeta, setHeadLink } from '@/elements'
 
 @Component({
@@ -161,6 +179,7 @@ export default class App extends Vue {
     eventBus.on('close-all-toasts', this.closeAllToasts)
     eventBus.on('show-selection-panel', this.showSelectionPanel)
     eventBus.on('hide-selection-panel', this.hideSelectionPanel)
+    eventBus.on('confirm-save', this.confirmSave)
     /* eslint-enable @typescript-eslint/unbound-method */
   }
 
@@ -176,6 +195,7 @@ export default class App extends Vue {
     eventBus.off('close-all-toasts', this.closeAllToasts)
     eventBus.off('show-selection-panel', this.showSelectionPanel)
     eventBus.off('hide-selection-panel', this.hideSelectionPanel)
+    eventBus.off('confirm-save', this.confirmSave)
     /* eslint-enable @typescript-eslint/unbound-method */
 
     this.destroyWindow(this.uid)
@@ -210,6 +230,50 @@ export default class App extends Vue {
 
   get authErrors() {
     return this.silentErrors ? [] : (this.rawErrors['auth'] ?? [])
+  }
+
+  // Shown before saving when edited fields carry `save_confirm`.
+  // Several such fields in one save produce one dialog with the messages listed.
+  private async confirmSave(args: IConfirmSaveArgs) {
+    const ust = (s: UserString | undefined): string =>
+      s !== undefined ? this.$ustOrEmpty(s) : ''
+
+    const messages = args.confirms
+      .map((confirm) => ust(confirm.message) || ust(confirm.title))
+      .filter((message) => message !== '')
+    const message =
+      messages.length > 0
+        ? messages.join('\n')
+        : this.$t('save_confirm_default_message').toString()
+
+    const first = args.confirms[0]
+    const opts: BvMsgBoxOptions = {
+      title:
+        ust(first?.title) || this.$t('save_confirm_default_title').toString(),
+      okTitle:
+        ust(first?.okTitle) || this.$t('save_confirm_default_ok').toString(),
+      cancelTitle:
+        ust(first?.cancelTitle) ||
+        this.$t('save_confirm_default_cancel').toString(),
+      centered: true,
+      modalClass: 'glass-confirm-modal',
+      dialogClass: 'glass-confirm-dialog',
+      contentClass: 'glass-confirm-content',
+      bodyClass: 'glass-confirm-body',
+      footerClass: 'glass-confirm-footer',
+    }
+    if (first?.okVariant && first.okVariant.type === 'existing') {
+      opts.okVariant = first.okVariant.className
+    }
+    if (first?.cancelVariant && first.cancelVariant.type === 'existing') {
+      opts.cancelVariant = first.cancelVariant.className
+    }
+
+    try {
+      args.resolve((await this.$bvModal.msgBoxConfirm(message, opts)) === true)
+    } catch {
+      args.resolve(false)
+    }
   }
 
   private showDemoModal() {

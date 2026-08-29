@@ -32,19 +32,26 @@ export interface IButtonConfirm {
 export const attrToConfirm = (attr: unknown): IButtonConfirm | undefined => {
   if (attr === true) return {}
   if (typeof attr !== 'object' || attr === null) return undefined
-  const obj = attr as Record<string, unknown>
+  // OzmaDB lowercases keys of object attributes, so `okTitle` written in FunQL
+  // arrives as `oktitle`. Look values up case-insensitively, otherwise every
+  // camelCase key is silently dropped and only title/message survive.
+  const source = attr as Record<string, unknown>
+  const obj: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(source)) {
+    obj[key.toLowerCase()] = value
+  }
   return {
     title: rawToUserString(obj.title) ?? undefined,
     message: rawToUserString(obj.message) ?? undefined,
-    okTitle: rawToUserString(obj.okTitle) ?? undefined,
+    okTitle: rawToUserString(obj.oktitle) ?? undefined,
     okVariant:
-      obj.okVariant !== undefined
-        ? colorVariantFromAttribute(obj.okVariant)
+      obj.okvariant !== undefined
+        ? colorVariantFromAttribute(obj.okvariant)
         : undefined,
-    cancelTitle: rawToUserString(obj.cancelTitle) ?? undefined,
+    cancelTitle: rawToUserString(obj.canceltitle) ?? undefined,
     cancelVariant:
-      obj.cancelVariant !== undefined
-        ? colorVariantFromAttribute(obj.cancelVariant)
+      obj.cancelvariant !== undefined
+        ? colorVariantFromAttribute(obj.cancelvariant)
         : undefined,
   }
 }

@@ -50,6 +50,11 @@ export interface ISelectionPanelArgs extends ISelectionPanelContent {
   sourceId: symbol
 }
 
+export interface IConfirmSaveArgs {
+  confirms: import('@/components/buttons/buttons').IButtonConfirm[]
+  resolve: (confirmed: boolean) => void
+}
+
 type Events = {
   ['show-readonly-demo-modal']?: string
   ['show-invite-user-modal']?: string
@@ -57,6 +62,9 @@ type Events = {
   ['close-all-toasts']?: string
   ['show-selection-panel']: ISelectionPanelArgs
   ['hide-selection-panel']: { sourceId: symbol }
+  // Asks the UI to confirm saving changes that touched fields marked with
+  // the `save_confirm` attribute; the handler answers through `resolve`.
+  ['confirm-save']: IConfirmSaveArgs
 }
 
 export const eventBus = mitt<Events>()
