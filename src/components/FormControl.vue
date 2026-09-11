@@ -143,6 +143,7 @@
           :label="usedCaption"
           :options-view="inputType.optionsView"
           :reference-entity="inputType.entity"
+          :link-attr="inputType.linkAttr"
           :height="customHeight"
           :autofocus="autofocus || iSlot.autofocus"
           :required="!isNullable"
@@ -429,6 +430,7 @@ interface IArrayReferenceFieldType {
   name: 'array_select'
   optionsView: IQuery | null
   entity: IEntityRef
+  linkAttr?: unknown
 }
 
 interface IReferenceType {
@@ -1031,6 +1033,8 @@ export default class FormControl extends Vue {
                 name: 'array_select',
                 optionsView,
                 entity: this.fieldType.subtype.entity,
+                // Ссылка на каждый элемент – как у одиночной ссылки: стрелка у чипа.
+                linkAttr: this.attributes['link'],
               }
             }
             case 'enum': {

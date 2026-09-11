@@ -22,6 +22,7 @@
     load-pun-on-mount
     :entries="entriesRef"
     :reference-entity="referenceEntity"
+    :link-attr="linkAttr"
     :home-schema="homeSchema"
     :required="required"
     :disabled="disabled"
@@ -59,6 +60,7 @@ export default class ArrayReferenceField extends Vue {
   @Prop({ required: true }) value!: unknown[] | null
   @Prop({ type: Object }) optionsView!: IQuery | undefined
   @Prop({ type: Object, required: true }) referenceEntity!: IEntityRef
+  @Prop({ type: Object }) linkAttr!: unknown | undefined
   @Prop({ type: Boolean, default: false }) required!: boolean
   @Prop({ type: Boolean, default: false }) disabled!: boolean
   @Prop({ type: Number }) height!: number | undefined
