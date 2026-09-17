@@ -261,6 +261,7 @@ export default {
   beforeDestroy() {
     this.clearAnimationHandles()
     this.destroyPopper()
+    this.removeFromBody()
   },
 
   beforeUnmount() {
@@ -630,6 +631,16 @@ export default {
       this.isDisplayed = false
       this.showPopper = false
       this.doDestroy()
+    },
+
+    // Vue removes only the component root on destroy, so the container moved
+    // to body would stay there forever (visible, if destroyed while open).
+    removeFromBody() {
+      const container = this.$refs.popperWrapper
+      if (container instanceof HTMLElement && container.parentElement === document.body) {
+        document.body.removeChild(container)
+      }
+      this.appendedToBody = false
     },
 
     appendArrow(element) {
