@@ -566,6 +566,12 @@ WHERE id = ANY($ids)
     }
   }
 
+  // Without this a value outside of the options view keeps the select in
+  // the loading state after a reload: its pun is never requested again.
+  protected onEntriesReset() {
+    this.loadPun()
+  }
+
   /* @Watch("entries")
    *  entriesRefChanged(newValue: EntriesRef) {
    *   void this.fetchEntries(newValue, this.requestedSearch, this.requestedLimit);

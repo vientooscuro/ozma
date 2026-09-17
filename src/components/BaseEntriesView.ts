@@ -86,11 +86,16 @@ export default class BaseEntriesView extends Vue {
         this.currentEntries = null
       } else if (this.newEntries === null) {
         void this.getRequestedEntries()
+        this.onEntriesReset()
       } else if (!(this.newEntries instanceof Promise)) {
         this.currentEntries = this.newEntries
       }
     }
   }
+
+  // The store dropped our entries (e.g. `entries/clear` on a global reload),
+  // so anything fetched by ids has to be requested again.
+  protected onEntriesReset() {}
 
   private getRequestedEntries() {
     return this.getEntries({
