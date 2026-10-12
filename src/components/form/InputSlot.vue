@@ -71,12 +71,13 @@
         ]"
       >
         <div
+          v-if="labelText"
           :class="[
             'border-label',
             { 'increase-z-index': focused && !$isMobile },
           ]"
         >
-          {{ $ustOrEmpty(label) }}
+          {{ labelText }}
         </div>
         <div
           :class="[
@@ -180,6 +181,10 @@ export default class InputSlot extends Vue {
     return getColorVariantAttributeVariables(this.colorVariantAttribute)
   }
 
+  private get labelText(): string {
+    return this.$ustOrEmpty(this.label)
+  }
+
   private get inputName(): string {
     return `${this.uid}-input`
   }
@@ -245,11 +250,16 @@ export default class InputSlot extends Vue {
   white-space: nowrap;
 }
 
+/* Stays in the flow so a wrapped caption pushes the control down instead of
+   covering it. The negative bottom margin cancels one line, so a single-line
+   caption takes no room and sits on the border as before. An empty caption
+   must not be rendered at all, or that margin would pull the control up. */
 .border-label {
-  position: absolute;
+  position: relative;
   top: -0.5rem;
-  left: 1.5rem;
   z-index: 40;
+  margin: 0 -0.9375rem -1em 0.5625rem;
+  width: fit-content;
   border-radius: 0.5rem;
   background-color: var(--default-backgroundColor);
   padding: 0 0.25rem;
