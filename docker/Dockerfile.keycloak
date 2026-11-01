@@ -6,7 +6,7 @@ FROM registry.access.redhat.com/ubi9 AS ubi
 
 RUN dnf install -y python3
 
-FROM keycloak/keycloak:25.0
+FROM keycloak/keycloak:26.8
 
 USER 0
 COPY --from=ubi /usr /tmp/usr

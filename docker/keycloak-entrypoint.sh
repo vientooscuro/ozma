@@ -13,15 +13,15 @@ if [ -z "$KC_HOSTNAME" ]; then
   fi
 fi
 
-if [ -z "$KEYCLOAK_ADMIN" ]; then
+if [ -z "$KC_BOOTSTRAP_ADMIN_USERNAME" ]; then
   if [ -n "$ADMIN_EMAIL" ]; then
-    export KEYCLOAK_ADMIN="$ADMIN_EMAIL"
+    export KC_BOOTSTRAP_ADMIN_USERNAME="$ADMIN_EMAIL"
   fi
 fi
 
-if [ -z "$KEYCLOAK_ADMIN_PASSWORD" ]; then
+if [ -z "$KC_BOOTSTRAP_ADMIN_PASSWORD" ]; then
   if [ -n "$ADMIN_PASSWORD" ]; then
-    export KEYCLOAK_ADMIN_PASSWORD="$ADMIN_PASSWORD"
+    export KC_BOOTSTRAP_ADMIN_PASSWORD="$ADMIN_PASSWORD"
   fi
 fi
 

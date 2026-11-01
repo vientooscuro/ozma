@@ -60,8 +60,8 @@ services:
           property: password
       - key: KC_HTTP_RELATIVE_PATH
         value: /auth
-      - key: KC_PROXY
-        value: edge
+      - key: KC_HTTP_ENABLED
+        value: 'true'
       - key: KC_PROXY_HEADERS
         value: xforwarded
       - key: KC_HOSTNAME_BACKCHANNEL_DYNAMIC
