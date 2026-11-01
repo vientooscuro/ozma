@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:16
+    image: postgres:18
     # Without query statistics every "what is slow?" question is guesswork.
     # The library has to be preloaded at startup; the extension itself is created
     # per database.
@@ -14,7 +14,7 @@ services:
       - pg_stat_statements.track=top
     restart: unless-stopped
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
       - ./docker/postgres-init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
     environment:
       POSTGRES_PASSWORD: postgres

@@ -247,6 +247,13 @@ docker compose up --build --pull always --remove-orphans -d
 > [!WARNING]
 > Be cautious when pulling the latest changes. Major updates might include breaking changes such as database upgrades. **Always back up your data before updating**.
 
+### Upgrading PostgreSQL 16 to 18
+An existing installation keeps its data in PostgreSQL 16 format, and PostgreSQL 18 refuses to start on it. After `git pull`, run once:
+```bash
+./docker/upgrade-postgres-16-to-18.sh
+```
+It stops the stack, dumps all databases with PostgreSQL 16 into `postgres-16-<date>.sql.gz`, restores them into a fresh PostgreSQL 18 cluster in the same volume and starts the stack again. The old files stay in the volume under `16-old/`; the script prints how to remove them and the dump once everything works.
+
 ## Stopping the Application
 To stop the application:
 ```bash
