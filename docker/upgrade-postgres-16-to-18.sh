@@ -6,10 +6,22 @@
 # While restoring, the old files sit in the volume under upgrade-in-progress/; once
 # the restore is done they become <old major>-old/ and stay until removed by hand.
 # If a run breaks off, the next one puts the old files back and starts over.
-set -eu
+set -euC
+umask 077
 
 TARGET=18
 IN_PROGRESS=upgrade-in-progress
+
+backup_dir=${PG_UPGRADE_BACKUP_DIR:-$HOME/postgres-upgrade-backups}
+mkdir -p "$backup_dir"
+backup_dir=$(cd "$backup_dir" && pwd -P)
+repo_dir=$(pwd -P)
+case "$backup_dir/" in
+  "$repo_dir/"*)
+    echo "The backup directory must be outside the repository: $backup_dir" >&2
+    exit 1
+    ;;
+esac
 
 project=$(docker compose config | sed -n 's/^name: //p' | head -n 1)
 volume=$(docker volume ls -q \
@@ -73,7 +85,7 @@ fi
 old=$(in_volume 'cat PG_VERSION')
 echo "Upgrading $volume: PostgreSQL $old -> $TARGET"
 
-dump="postgres-$old-$(date +%Y%m%d-%H%M%S).sql.gz"
+dump="$backup_dir/postgres-$old-$(date +%Y%m%d-%H%M%S)-$$.sql.gz"
 docker run -d --name "$DUMP_CONTAINER" -v "$volume:/var/lib/postgresql/data" "postgres:$old" >/dev/null
 wait_ready "$DUMP_CONTAINER"
 docker exec "$DUMP_CONTAINER" pg_dumpall -U postgres | gzip >"$dump"
@@ -96,8 +108,8 @@ docker run -d --name "$RESTORE_CONTAINER" -v "$volume:/var/lib/postgresql" \
   -e POSTGRES_PASSWORD=postgres "postgres:$TARGET" \
   -c shared_preload_libraries=pg_stat_statements >/dev/null
 wait_ready "$RESTORE_CONTAINER"
-# The fresh cluster already has its superuser.
-gzip -dc "$dump" | grep -v '^CREATE ROLE postgres;$' |
+# The fresh cluster already has its superuser. Keep identical lines in COPY data.
+gzip -dc "$dump" | awk '$0 == "CREATE ROLE postgres;" && !skipped { skipped=1; next } { print }' |
   docker exec -i "$RESTORE_CONTAINER" psql -U postgres -X -q -v ON_ERROR_STOP=1 -d postgres >/dev/null
 docker exec "$RESTORE_CONTAINER" vacuumdb -U postgres -q --all --analyze-only
 docker stop "$RESTORE_CONTAINER" >/dev/null
@@ -106,5 +118,5 @@ in_volume "mv $IN_PROGRESS $old-old"
 
 docker compose up -d
 echo "Done. Once everything works:"
-echo "  rm $dump"
+echo "  Remove dump after verification: $dump"
 echo "  docker run --rm -v $volume:/v alpine rm -rf /v/$old-old"

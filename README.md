@@ -252,7 +252,7 @@ An existing installation keeps its data in PostgreSQL 16 format, and PostgreSQL 
 ```bash
 ./docker/upgrade-postgres-16-to-18.sh
 ```
-It stops the stack, dumps all databases with PostgreSQL 16 into `postgres-16-<date>.sql.gz`, restores them into a fresh PostgreSQL 18 cluster in the same volume and starts the stack again. The old files stay in the volume under `16-old/`; the script prints how to remove them and the dump once everything works.
+It stops the stack, dumps all databases with PostgreSQL 16 into `~/postgres-upgrade-backups/` with owner-only permissions, restores them into a fresh PostgreSQL 18 cluster in the same volume and starts the stack again. Set `PG_UPGRADE_BACKUP_DIR` to use another directory outside the repository. The old files stay in the volume under `16-old/`; the script prints where the dump is and how to remove the old files once everything works.
 
 ## Stopping the Application
 To stop the application:
